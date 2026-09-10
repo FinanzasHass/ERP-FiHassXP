@@ -1,0 +1,52 @@
+{
+  "name": "mini-erp-financiero",
+  "version": "0.3.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "24.18.0"
+  },
+  "scripts": {
+    "dev": "node scripts/check-runtime.mjs && tsx watch --env-file=.env src/server/index.ts",
+    "build": "node scripts/check-runtime.mjs && tsc -p tsconfig.json && tsc -p tsconfig.client.json && vite build && node scripts/check-client-boundary.mjs",
+    "start": "node scripts/check-runtime.mjs && node dist/server/index.js",
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc -p tsconfig.client.json",
+    "test": "tsx --test tests/*.test.ts",
+    "test:db": "node supabase/tests/phase2.test.mjs",
+    "test:integration": "tsx --test tests/integration/*.test.ts",
+    "test:concurrency": "node supabase/tests/concurrency.test.mjs",
+    "test:e2e": "node scripts/e2e.mjs",
+    "dev:client": "vite --host 127.0.0.1"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "2.116.0",
+    "exceljs": "4.4.0",
+    "express": "5.2.1",
+    "express-rate-limit": "8.7.0",
+    "helmet": "8.3.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "zod": "4.5.4"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "0.3.14",
+    "@playwright/test": "1.63.0",
+    "@types/express": "5.0.6",
+    "@types/node": "24.13.3",
+    "@types/pg": "8.23.1",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.7",
+    "@types/supertest": "7.2.1",
+    "pg": "8.23.0",
+    "prettier": "3.9.6",
+    "supertest": "7.2.2",
+    "tsx": "4.23.13",
+    "typescript": "7.0.2",
+    "vite": "8.2.2"
+  },
+  "overrides": {
+    "exceljs": {
+      "uuid": "11.1.1"
+    }
+  }
+}
