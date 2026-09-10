@@ -1,6 +1,6 @@
 # Mini ERP Financiero — Fase 3
 
-**Puerta 3.1:** [registro de verificación Supabase real](docs/fase-3.1/verificacion.md). Pendiente de entorno de desarrollo y accesos; Fase 4 aún no iniciada.
+**Puerta 3.1:** [resultados actuales contra Supabase DEV real](docs/fase-3.1/resultado-dev.md). La matriz vigente distingue PASS, FAIL y BLOCKED_EXTERNAL; Fase 4 no iniciada. El preflight anterior se conserva sólo como histórico.
 
 **Interfaz y maestros implementados.** [Entrega de Fase 3, capturas, endpoints, migraciones, pruebas e instrucciones Supabase/Render](docs/fase-3/README.md).
 

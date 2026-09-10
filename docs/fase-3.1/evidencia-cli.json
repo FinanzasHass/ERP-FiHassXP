@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "source": "Evidencia histórica de ejecución Supabase CLI aportada explícitamente por el propietario en esta conversación; correspondencia del proyecto comprobada localmente en esta revisión.",
+  "reviewedAt": "2026-09-10",
+  "sameProjectAsApplication": true,
+  "projectCheck": "supabase/.temp/project-ref coincide exactamente con el project-ref del hostname SUPABASE_URL cargado desde .env. Valores omitidos.",
+  "commandsReported": ["npx supabase migration list", "npx supabase db push"],
+  "versions": ["202609090001", "202609090002", "202609090003", "202609090004", "202609090005", "202609090006", "202609090007", "202609090008", "202609090009", "202609090010", "202609090011"],
+  "evidence": "Supabase CLI vinculada al mismo project-ref DEV utilizado por la aplicación mostró 202609090001–202609090011 en LOCAL y REMOTE; db push previo terminó con Finished supabase db push. Ejecuciones históricas confirmadas por el propietario; correspondencia CLI/aplicación verificada localmente en esta revisión. La conexión SQL mediante SUPABASE_DB_URL permanece como diagnóstico separado BLOCKED_EXTERNAL (28P01)."
+}

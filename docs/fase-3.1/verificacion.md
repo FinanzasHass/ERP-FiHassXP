@@ -1,5 +1,7 @@
 # Fase 3.1 — Puerta de verificación Supabase real
 
+> **Documento histórico del preflight.** El estado actual y los resultados reales están en [resultado-dev.md](resultado-dev.md) y [resultado-dev.json](resultado-dev.json). Los bloqueos descritos abajo corresponden a la inspección anterior y no determinan la aprobación actual.
+
 **Estado: BLOQUEADA / NO SUPERADA. Fase 4 no iniciada.**
 
 La comprobación inicial encontró las migraciones 001–011 y el bundle local. No existe `.env` y no están definidas SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, SUPABASE_SECRET_KEY, SUPABASE_DB_URL ni APP_ORIGIN en el entorno del proceso. No hay un conector Supabase disponible en esta sesión. No se conectó, creó ni modificó ningún proyecto remoto.

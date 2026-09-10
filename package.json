@@ -39,6 +39,7 @@
     "@types/supertest": "7.2.1",
     "pg": "8.23.0",
     "prettier": "3.9.6",
+    "supabase": "^2.117.0",
     "supertest": "7.2.2",
     "tsx": "4.23.13",
     "typescript": "7.0.2",

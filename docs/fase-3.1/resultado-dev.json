@@ -1,0 +1,197 @@
+{
+  "run": "V31_20260910165903",
+  "generatedAt": "2026-09-10T17:21:07.114Z",
+  "summary": {
+    "criticalPass": 16,
+    "criticalFail": 0,
+    "blockedExternal": 1,
+    "pass": 22,
+    "fail": 0
+  },
+  "results": [
+    {
+      "id": 1,
+      "name": "Migraciones 001–011",
+      "critical": true,
+      "status": "PASS",
+      "evidence": "Supabase CLI vinculada al mismo project-ref DEV utilizado por la aplicación mostró 202609090001–202609090011 en LOCAL y REMOTE; db push previo terminó con Finished supabase db push. Ejecuciones históricas confirmadas por el propietario; correspondencia CLI/aplicación verificada localmente en esta revisión. La conexión SQL mediante SUPABASE_DB_URL permanece como diagnóstico separado BLOCKED_EXTERNAL (28P01).",
+      "evidenceSource": "Evidencia histórica de ejecución Supabase CLI aportada explícitamente por el propietario en esta conversación; correspondencia del proyecto comprobada localmente en esta revisión.",
+      "reviewedAt": "2026-09-10"
+    },
+    {
+      "id": 2,
+      "name": "Variables backend",
+      "critical": true,
+      "status": "PASS",
+      "evidence": "Variables backend válidas, cargadas localmente sin imprimir valores. Entorno confirmado DEV por el propietario."
+    },
+    {
+      "id": 3,
+      "name": "Separación publishable/secret",
+      "critical": true,
+      "status": "PASS",
+      "evidence": "Auth Admin acepta secret; publishable sin sesión no ejecuta lookup privilegiado. CRUD de pruebas usa API request-scoped."
+    },
+    {
+      "id": 4,
+      "name": "Administrador inicial",
+      "critical": true,
+      "status": "PASS",
+      "evidence": "Administrador existente activo y efectivo, autenticado con sesión real. Bootstrap no repetido; contraseña no modificada."
+    },
+    {
+      "id": 5,
+      "name": "Dos empresas de prueba",
+      "critical": false,
+      "status": "PASS",
+      "evidence": "Dos empresas sintéticas creadas por Express/RPC; identificadas en el manifiesto."
+    },
+    {
+      "id": 6,
+      "name": "Usuarios solicitante/aprobador/Finanzas/administrador",
+      "critical": false,
+      "status": "PASS",
+      "evidence": "Tres usuarios sintéticos provisionados por API y login por username real; administrador inicial conservado."
+    },
+    {
+      "id": 7,
+      "name": "Memberships empresariales",
+      "critical": true,
+      "status": "PASS",
+      "evidence": "Solicitante/aprobador en A; Finanzas en A/B. Workspace del solicitante excluye B."
+    },
+    {
+      "id": 8,
+      "name": "Roles por empresa",
+      "critical": true,
+      "status": "PASS",
+      "evidence": "Roles nuevos configurados y asignados por empresa; permiso A no concede B. Sin grants financieros nuevos."
+    },
+    {
+      "id": 9,
+      "name": "Selector multiempresa",
+      "critical": true,
+      "status": "PASS",
+      "evidence": "Navegador real sin mocks: login y cambio B→A confirmados visualmente contra API DEV."
+    },
+    {
+      "id": 10,
+      "name": "CECO raíz e hijo",
+      "critical": false,
+      "status": "PASS",
+      "evidence": "Raíz e hijo persistidos en DEV; nivel derivado 0/1."
+    },
+    {
+      "id": 11,
+      "name": "Rechazo de ciclo CECO",
+      "critical": true,
+      "status": "PASS",
+      "evidence": "Ciclo rechazado HTTP 409; padre original conserva NULL."
+    },
+    {
+      "id": 12,
+      "name": "Rechazo de padre de otra empresa",
+      "critical": true,
+      "status": "PASS",
+      "evidence": "Referencia A→B rechazada HTTP 409 por la regla persistida."
+    },
+    {
+      "id": 13,
+      "name": "Proyecto/subproyecto",
+      "critical": false,
+      "status": "PASS",
+      "evidence": "Proyecto/subproyecto creados en DEV con misma empresa. Repetición aprobada tras corregir paginación del verificador y completar grants sólo del rol sintético."
+    },
+    {
+      "id": 14,
+      "name": "CSV y XLSX contra API real",
+      "critical": false,
+      "status": "PASS",
+      "evidence": "CSV y XLSX cargados desde navegador real, previsualizados y confirmados por UI/Express/RPC; cada archivo persistió 1 centro en DEV. Sin mocks."
+    },
+    {
+      "id": 15,
+      "name": "Preview sin persistencia",
+      "critical": true,
+      "status": "PASS",
+      "evidence": "Preview de hijo antes de padre: 2 previstos, 0 escrituras y 0 eventos persistidos (comparación antes/después)."
+    },
+    {
+      "id": 16,
+      "name": "Confirmación de importación",
+      "critical": false,
+      "status": "PASS",
+      "evidence": "Lote confirmado: 2 creados y 0 errores en Supabase DEV."
+    },
+    {
+      "id": 17,
+      "name": "Idempotencia al repetir lote",
+      "critical": true,
+      "status": "PASS",
+      "evidence": "Mismo lote: 0 creados, 2 ignorados, 0 errores."
+    },
+    {
+      "id": 18,
+      "name": "Bloqueo con sesión existente",
+      "critical": true,
+      "status": "PASS",
+      "evidence": "Mismo JWT: API 403 y REST sin filas tras bloqueo. Usuario sintético reactivado al concluir."
+    },
+    {
+      "id": 19,
+      "name": "Revocación de membership con sesión existente",
+      "critical": true,
+      "status": "PASS",
+      "evidence": "Mismo JWT: API 403 y REST sin filas tras revocación; membresía de prueba restaurada."
+    },
+    {
+      "id": 20,
+      "name": "REST directo a tablas",
+      "critical": true,
+      "status": "PASS",
+      "evidence": "REST: B devuelve 0 filas; INSERT directo de maestro y auditoría devuelve 403."
+    },
+    {
+      "id": 21,
+      "name": "Auditoría",
+      "critical": true,
+      "status": "PASS",
+      "evidence": "Auditoría consultada por API: actor Finanzas sintético, empresa A, entidad CECO y new_values correctos."
+    },
+    {
+      "id": 22,
+      "name": "SMTP y callback",
+      "critical": false,
+      "status": "BLOCKED_EXTERNAL",
+      "evidence": "No hay buzón SMTP verificable en esta sesión. No se envió correo a direcciones ajenas; respuesta HTTP o token generado por Auth Admin no acreditan entrega SMTP/callback."
+    },
+    {
+      "id": 23,
+      "name": "Ausencia de secret en bundle/logs",
+      "critical": true,
+      "status": "PASS",
+      "evidence": "Valores reales comparados en memoria: ausentes en src/client, shared, bundle y logs locales disponibles. No se exportaron valores ni respuestas Auth."
+    }
+  ],
+  "history": [
+    {
+      "id": 13,
+      "name": "Proyecto/subproyecto",
+      "critical": false,
+      "status": "FAIL",
+      "evidence": "HTTP 403 en /subprojects (ACCESS_DENIED).",
+      "resolvedAt": "2026-09-10T17:02:54.629Z",
+      "cause": "El verificador inicial leyó sólo la primera página del catálogo y omitió grants subproject. Corregida paginación; no se cambió autorización del producto."
+    }
+  ],
+  "approval": "PASSED_WITH_NON_BLOCKING_EXTERNAL_EXCEPTION",
+  "diagnostics": [
+    {
+      "name": "Conexión SQL mediante SUPABASE_DB_URL",
+      "classification": "DIAGNOSTIC",
+      "status": "BLOCKED_EXTERNAL",
+      "evidence": "Conexión/historial SQL no verificable; diagnóstico sanitizado: 28P01.",
+      "executedAt": "2026-09-10T17:06:52.670Z"
+    }
+  ]
+}

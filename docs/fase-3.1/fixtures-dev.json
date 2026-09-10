@@ -1,0 +1,46 @@
+{
+  "run": "V31_20260910165903",
+  "createdAt": "2026-09-10T16:59:03.734Z",
+  "companies": [
+    {
+      "id": "73c329ce-afe6-45c1-a22b-7efe6aaa998e",
+      "code": "V31_20260910165903_A"
+    },
+    {
+      "id": "a0659ee7-0bcb-4752-a131-21a5a1cf2cb9",
+      "code": "V31_20260910165903_B"
+    }
+  ],
+  "users": [
+    {
+      "id": "480a8dee-63a0-484a-adac-f8dee5bdefde",
+      "username": "v31_20260910165903_solicitante",
+      "kind": "solicitante"
+    },
+    {
+      "id": "3d66c23d-b28f-4367-bcc8-cd08d047b47c",
+      "username": "v31_20260910165903_aprobador",
+      "kind": "aprobador"
+    },
+    {
+      "id": "ad437f22-6437-4a73-bee5-b809ab5b9607",
+      "username": "v31_20260910165903_finanzas",
+      "kind": "finanzas"
+    }
+  ],
+  "roles": [
+    {
+      "id": "ef9ea3e2-3666-4c86-933e-dabbaaa1aa57",
+      "kind": "sol"
+    },
+    {
+      "id": "777c8a4a-1858-4f61-944e-8cd25d9fe4bb",
+      "kind": "apr"
+    },
+    {
+      "id": "fe5ae8f5-b5ac-4993-b1dd-980196fcfe5f",
+      "kind": "fin"
+    }
+  ],
+  "initialAdministrator": "7cebd856-7fe4-4349-90fe-5a6753eb4e06"
+}
