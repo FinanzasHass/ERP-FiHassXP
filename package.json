@@ -1,6 +1,6 @@
 {
   "name": "mini-erp-financiero",
-  "version": "0.3.0",
+  "version": "0.5.0",
   "private": true,
   "type": "module",
   "engines": {
@@ -16,7 +16,10 @@
     "test:integration": "tsx --test tests/integration/*.test.ts",
     "test:concurrency": "node supabase/tests/concurrency.test.mjs",
     "test:e2e": "node scripts/e2e.mjs",
-    "dev:client": "vite --host 127.0.0.1"
+    "verify:phase4:dev": "node --env-file=.env --import tsx scripts/verify-phase4-dev.ts",
+    "db:dev:apply": "node --env-file=.env scripts/phase5-dev-migrations.mjs --apply",
+    "dev:client": "vite --host 127.0.0.1",
+    "verify:phase5:dev": "node --env-file=.env --import tsx scripts/verify-phase5-dev.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.116.0",

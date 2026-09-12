@@ -20,3 +20,9 @@ services:
         sync: false
       - key: SUPABASE_SECRET_KEY
         sync: false
+      - key: ATTACHMENT_ENCRYPTION_ACTIVE_VERSION
+        value: V1
+      - key: ATTACHMENT_ENCRYPTION_KEY_V1
+        sync: false
+      - key: ATTACHMENT_ENCRYPTION_KEY
+        sync: false

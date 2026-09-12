@@ -1,0 +1,96 @@
+{
+  "run": "F4_20260910201558",
+  "startedAt": "2026-09-10T20:15:58.184Z",
+  "environment": "DEV",
+  "sameProjectAsApplication": true,
+  "results": [
+    {
+      "name": "Setup sintético por API; sin grants de migración ni ejecución financiera del administrador",
+      "status": "PASS"
+    },
+    {
+      "name": "A no lee B y REST directo no permite crear ni aprobar solicitudes",
+      "status": "PASS"
+    },
+    {
+      "name": "CECO/proyecto/subproyecto y primer uso transaccional",
+      "status": "PASS"
+    },
+    {
+      "name": "Solicitud e historial; CECO usado no permite cambio de código",
+      "status": "PASS"
+    },
+    {
+      "name": "Aprobación configurada, autoaprobación prohibida, transición inválida y observación versionada",
+      "status": "PASS"
+    },
+    {
+      "name": "Proveedor compartible por identidad y duplicado rechazado",
+      "status": "PASS"
+    },
+    {
+      "name": "Cuenta bancaria pendiente no activa; aprobación independiente",
+      "status": "PASS"
+    },
+    {
+      "name": "Orden de servicio, separación de aprobación y prohibición de edición posterior",
+      "status": "PASS"
+    },
+    {
+      "name": "Comprobante duplicado protegido en base de datos",
+      "status": "PASS"
+    },
+    {
+      "name": "CxP a 30 días y conformidad obligatoria",
+      "status": "PASS"
+    },
+    {
+      "name": "Anticipado sin factura, fecha explícita y ausencia de estado PAID",
+      "status": "PASS"
+    },
+    {
+      "name": "Storage privado, upload y download reales; empresa y extensión incorrectas rechazadas",
+      "status": "FAIL",
+      "evidence": "POST /attachments/upload failed 503: STORAGE_UNAVAILABLE"
+    }
+  ],
+  "fixtures": {
+    "companies": [
+      {
+        "id": "19b01777-ee3a-48ea-b5e4-4d9e45c5a41b",
+        "code": "F4_20260910201558_A"
+      },
+      {
+        "id": "269d3455-8de4-4819-a00e-f4f9fff18842",
+        "code": "F4_20260910201558_B"
+      }
+    ],
+    "roles": [
+      "fa93c9a6-f251-40f7-9f94-5f085ca58b2c"
+    ],
+    "users": [
+      {
+        "id": "480a8dee-63a0-484a-adac-f8dee5bdefde",
+        "kind": "solicitante"
+      },
+      {
+        "id": "3d66c23d-b28f-4367-bcc8-cd08d047b47c",
+        "kind": "aprobador"
+      },
+      {
+        "id": "ad437f22-6437-4a73-bee5-b809ab5b9607",
+        "kind": "finanzas"
+      }
+    ],
+    "request": "5b5c669f-fa3c-4dd7-b928-c560dfa79faf",
+    "supplier": "604d8053-ee37-45e5-8568-f493bf9fcc00",
+    "payable": "6a88e7ee-32b9-4d8c-9daf-189d9ebe7c6f"
+  },
+  "updatedAt": "2026-09-10T20:17:38.163Z",
+  "summary": {
+    "pass": 11,
+    "fail": 1
+  },
+  "status": "FAIL",
+  "error": "POST /attachments/upload failed 503: STORAGE_UNAVAILABLE"
+}

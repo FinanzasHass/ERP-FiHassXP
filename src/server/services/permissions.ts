@@ -6,7 +6,7 @@ export async function hasPermission(actor: Actor, userId: string, code: string, 
   if (userId !== actor.id) throw new HttpError(403, 'IDENTITY_MISMATCH');
   return actor.db.rpc<boolean>('has_permission', { permission_code: code, company_id: companyId });
 }
-// Contract for future persisted resources. No payment/request endpoints are implemented.
+// Resource helper; persisted company and ownership must come from the repository.
 // The repository must supply ResourceContext from the persisted record, never req.body.
 export async function canReadRequest(actor: Actor, resource: ResourceContext, selectedCompany: string): Promise<boolean> {
   if (!await actor.db.rpc<boolean>('has_company_access', { target_company: resource.company_id })) return false;

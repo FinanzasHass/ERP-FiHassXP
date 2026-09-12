@@ -158,17 +158,15 @@ test("login and dashboard without fictitious financial quantities; company guard
 }) => {
   await fixture(page);
   await page.goto("/login");
-  await mkdir("docs/fase-3/capturas", { recursive: true });
+  await mkdir("docs/fase-5/capturas", { recursive: true });
   await page.screenshot({
-    path: "docs/fase-3/capturas/login.png",
+    path: "docs/fase-5/capturas/login-regresion.png",
     fullPage: true,
   });
   await login(page);
-  await expect(page.getByText("No hay datos disponibles todavía")).toHaveCount(
-    6,
-  );
+  await expect(page.getByText("Sin acceso", { exact: true })).toHaveCount(4);
   await page.screenshot({
-    path: "docs/fase-3/capturas/dashboard-prueba.png",
+    path: "docs/fase-5/capturas/dashboard-regresion.png",
     fullPage: true,
   });
   await page.getByLabel("Empresa activa", { exact: true }).selectOption(b);
@@ -253,7 +251,7 @@ test("mobile sidebar drawer and tablet layout", async ({ page }) => {
     page.getByRole("heading", { name: "Su espacio de gestión" }),
   ).toBeVisible();
   await page.screenshot({
-    path: "docs/fase-3/capturas/tablet-prueba.png",
+    path: "docs/fase-5/capturas/tablet-regresion.png",
     fullPage: true,
   });
 });

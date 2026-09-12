@@ -1,0 +1,47 @@
+{
+  "run": "F5_20260911182922",
+  "startedAt": "2026-09-11T18:29:22.657Z",
+  "environment": "DEV",
+  "sameProjectAsApplication": true,
+  "results": [],
+  "fixtures": {
+    "companies": [
+      {
+        "id": "05c12d9f-274a-4e7c-8957-89bb8a9d5496",
+        "code": "F5_20260911182922_A"
+      },
+      {
+        "id": "2208cddd-7a8c-44a9-9163-61da06262823",
+        "code": "F5_20260911182922_B"
+      }
+    ],
+    "roles": [
+      "9f54940a-1159-4830-90ac-5edd735052f2"
+    ],
+    "users": [
+      {
+        "id": "480a8dee-63a0-484a-adac-f8dee5bdefde",
+        "kind": "solicitante"
+      },
+      {
+        "id": "3d66c23d-b28f-4367-bcc8-cd08d047b47c",
+        "kind": "aprobador"
+      },
+      {
+        "id": "ad437f22-6437-4a73-bee5-b809ab5b9607",
+        "kind": "finanzas"
+      },
+      {
+        "id": "98ffc606-6c31-4abc-8828-3a3842f14b77",
+        "kind": "conciliador"
+      }
+    ]
+  },
+  "status": "FAIL",
+  "error": "Currency seeds missing",
+  "updatedAt": "2026-09-11T18:30:30.026Z",
+  "summary": {
+    "pass": 0,
+    "fail": 0
+  }
+}

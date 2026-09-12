@@ -1,0 +1,167 @@
+{
+  "run": "F4_20260910202312",
+  "startedAt": "2026-09-10T20:23:13.014Z",
+  "environment": "DEV",
+  "sameProjectAsApplication": true,
+  "results": [
+    {
+      "name": "Setup sintético por API; sin grants de migración ni ejecución financiera del administrador",
+      "status": "PASS"
+    },
+    {
+      "name": "A no lee B y REST directo no permite crear ni aprobar solicitudes",
+      "status": "PASS"
+    },
+    {
+      "name": "CECO/proyecto/subproyecto y primer uso transaccional",
+      "status": "PASS"
+    },
+    {
+      "name": "Solicitud e historial; CECO usado no permite cambio de código",
+      "status": "PASS"
+    },
+    {
+      "name": "Aprobación configurada, autoaprobación prohibida, transición inválida y observación versionada",
+      "status": "PASS"
+    },
+    {
+      "name": "Proveedor compartible por identidad y duplicado rechazado",
+      "status": "PASS"
+    },
+    {
+      "name": "Cuenta bancaria pendiente no activa; aprobación independiente",
+      "status": "PASS"
+    },
+    {
+      "name": "Orden de servicio, separación de aprobación y prohibición de edición posterior",
+      "status": "PASS"
+    },
+    {
+      "name": "Comprobante duplicado protegido en base de datos",
+      "status": "PASS"
+    },
+    {
+      "name": "CxP a 30 días y conformidad obligatoria",
+      "status": "PASS"
+    },
+    {
+      "name": "Anticipado sin factura, fecha explícita y ausencia de estado PAID",
+      "status": "PASS"
+    },
+    {
+      "name": "Storage privado, upload y download reales; empresa y extensión incorrectas rechazadas",
+      "status": "PASS",
+      "evidence": "Repetido con formato cifrado: Storage contiene ERP1/ciphertext, la API autorizada descifra y comprueba contenido. No hay nuevos archivos legibles en Storage."
+    },
+    {
+      "name": "Bloqueo y revocación invalidan sesión existente, REST y archivos",
+      "status": "PASS",
+      "evidence": "Mismo JWT denegado por API tras revocar membership. Storage sólo almacena ciphertext AES-GCM; un HIT de CDN no entrega documento legible ni clave. RLS de metadata y descifrado requieren acceso vigente."
+    },
+    {
+      "name": "Reportes y auditoría real preservan actor/empresa y no incluyen cuentas bancarias",
+      "status": "PASS"
+    },
+    {
+      "name": "UI real: creación de solicitud y dashboard sin mocks",
+      "status": "PASS"
+    }
+  ],
+  "fixtures": {
+    "companies": [
+      {
+        "id": "d417dabe-933b-4587-a0fd-28f0e9fef86c",
+        "code": "F4_20260910202312_A"
+      },
+      {
+        "id": "5bafe39b-f6ec-42dd-a11a-2fd0c4752b68",
+        "code": "F4_20260910202312_B"
+      }
+    ],
+    "roles": [
+      "f11c8c34-2898-4d29-b378-241c9b942e5e"
+    ],
+    "users": [
+      {
+        "id": "480a8dee-63a0-484a-adac-f8dee5bdefde",
+        "kind": "solicitante"
+      },
+      {
+        "id": "3d66c23d-b28f-4367-bcc8-cd08d047b47c",
+        "kind": "aprobador"
+      },
+      {
+        "id": "ad437f22-6437-4a73-bee5-b809ab5b9607",
+        "kind": "finanzas"
+      }
+    ],
+    "request": "c6fbddfd-fa00-4477-853d-97fbecc28a47",
+    "supplier": "4b6ffc51-af23-4000-84d2-ade752ebb27c",
+    "payable": "c6f61d31-2d7b-4b7c-9158-ebed578033f9"
+  },
+  "updatedAt": "2026-09-11T02:04:40.749Z",
+  "summary": {
+    "pass": 15,
+    "fail": 0
+  },
+  "status": "PASS",
+  "storageRevocation": {
+    "status": 200,
+    "cacheControl": "public, max-age=0",
+    "cacheStatus": "HIT",
+    "plaintextApiStatus": 404,
+    "cachedContent": "CIPHERTEXT_ONLY"
+  },
+  "history": [
+    {
+      "name": "Bloqueo y revocación invalidan sesión existente, REST y archivos",
+      "status": "FAIL",
+      "evidence": "Revoked membership downloaded Storage",
+      "resolvedAt": "2026-09-11T01:57:26.108Z"
+    },
+    {
+      "name": "Storage privado, upload y download reales; empresa y extensión incorrectas rechazadas",
+      "status": "PASS",
+      "resolvedAt": "2026-09-11T01:57:26.108Z"
+    },
+    {
+      "name": "Bloqueo y revocación invalidan sesión existente, REST y archivos",
+      "status": "PASS",
+      "evidence": "Mismo JWT denegado por API tras revocar membership. Storage sólo almacena ciphertext AES-GCM; un HIT de CDN no entrega documento legible ni clave. RLS de metadata y descifrado requieren acceso vigente.",
+      "resolvedAt": "2026-09-11T02:03:05.874Z"
+    },
+    {
+      "name": "Storage privado, upload y download reales; empresa y extensión incorrectas rechazadas",
+      "status": "PASS",
+      "evidence": "Repetido con formato cifrado: Storage contiene ERP1/ciphertext, la API autorizada descifra y comprueba contenido. No hay nuevos archivos legibles en Storage.",
+      "resolvedAt": "2026-09-11T02:03:05.874Z"
+    },
+    {
+      "name": "Reportes y auditoría real preservan actor/empresa y no incluyen cuentas bancarias",
+      "status": "PASS",
+      "resolvedAt": "2026-09-11T02:03:16.607Z"
+    },
+    {
+      "name": "Bloqueo y revocación invalidan sesión existente, REST y archivos",
+      "status": "PASS",
+      "evidence": "Mismo JWT denegado por API tras revocar membership. Storage sólo almacena ciphertext AES-GCM; un HIT de CDN no entrega documento legible ni clave. RLS de metadata y descifrado requieren acceso vigente.",
+      "resolvedAt": "2026-09-11T02:04:18.083Z"
+    },
+    {
+      "name": "Storage privado, upload y download reales; empresa y extensión incorrectas rechazadas",
+      "status": "PASS",
+      "evidence": "Repetido con formato cifrado: Storage contiene ERP1/ciphertext, la API autorizada descifra y comprueba contenido. No hay nuevos archivos legibles en Storage.",
+      "resolvedAt": "2026-09-11T02:04:18.083Z"
+    },
+    {
+      "name": "Reportes y auditoría real preservan actor/empresa y no incluyen cuentas bancarias",
+      "status": "PASS",
+      "resolvedAt": "2026-09-11T02:04:29.660Z"
+    },
+    {
+      "name": "UI real: creación de solicitud y dashboard sin mocks",
+      "status": "PASS",
+      "resolvedAt": "2026-09-11T02:04:40.749Z"
+    }
+  ]
+}

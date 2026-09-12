@@ -1,0 +1,37 @@
+{
+  "run": "F5_20260911183948",
+  "startedAt": "2026-09-11T18:39:48.466Z",
+  "environment": "DEV",
+  "sameProjectAsApplication": true,
+  "results": [
+    {
+      "name": "Concurrencia DEV: sólo una ejecución puede consumir el mismo remanente",
+      "status": "PASS"
+    },
+    {
+      "name": "Compatibilidad: adjunto V1 de Fase 4 sigue descifrable",
+      "status": "PASS"
+    },
+    {
+      "name": "UI DEV: CSV/XLSX preview, duplicados, confirmación y moneda legible",
+      "status": "FAIL",
+      "evidence": "Detalle sensible omitido; revisar la operación indicada."
+    }
+  ],
+  "baseRun": "F5_20260911183203",
+  "concurrency": {
+    "statuses": [
+      200,
+      409
+    ],
+    "winnerReversed": true,
+    "loserCancelled": true
+  },
+  "updatedAt": "2026-09-11T18:40:46.064Z",
+  "summary": {
+    "pass": 2,
+    "fail": 1
+  },
+  "status": "FAIL",
+  "error": "Error de seguimiento; detalle sensible omitido."
+}

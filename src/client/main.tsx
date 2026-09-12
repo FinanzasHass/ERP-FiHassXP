@@ -19,6 +19,8 @@ import {
 } from "./components";
 import { AuditPage, PermissionMatrix, UserDetail } from "./admin";
 import { CostCenterImport } from "./imports";
+import {TreasuryPage,TreasuryDashboard,treasuryPages} from "./treasury";
+import { FinancePage, FinancialDashboard, financePages } from "./finance";
 import "./styles.css";
 
 function Login({ onLogin }: { onLogin: () => void }) {
@@ -371,13 +373,21 @@ function App() {
         <div className="workspace-label">ESPACIO DE TRABAJO</div>
         <nav>
           {nav("Dashboard", "/app/dashboard", "◈")}
+          {[
+            ['OPERACIONES', [['Solicitudes','requests',['request.view_own','request.view_area','request.view_company','request.create']]]],
+            ['BANDEJA', [['Aprobaciones','approvals',['request.approve','request.observe','request.reject']]]],
+            ['COMPRAS', [['Órdenes','purchase-orders',['purchase_order.view']],['Conformidades','service-acceptances',['service_acceptance.view']]]],
+            ['DOCUMENTOS', [['Comprobantes','tax-documents',['tax_document.view']]]],
+            ['FINANZAS', [['Cuentas por pagar','payables',['payable.view']],['Órdenes de pago','payment-orders',['payment_order.view']],['Programación','schedule',['payment_order.view']],['Reportes operativos','reports',['request.view_own','request.view_area','request.view_company','payable.view']]]],
+          ].map(([title, entries])=><div className="nav-group" key={String(title)}><p>{String(title)}</p>{(entries as [string,string,string[]][]).filter(([, ,permissions])=>permissions.some(can)).map(([label,url])=>nav(label,'/app/'+url))}</div>)}
+          <div className="nav-group"><p>TESORERÍA</p>{Object.entries(treasuryPages).filter(([key,d])=>key!=='payment-orders'&&can(d.permission+'.view')).map(([key,d])=>nav(d.title,'/app/'+key))}{can('payment_order.view')&&nav('Panel de Tesorería','/app/treasury')}{can('cashflow.view')&&nav('Cash Flow','/app/cashflow')}</div>
           {futureGroups.map(
             (group) =>
-              group.items.some((i) => i.slice(2).some(can)) && (
+              group.items.some((i) => !['requests','suppliers','purchase-orders','tax-documents','payables','approvals','service-acceptances','payments','banks','cashflow','payment-batches','bank-reconciliation'].includes(i[1]!) && i.slice(2).some(can)) && (
                 <div className="nav-group" key={group.title}>
                   <p>{group.title}</p>
                   {group.items
-                    .filter((i) => i.slice(2).some(can))
+                    .filter((i) => !['requests','suppliers','purchase-orders','tax-documents','payables','approvals','service-acceptances','payments','banks','cashflow','payment-batches','bank-reconciliation'].includes(i[1]!) && i.slice(2).some(can))
                     .map((i) => nav(i[0], "/app/future/" + i[1]))}
                 </div>
               ),
@@ -388,7 +398,11 @@ function App() {
               .filter((i) => can(i[2]))
               .map((i) => nav(i[0], "/app/" + i[1]))}
             {can("supplier.view") &&
-              nav("Proveedores", "/app/future/suppliers")}
+              nav("Proveedores", "/app/suppliers")}
+            {can('supplier.view')&&nav('Contactos de proveedor','/app/supplier-contacts')}
+            {can('supplier.bank_view')&&nav('Cambios bancarios','/app/bank-changes')}
+            {can('payment_term.view')&&nav('Condiciones de pago','/app/payment-terms')}
+            {(can('approval_policy.view')||can('approval_policy.manage'))&&nav('Reglas de aprobación','/app/approval-policies')}
             {can("customer.view") && nav("Clientes", "/app/future/customers")}
           </div>
           <div className="nav-group">
@@ -400,7 +414,7 @@ function App() {
         </nav>
         <div className="sidebar-foot">
           <span className="status-dot" /> Plataforma administrativa{" "}
-          <small>Fase 3</small>
+          <small>Fase 5</small>
         </div>
       </aside>
       <div className="main-column">
@@ -483,6 +497,10 @@ function App() {
           ) : (
             me && (
               <div key={company + key + mode}>
+                {treasuryPages[key]&&<TreasuryPage key={company+key} page={key} company={company} can={can}/>}
+                {['treasury','schedule','cashflow'].includes(key)&&<TreasuryDashboard key={company+key} page={key} company={company} can={can}/>}
+                {(financePages[key]||key==='approvals')&&<FinancePage page={key} company={company} can={can} actor={me.profile.id}/>}
+                {key==='reports'&&<FinancialDashboard company={company} can={can} reports/>}
                 {key === "dashboard" && (
                   <>
                     <div className="page-heading">
@@ -529,39 +547,13 @@ function App() {
                         </div>
                       </dl>
                     </section>
-                    <div className="section-heading">
-                      <h2>Control operativo</h2>
-                      <span>Los módulos se habilitarán progresivamente</span>
-                    </div>
-                    <div className="dashboard-grid">
-                      {[
-                        "Pendientes de aprobación",
-                        "Pagos pendientes",
-                        "Cuentas por pagar",
-                        "Cobranzas",
-                        "Anticipos por rendir",
-                        "Alertas",
-                      ].map((label, i) => (
-                        <section className="metric" key={label}>
-                          <div>
-                            <span className="metric-icon">
-                              {["✓", "↗", "▤", "↙", "◷", "◇"][i]}
-                            </span>
-                            <small>EN PREPARACIÓN</small>
-                          </div>
-                          <h3>{label}</h3>
-                          <Empty />
-                        </section>
-                      ))}
-                    </div>
+                    <FinancialDashboard company={company} can={can}/>
                     <section className="roadmap-note">
                       <span>◈</span>
                       <div>
-                        <h3>Una base preparada para crecer</h3>
+                        <h3>Gestión y control financiero interno</h3>
                         <p>
-                          Configure empresas, organización y maestros. Los
-                          módulos financieros se incorporarán en las siguientes
-                          fases.
+                          Gestione solicitudes, aprobaciones, documentación y obligaciones por empresa.
                         </p>
                       </div>
                     </section>
@@ -667,7 +659,7 @@ function App() {
           )}
         </main>
         <footer className="app-footer">
-          Mini ERP Financiero <span>Administración y maestros · Fase 3</span>
+          Mini ERP Financiero <span>Tesorería y control financiero · Fase 5</span>
         </footer>
       </div>
       {selected && key === "users" && (

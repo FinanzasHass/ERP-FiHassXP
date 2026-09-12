@@ -1,12 +1,16 @@
-# Mini ERP Financiero — Fase 3
+# Mini ERP Financiero — Fase 5
 
-**Puerta 3.1:** [resultados actuales contra Supabase DEV real](docs/fase-3.1/resultado-dev.md). La matriz vigente distingue PASS, FAIL y BLOCKED_EXTERNAL; Fase 4 no iniciada. El preflight anterior se conserva sólo como histórico.
+**Entrega actual:** [Fase 5: Tesorería, bancos, pagos y conciliación](docs/fase-5/README.md). [Matriz DEV](docs/fase-5/resultado-dev.json) y [migraciones DEV](docs/fase-5/migraciones-dev.json). [Claves versionadas de adjuntos](docs/fase-5/cifrado.md). Sólo fixtures sintéticos; no se inicia Fase 6.
+
+**Fase 4 aprobada:** [entrega](docs/fase-4/README.md), 15 verificaciones DEV PASS y 0 FAIL.
+
+**Puerta 3.1 aprobada:** [resultados aceptados](docs/fase-3.1/resultado-dev.md): 16 Critical PASS, 0 Critical FAIL, 22 PASS; SMTP/callback permanece como excepción externa no bloqueante.
 
 **Interfaz y maestros implementados.** [Entrega de Fase 3, capturas, endpoints, migraciones, pruebas e instrucciones Supabase/Render](docs/fase-3/README.md).
 
 [Fase 2.5: diseño del ERP y sustitución progresiva de Ábasoft](docs/fase-2.5/README.md). Incluye modelos, diagramas, workflows, migración y roadmap; no implementa módulos financieros.
 
-API de autenticación, autorización y administración, frontend React/Vite, selector de empresa, CECO/importación, proyectos/subproyectos, monedas y auditoría. Sin módulos financieros operativos ni contabilidad. **Fase 4 no iniciada.** La base de seguridad de Fase 2 se mantiene; para instalar o actualizar use las instrucciones de Fase 3 enlazadas arriba.
+API de autenticación, autorización y administración, frontend React/Vite, selector de empresa, CECO/importación, proyectos/subproyectos, solicitudes, aprobaciones, proveedores, órdenes, conformidades, comprobantes, CxP y auditoría. Incluye registro de pagos externos y conciliación; no envía transferencias a bancos ni implementa contabilidad productiva o SUNAT automático. La base de seguridad de Fases 1–3 se conserva; para actualizar use las instrucciones de Fase 5.
 
 ## Implementación
 

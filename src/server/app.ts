@@ -23,12 +23,14 @@ export function createApp(config: RuntimeConfig, deps: Dependencies, clientDirec
     next();
   });
   app.use('/api/cost-centers/import', express.json({ limit: '256kb', strict: true }));
+  app.use('/api/treasury/import', express.json({ limit: '1mb', strict: true }));
+  app.use('/api/attachments/upload', express.json({ limit: '7mb', strict: true }));
   app.use('/api', express.json({ limit: '32kb', strict: true }));
   app.use('/api', apiRouter(config, deps));
   app.use('/api', (_req, res) => res.status(404).json({ error: 'NOT_FOUND' }));
   app.use(express.static(clientDirectory, { dotfiles: 'deny', index: false, fallthrough: true }));
   // Explicit known SPA routes only. Missing assets/endpoints never become index.html.
-  app.get(['/', '/login', '/auth/callback', '/app', '/app/dashboard', '/app/companies', '/app/areas', '/app/positions', '/app/users', '/app/roles', '/app/audit', '/app/settings', '/app/cost-centers', '/app/projects', '/app/currencies', '/app/future/:module'], (_req, res) => {
+  app.get(['/', '/login', '/auth/callback', '/app', '/app/dashboard', '/app/companies', '/app/areas', '/app/positions', '/app/users', '/app/roles', '/app/audit', '/app/settings', '/app/cost-centers', '/app/projects', '/app/currencies', '/app/requests', '/app/approvals', '/app/suppliers', '/app/purchase-orders', '/app/service-acceptances', '/app/tax-documents', '/app/payables', '/app/payment-terms', '/app/approval-policies', '/app/bank-changes', '/app/supplier-contacts', '/app/reports', '/app/payment-orders','/app/payments','/app/payment-batches','/app/banks','/app/bank-accounts','/app/payment-methods','/app/bank-transactions','/app/reconciliation-periods','/app/reconciliation-matches','/app/treasury','/app/schedule','/app/cashflow','/app/future/:module'], (_req, res) => {
     const index = path.join(clientDirectory, 'index.html');
     if (!existsSync(index)) { res.status(503).json({ error: 'CLIENT_BUILD_REQUIRED' }); return; }
     res.setHeader('Cache-Control', 'no-cache');

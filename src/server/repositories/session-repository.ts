@@ -26,6 +26,7 @@ export function createSessionRepository(config: Pick<Config, 'SUPABASE_URL' | 'S
     },
     async list(table, query, filters = {}) {
       let builder = db.from(table).select('*', { count: 'exact' });
+      if(table==='supplier_companies')builder=db.from(table).select('*,suppliers(id,tax_id_type,tax_id,country_code,legal_name)',{count:'exact'});
       if(table==='profiles') {
         builder=db.from(table).select(query.company_id?'*,user_companies!inner(company_id,active)':'*,user_companies(company_id,active)',{count:'exact'});
         if(query.company_id) builder=builder.eq('user_companies.company_id',query.company_id).eq('user_companies.active',true);

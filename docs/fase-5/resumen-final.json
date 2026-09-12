@@ -1,0 +1,25 @@
+{
+  "environment": "DEV",
+  "status": "PASS",
+  "main": {
+    "pass": 25,
+    "fail": 0
+  },
+  "supplementary": {
+    "pass": 4,
+    "fail": 0
+  },
+  "local": {
+    "application": 28,
+    "databaseGroups": 52,
+    "interfaceRegression": 6,
+    "typecheck": "PASS",
+    "build": "PASS",
+    "secretBoundary": "PASS"
+  },
+  "migrations": "017–021",
+  "baseRun": "F5_20260911183203",
+  "baseExecutedAt": "2026-09-11T18:35:33.981Z",
+  "followupExecutedAt": "2026-09-11T23:52:16.703Z",
+  "generatedAt": "2026-09-11T23:53:29.184Z"
+}

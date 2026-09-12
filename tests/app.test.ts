@@ -52,6 +52,19 @@ test('master endpoints validate company, input, and use authorized RPC only',asy
   assert.equal((await request(app).post('/api/cost-centers/import').auth('valid',{type:'bearer'}).send({company_id:company,commit:false,rows:[{company_code:'A',code:'CC',name:'Center'}]})).status,200);
   assert.equal(calls.find(c=>c.name==='import_cost_centers')?.args.commit_batch,false);
 });
+test('financial endpoints require live authentication, validate payload and delegate company/resource checks to RPC',async()=>{
+ const {app,calls}=fixture({companyAllowed:true});
+ assert.equal((await request(app).get('/api/financial-requests?company_id='+company)).status,401);
+ assert.equal((await request(fixture({inactive:true}).app).get('/api/payables?company_id='+company).auth('valid',{type:'bearer'})).status,403);
+ assert.equal((await request(fixture().app).get('/api/payables?company_id='+company).auth('valid',{type:'bearer'})).status,403);
+ const payload={request_type:'service',cost_center_id:other,currency_id:other,description:'Synthetic',justification:'Test',required_date:'2026-09-10',payment_modality:'credit',items:[{description:'Item',quantity:1,unit_price:100}]};
+ assert.equal((await request(app).post('/api/financial-requests?company_id='+company).auth('valid',{type:'bearer'}).send({...payload,company_id:other})).status,400);
+ assert.equal((await request(app).post('/api/financial-requests?company_id='+company).auth('valid',{type:'bearer'}).send(payload)).status,201);
+ assert.equal(calls.find(c=>c.name==='financial_save')?.args.target_company,company);
+ assert.equal((await request(app).post('/api/financial-requests/'+other+'/actions').auth('valid',{type:'bearer'}).send({action:'approve',comment:'Review'})).status,200);
+ const transition=calls.find(c=>c.name==='financial_transition')!;assert.equal(transition.args.target_id,other);assert.equal(transition.args.company_id,undefined);
+ assert.equal((await request(app).post('/api/payables/'+other+'/actions').auth('valid',{type:'bearer'}).send({action:'paid',comment:'Invalid'})).status,400);
+});
 test('username login resolves only through narrow server identity operation',async()=>{
  const {deps,calls}=fixture();let resolved='';deps.privileged.resolveUsername=async name=>{resolved=name;return 'test@example.test';};
  const result=await request(createApp(config,deps)).post('/api/auth/login').send({email:'tester',password:'correct'});

@@ -1,0 +1,19 @@
+{
+  "run": "F5_20260911234749",
+  "startedAt": "2026-09-11T23:47:49.362Z",
+  "environment": "DEV",
+  "sameProjectAsApplication": true,
+  "results": [
+    {
+      "name": "UI DEV: CSV/XLSX preview, duplicados, confirmación y moneda legible",
+      "status": "PASS"
+    }
+  ],
+  "baseRun": "F5_20260911183203",
+  "updatedAt": "2026-09-11T23:48:23.127Z",
+  "summary": {
+    "pass": 1,
+    "fail": 0
+  },
+  "status": "PASS"
+}

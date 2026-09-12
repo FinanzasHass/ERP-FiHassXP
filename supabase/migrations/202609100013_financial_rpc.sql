@@ -13,9 +13,9 @@ declare result jsonb; ancestors jsonb; d jsonb; begin
  if subproject is not null and not exists(select 1 from public.subprojects where id=subproject and company_id=c and project_id=project and status='active') then raise exception using errcode='23514',message='Subproject mismatch'; end if;
  with recursive chain as (select id,parent_id from public.cost_centers where id=center_id and company_id=c
  union all select x.id,x.parent_id from public.cost_centers x join chain a on x.id=a.parent_id and x.company_id=c)
- update public.cost_centers set first_used_at=coalesce(first_used_at,now()) where id in (select id from chain);
- update public.projects set first_used_at=coalesce(first_used_at,now()) where id=project and company_id=c;
- update public.subprojects set first_used_at=coalesce(first_used_at,now()) where id=subproject and company_id=c;
+ update public.cost_centers set first_used_at=now() where id in (select id from chain) and first_used_at is null;
+ update public.projects set first_used_at=now() where id=project and company_id=c and first_used_at is null;
+ update public.subprojects set first_used_at=now() where id=subproject and company_id=c and first_used_at is null;
  with recursive chain as (select x.* from public.cost_centers x where id=center_id and company_id=c
  union all select x.* from public.cost_centers x join chain a on x.id=a.parent_id and x.company_id=c)
  select jsonb_agg(to_jsonb(chain)||jsonb_build_object('category',(select to_jsonb(cat) from public.cost_center_categories cat where cat.id=chain.category_id)) order by level) into ancestors from chain;
@@ -61,6 +61,7 @@ begin
  if kind in ('purchase_order','tax_document') and previous->>'status' not in ('draft','observed') then raise exception using errcode='23514',message='Approved content immutable'; end if;
  end if;
  merged:=coalesce(previous,'{}')||payload;
+ if merged->>'currency_id' is not null and not exists(select 1 from public.currencies where id=(merged->>'currency_id')::uuid and active) then raise exception using errcode='23514',message='Active currency required'; end if;
  if kind='request' then
  if merged->>'request_type' in ('advance','reimbursement') then raise exception using errcode='23514',message='Employee advances and reimbursements reserved for Phase 6'; end if;
  if target_id is null then payload:=payload||jsonb_build_object('requester_id',auth.uid(),'area_id',(select area_id from public.profiles where id=auth.uid()),'request_number',private.next_document_number(target_company,'SOL')); end if;
@@ -75,6 +76,7 @@ begin
  total:=0;
  for item in select value from jsonb_array_elements(items) loop
  perform private.validate_keys(item,array['description','quantity','unit_price']);
+ if (item->>'quantity')::numeric<>round((item->>'quantity')::numeric,4) or (item->>'unit_price')::numeric<>round((item->>'unit_price')::numeric,4) then raise exception using errcode='22023',message='Items support four decimals'; end if;
  if length(trim(coalesce(item->>'description','')))=0 or (item->>'quantity')::numeric<=0 or (item->>'unit_price')::numeric<0 then raise exception using errcode='23514',message='Invalid item'; end if;
  total:=total+round((item->>'quantity')::numeric*(item->>'unit_price')::numeric,2);
  end loop;
@@ -98,6 +100,8 @@ begin
  raise exception using errcode='23514',message='Shared legal identity immutable; operational data is company scoped'; end if;
  end if;
  payload:=payload-array['country_code','tax_id_type','tax_id','legal_name','reuse_identity'];
+ if target_id is null then insert into public.audit_logs(user_id,action,category,entity_type,entity_id,company_id,new_values)
+ select auth.uid(),'supplier.link','finance','suppliers',id::text,target_company,to_jsonb(s) from public.suppliers s where id=sid; end if;
  end if;
  if kind='bank_change' then
  perform private.validate_keys(payload->'proposed',array['bank_name','currency_id','account_number','cci','account_type','is_primary']);
@@ -124,7 +128,7 @@ begin
  if kind='tax_document' then
  if (merged->>'currency_id')::uuid<>r.currency_id then raise exception using errcode='23514',message='Currency mismatch'; end if;
  payload:=payload||jsonb_build_object('total_amount',(merged->>'subtotal')::numeric+(merged->>'tax_amount')::numeric+coalesce((merged->>'non_taxable_amount')::numeric,0));
- items:=payload->'amounts'; payload:=payload-'amounts';
+ items:=coalesce(payload->'amounts',case when (merged->>'tax_amount')::numeric>0 then jsonb_build_array(jsonb_build_object('code','TAX','name','Tributos declarados','amount',(merged->>'tax_amount')::numeric)) else '[]'::jsonb end); payload:=payload-'amounts';
  if items is not null then
  total:=0; for item in select value from jsonb_array_elements(items) loop
  perform private.validate_keys(item,array['code','name','amount']); total:=total+(item->>'amount')::numeric; end loop;
@@ -246,6 +250,7 @@ begin
  if action in ('approve','reject') and bank.requested_by=auth.uid() then raise exception using errcode='42501',message='Independent bank reviewer required'; end if;
  next_status:=case action when 'approve' then 'approved' when 'reject' then 'rejected' when 'cancel' then 'cancelled' end;
  if action='approve' then
+ if not exists(select 1 from public.supplier_companies where company_id=c and supplier_id=bank.supplier_id and status='active') or not exists(select 1 from public.currencies where id=(bank.proposed->>'currency_id')::uuid and active) then raise exception using errcode='23514',message='Active supplier and currency required'; end if;
  if bank.account_id is not null then
  update public.supplier_bank_accounts set status='superseded',is_primary=false where id=bank.account_id and company_id=c and supplier_id=bank.supplier_id and status='active';
  if not found then raise exception using errcode='23514',message='Stale bank change'; end if;
@@ -263,6 +268,21 @@ begin
  if kind='request' then perform private.request_history(target_id,action,s,comment); end if;
  return result;
 end $$;
+
+create function public.financial_inbox(target_company uuid) returns jsonb language plpgsql stable security definer set search_path='' as $$
+begin
+ if not private.has_company_access(target_company) then raise exception using errcode='42501',message='Company access denied'; end if;
+ return coalesce((select jsonb_agg(x) from (
+ select r.*,p.full_name as requester_name,a.name as area_name,c.code as currency_code,
+ (select name from public.cost_centers where id=r.cost_center_id) as cost_center_name,
+ (select name from public.projects where id=r.project_id) as project_name
+ from public.financial_requests r join public.profiles p on p.id=r.requester_id left join public.areas a on a.id=r.area_id
+ join public.currencies c on c.id=r.currency_id
+ where r.company_id=target_company and r.status in ('submitted','under_review') and private.can_review_request(r.id)
+ order by r.created_at limit 200) x),'[]'::jsonb);
+end $$;
+revoke all on function public.financial_inbox(uuid) from public,anon,service_role;
+grant execute on function public.financial_inbox(uuid) to authenticated;
 
 create function public.payable_change_due_date(target_id uuid,new_date date,reason text) returns jsonb language plpgsql security definer set search_path='' as $$
 declare p public.payables; result jsonb; begin

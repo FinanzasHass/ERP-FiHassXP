@@ -1,0 +1,19 @@
+{
+  "run": "F5_20260911234658",
+  "startedAt": "2026-09-11T23:46:58.691Z",
+  "environment": "DEV",
+  "sameProjectAsApplication": true,
+  "results": [
+    {
+      "name": "RPC DEV: rechaza NaN, precisión excesiva y acceso al núcleo interno",
+      "status": "PASS"
+    }
+  ],
+  "baseRun": "F5_20260911183203",
+  "updatedAt": "2026-09-11T23:47:15.338Z",
+  "summary": {
+    "pass": 1,
+    "fail": 0
+  },
+  "status": "PASS"
+}

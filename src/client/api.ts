@@ -31,6 +31,10 @@ export class ApiError extends Error {
   }
 }
 const messages: Record<string, string> = {
+  INVALID_FILE: "Archivo no permitido: revise extensión, contenido y tamaño (máximo 5 MB).",
+  ATTACHMENT_KEY_REQUIRED: "El almacenamiento seguro de archivos requiere configuración del backend.",
+  ATTACHMENT_INTEGRITY_ERROR: "No se pudo verificar la integridad del archivo. Contacte al administrador.",
+  STORAGE_UNAVAILABLE: "No se pudo completar la operación de archivo. Revise la carga antes de reintentar.",
   INVALID_CREDENTIALS: "Correo, usuario o contraseña incorrectos.",
   PROFILE_DISABLED:
     "Su cuenta está inactiva o bloqueada. Contacte al administrador.",

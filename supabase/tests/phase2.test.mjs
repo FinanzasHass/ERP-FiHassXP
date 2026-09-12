@@ -29,6 +29,12 @@ try {
       if not exists(select 1 from pg_roles where rolname='authenticated') then create role authenticated nologin; end if;
       if not exists(select 1 from pg_roles where rolname='service_role') then create role service_role nologin bypassrls; end if;
     end $$;
+    create schema storage;
+    create table storage.buckets(id text primary key,name text,public boolean,file_size_limit bigint,allowed_mime_types text[]);
+    create table storage.objects(id uuid primary key default gen_random_uuid(),bucket_id text,name text,metadata jsonb);
+    alter table storage.objects enable row level security;
+    grant usage on schema storage to authenticated;
+    grant select,insert on storage.objects to authenticated;
     create schema auth; create table auth.users(id uuid primary key,email text);
     create table auth.sessions(id uuid primary key,user_id uuid not null references auth.users(id));
     create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid $$;
@@ -51,7 +57,7 @@ try {
   await test('migrations and system admin separates delegation from execution',async()=>{
     assert.equal(await can(admin,'role.assign'),true); assert.equal(await can(admin,'permission.assign'),true);
     assert.equal(await can(admin,'payment.execute',a),false);
-    assert.equal(await scalar("select count(*)::int from pg_tables where schemaname='public' and rowsecurity"),18);
+    assert.equal(await scalar("select count(*)::int from pg_tables where schemaname='public' and not rowsecurity"),0);
   });
   for(const [id,name] of [[a,'A'],[b,'B']]) await db.exec(`insert into public.companies(id,legal_name,code,tax_id,country_code) values ('${id}','Company ${name}','C${name}','TEST-${name}','PE')`);
   await rpc(admin,'admin_set_role_permissions',[treasury,[execute]]);
@@ -203,5 +209,7 @@ try {
     await rpc(admin,'admin_set_profile_status',[gianella,'active']);
   });
   await (await import('./phase3-checks.mjs')).phase3Checks({db,rpc,asUser,scalar,test,admin,gianella,a,b});
-  console.log(`PASS ${checks} Phase 2 + 3 database checks on ${process.version}`);
+  const f4=await (await import('./phase4-checks.mjs')).phase4Checks({db,rpc,asUser,scalar,test,admin});
+  await (await import('./phase5-checks.mjs')).phase5Checks({db,rpc,asUser,scalar,test,admin,...f4});
+  console.log(`PASS ${checks} Phase 2–5 database checks on ${process.version}`);
 }catch(error){console.error({message:error.message,code:error.code,position:error.position,where:error.where});process.exitCode=1;}finally{await db.close();}

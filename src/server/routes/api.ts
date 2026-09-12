@@ -10,6 +10,8 @@ import * as v from '../validators/index.js';
 import { HttpError } from '../middleware/errors.js';
 import { z } from 'zod';
 import { mastersRouter } from './masters.js';
+import {treasuryRouter} from './treasury.js';
+import { financeRouter } from './finance.js';
 export interface Dependencies {
   auth: Authentication; privileged: PrivilegedAuth;
   repository: (token: string) => SessionRepository;
@@ -44,6 +46,8 @@ export function apiRouter(_config: RuntimeConfig, deps: Dependencies) {
   });
   router.use(authenticated);
   router.use(mastersRouter());
+  router.use(financeRouter(_config));
+  router.use(treasuryRouter());
   router.get('/auth/workspace',async(req,res)=>res.json(await getActor(req).db.rpc('my_workspace',{})));
   router.get('/auth/me', async (req, res) => {
     const { company_id } = v.companyContext.parse(req.query);

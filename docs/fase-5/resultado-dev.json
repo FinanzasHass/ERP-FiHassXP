@@ -1,0 +1,154 @@
+{
+  "run": "F5_20260911183203",
+  "startedAt": "2026-09-11T18:32:03.280Z",
+  "environment": "DEV",
+  "sameProjectAsApplication": true,
+  "results": [
+    {
+      "name": "01 Banco empresa A no accesible desde B",
+      "status": "PASS"
+    },
+    {
+      "name": "02 Crear OP",
+      "status": "PASS"
+    },
+    {
+      "name": "03 OP varias CxP",
+      "status": "PASS"
+    },
+    {
+      "name": "04 Exceder outstanding rechazado",
+      "status": "PASS"
+    },
+    {
+      "name": "05 Monedas incompatibles rechazadas",
+      "status": "PASS"
+    },
+    {
+      "name": "06 Autoaprobación prohibida",
+      "status": "PASS"
+    },
+    {
+      "name": "07 OP aprobada inmutable",
+      "status": "PASS"
+    },
+    {
+      "name": "08 Pago parcial",
+      "status": "PASS"
+    },
+    {
+      "name": "09 Pago completo",
+      "status": "PASS"
+    },
+    {
+      "name": "10 Pago cubriendo varias CxP",
+      "status": "PASS"
+    },
+    {
+      "name": "11 CxP no puede marcarse paid manualmente",
+      "status": "PASS"
+    },
+    {
+      "name": "12 Reverso restaura outstanding",
+      "status": "PASS"
+    },
+    {
+      "name": "13 Voucher cifrado y metadatos V1",
+      "status": "PASS"
+    },
+    {
+      "name": "14 Revocación membership bloquea voucher",
+      "status": "PASS"
+    },
+    {
+      "name": "15 Lote de pagos",
+      "status": "PASS"
+    },
+    {
+      "name": "16 Importación bancaria preview sin persistencia",
+      "status": "PASS"
+    },
+    {
+      "name": "17 Idempotencia importación",
+      "status": "PASS"
+    },
+    {
+      "name": "18 Suggested match sin conciliación automática",
+      "status": "PASS"
+    },
+    {
+      "name": "19 Conciliación, cierre y reapertura controlada",
+      "status": "PASS"
+    },
+    {
+      "name": "20 Movimiento empresa B rechazado",
+      "status": "PASS"
+    },
+    {
+      "name": "21 REST directo bloqueado",
+      "status": "PASS"
+    },
+    {
+      "name": "22 Auditoría empresarial sin cuentas completas",
+      "status": "PASS"
+    },
+    {
+      "name": "23 Cash Flow no duplica pagos",
+      "status": "PASS"
+    },
+    {
+      "name": "24 UI real sin mocks",
+      "status": "PASS"
+    },
+    {
+      "name": "25 Secretos ausentes del bundle",
+      "status": "PASS"
+    }
+  ],
+  "fixtures": {
+    "companies": [
+      {
+        "id": "cc085e16-2dba-4d78-b5d2-bb6a5e0ac76b",
+        "code": "F5_20260911183203_A"
+      },
+      {
+        "id": "116b2b66-66ea-4088-8620-d30c9e3ccbcd",
+        "code": "F5_20260911183203_B"
+      }
+    ],
+    "roles": [
+      "c96b71d6-9d74-4b6b-9982-35c7316d9128"
+    ],
+    "users": [
+      {
+        "id": "480a8dee-63a0-484a-adac-f8dee5bdefde",
+        "kind": "solicitante"
+      },
+      {
+        "id": "3d66c23d-b28f-4367-bcc8-cd08d047b47c",
+        "kind": "aprobador"
+      },
+      {
+        "id": "ad437f22-6437-4a73-bee5-b809ab5b9607",
+        "kind": "finanzas"
+      },
+      {
+        "id": "0fa0a5fb-6a69-4113-ba29-0628e616aacd",
+        "kind": "conciliador"
+      }
+    ],
+    "payables": [
+      "40a2fbfc-fda3-4043-a133-c55ee6713cb9",
+      "6ea76f57-933b-410f-8031-fc40d14aabeb"
+    ],
+    "order": "af741c08-50e4-4868-9589-bea46172fb54",
+    "payment": "e638290c-36df-4ba9-93f5-ad0081507a3c",
+    "transaction": "9df8a934-783e-429f-9cbc-263e34e7cbdc"
+  },
+  "updatedAt": "2026-09-11T18:35:33.981Z",
+  "summary": {
+    "pass": 25,
+    "fail": 0
+  },
+  "status": "PASS"
+}
