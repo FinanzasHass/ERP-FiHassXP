@@ -74,13 +74,14 @@ export const treasuryPages: Record<string, Def> = {
       "scheduled_payment_date",
     ],
     fields: [
-      ["beneficiary_id", "Proveedor", "suppliers"],
+      ["beneficiary_type", "Tipo de beneficiario", "beneficiary_types"],
+      ["beneficiary_id", "Beneficiario", "beneficiaries"],
       ["currency_id", "Moneda", "currencies"],
       ["payment_method_id", "Medio", "methods"],
       [
         "beneficiary_account_id",
         "Cuenta beneficiaria aprobada",
-        "supplier_accounts",
+        "beneficiary_accounts",
         false,
       ],
       ["requested_payment_date", "Fecha solicitada", "date"],
@@ -178,7 +179,10 @@ export const treasuryPages: Record<string, Def> = {
   },
 };
 const labels: Record<string, string> = {
-  currency_code: "Moneda ISO", external_id: "Identificador externo · opcional", counterparty: "Contraparte · opcional", value_date: "Fecha valor · opcional",
+  currency_code: "Moneda ISO",
+  external_id: "Identificador externo · opcional",
+  counterparty: "Contraparte · opcional",
+  value_date: "Fecha valor · opcional",
   exclude: "Excluir de matching",
   excluded: "Excluido de matching",
   draft: "Borrador",
@@ -226,7 +230,8 @@ const labels: Record<string, string> = {
   amount: "Importe",
   total_amount: "Total",
   status: "Estado",
-  beneficiary_id: "Proveedor",
+  beneficiary_id: "Beneficiario",
+  beneficiary_type: "Tipo de beneficiario",
   bank_account_id: "Cuenta",
   operation_number: "Operación",
   payment_date: "Fecha de pago",
@@ -260,11 +265,23 @@ const sources: Record<string, string> = {
   beneficiary_account_id: "supplier_accounts",
   payment_order_id: "orders",
 };
-function textValue(key: string, value: any, opts: Row) {
+function textValue(
+  key: string,
+  value: any,
+  opts: Row,
+  beneficiaryType = "supplier",
+) {
   if (value === null || value === undefined) return "—";
   if (typeof value === "boolean") return value ? "Sí" : "No";
   if (key === "account_number") return "••••" + String(value).slice(-4);
-  const list = opts[sources[key] ?? ""];
+  const list =
+    opts[
+      beneficiaryType === "employee" && key === "beneficiary_id"
+        ? "employees"
+        : beneficiaryType === "employee" && key === "beneficiary_account_id"
+          ? "employee_accounts"
+          : (sources[key] ?? "")
+    ];
   if (Array.isArray(list))
     return (
       list.find((x: Row) => x.id === value)?.name ?? String(value).slice(0, 8)
@@ -295,7 +312,7 @@ function FormField({
           onChange={(e) => set(e.target.value)}
         >
           <option value="">Seleccione</option>
-          {(opts[type]??[]).map((o: Row) => (
+          {(opts[type] ?? []).map((o: Row) => (
             <option key={o.id} value={o.id}>
               {o.name}
             </option>
@@ -461,6 +478,7 @@ export function TreasuryPage({
       setOpts({ ...opts, ...extra });
       setForm(
         row ?? {
+          beneficiary_type: "supplier",
           individual_approval_required: true,
           requires_beneficiary_account: true,
         },
@@ -572,7 +590,9 @@ export function TreasuryPage({
               {rows.map((row) => (
                 <tr key={row.id}>
                   {d.columns.map((k) => (
-                    <td key={k}>{textValue(k, row[k], opts)}</td>
+                    <td key={k}>
+                      {textValue(k, row[k], opts, row.beneficiary_type)}
+                    </td>
                   ))}
                   <td>
                     <button onClick={() => show(row)}>Ver detalle</button>
@@ -626,8 +646,42 @@ export function TreasuryPage({
                   key={f[0]}
                   f={f}
                   value={form[f[0]]}
-                  set={(v) => setForm({ ...form, [f[0]]: v })}
-                  opts={opts}
+                  set={(v) => {
+                    if (
+                      f[0] === "beneficiary_type" ||
+                      f[0] === "beneficiary_id"
+                    ) {
+                      setItems([]);
+                      setForm({
+                        ...form,
+                        beneficiary_account_id: "",
+                        ...(f[0] === "beneficiary_type"
+                          ? { beneficiary_id: "" }
+                          : {}),
+                        [f[0]]: v,
+                      });
+                    } else setForm({ ...form, [f[0]]: v });
+                  }}
+                  opts={{
+                    ...opts,
+                    beneficiary_types: [
+                      { id: "supplier", name: "Proveedor" },
+                      { id: "employee", name: "Colaborador" },
+                    ],
+                    beneficiaries:
+                      form.beneficiary_type === "employee"
+                        ? opts.employees
+                        : opts.suppliers,
+                    beneficiary_accounts: (form.beneficiary_type === "employee"
+                      ? opts.employee_accounts
+                      : opts.supplier_accounts
+                    )?.filter(
+                      (a: Row) =>
+                        (a.employee_id ?? a.supplier_id) ===
+                          form.beneficiary_id &&
+                        a.currency_id === form.currency_id,
+                    ),
+                  }}
                 />
               ))}
             </div>
@@ -666,7 +720,21 @@ export function TreasuryPage({
                             ),
                           )
                         }
-                        opts={opts}
+                        opts={
+                          d.kind === "payment_order"
+                            ? {
+                                ...opts,
+                                payables: opts.payables?.filter(
+                                  (p: Row) =>
+                                    (form.beneficiary_type === "employee"
+                                      ? p.employee_id
+                                      : p.supplier_id) ===
+                                      form.beneficiary_id &&
+                                    p.currency_id === form.currency_id,
+                                ),
+                              }
+                            : opts
+                        }
                       />
                       {!batch && (
                         <FormField
@@ -779,7 +847,9 @@ export function TreasuryPage({
               .map(([k, v]) => (
                 <React.Fragment key={k}>
                   <dt>{labels[k] ?? k}</dt>
-                  <dd>{textValue(k, v, opts)}</dd>
+                  <dd>
+                    {textValue(k, v, opts, detail.record?.beneficiary_type)}
+                  </dd>
                 </React.Fragment>
               ))}
           </dl>
@@ -959,7 +1029,9 @@ function BankImport({
         {
           account_id: account,
           source_filename: name,
-          column_mapping: Object.fromEntries(Object.entries(mapping).filter(([,column])=>column)),
+          column_mapping: Object.fromEntries(
+            Object.entries(mapping).filter(([, column]) => column),
+          ),
           rows: mapBankRows(raw, mapping),
           confirm,
         },
@@ -999,7 +1071,7 @@ function BankImport({
           <div className="form-grid">
             {fields.map((k) => (
               <label key={k}>
-                {labels[k]??k}
+                {labels[k] ?? k}
                 <select
                   aria-label={"Columna " + k}
                   value={mapping[k] ?? ""}

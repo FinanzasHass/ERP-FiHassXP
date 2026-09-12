@@ -44,6 +44,7 @@ export const treasurySchemas: Record<string, z.ZodObject<any>> = {
     .strict(),
   payment_order: z
     .object({
+      beneficiary_type: z.enum(["supplier", "employee"]).optional(),
       beneficiary_id: uuid,
       currency_id: uuid,
       bank_account_id: uuid.nullable().optional(),

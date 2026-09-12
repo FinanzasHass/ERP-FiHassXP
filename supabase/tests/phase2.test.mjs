@@ -211,5 +211,7 @@ try {
   await (await import('./phase3-checks.mjs')).phase3Checks({db,rpc,asUser,scalar,test,admin,gianella,a,b});
   const f4=await (await import('./phase4-checks.mjs')).phase4Checks({db,rpc,asUser,scalar,test,admin});
   await (await import('./phase5-checks.mjs')).phase5Checks({db,rpc,asUser,scalar,test,admin,...f4});
-  console.log(`PASS ${checks} Phase 2–5 database checks on ${process.version}`);
+  const f6=await (await import('./phase6-foundation-checks.mjs')).phase6FoundationChecks({db,rpc,asUser,scalar,test,admin,...f4});
+  await (await import('./phase6-settlement-checks.mjs')).phase6SettlementChecks({db,rpc,asUser,scalar,test,admin,...f4,...f6});
+  console.log(`PASS ${checks} Phase 2–6 foundation database checks on ${process.version}`);
 }catch(error){console.error({message:error.message,code:error.code,position:error.position,where:error.where});process.exitCode=1;}finally{await db.close();}

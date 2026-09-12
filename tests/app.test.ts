@@ -65,6 +65,21 @@ test('financial endpoints require live authentication, validate payload and dele
  const transition=calls.find(c=>c.name==='financial_transition')!;assert.equal(transition.args.target_id,other);assert.equal(transition.args.company_id,undefined);
  assert.equal((await request(app).post('/api/payables/'+other+'/actions').auth('valid',{type:'bearer'}).send({action:'paid',comment:'Invalid'})).status,400);
 });
+test('employee travel endpoints deny inactive identity and reject client-controlled totals, actor and state',async()=>{
+ const {app,calls}=fixture({companyAllowed:true});
+ assert.equal((await request(app).get('/api/travel-expenses?company_id='+company)).status,401);
+ assert.equal((await request(fixture({inactive:true}).app).get('/api/employees?company_id='+company).auth('valid',{type:'bearer'})).status,403);
+ assert.equal((await request(fixture().app).get('/api/travel-expenses?company_id='+company).auth('valid',{type:'bearer'})).status,403);
+ const payload={employee_id:user,cost_center_id:other,destination:'Sintético',purpose:'Prueba',start_date:'2026-09-11',end_date:'2026-09-12',currency_id:other,requested_advance_amount:180,items:[{category_id:other,description:'Estimación',estimated_amount:180,cost_center_id:other}]};
+ for(const injection of [{company_id:other},{estimated_amount:1},{created_by:other},{status:'approved'}])
+  assert.equal((await request(app).post('/api/travel-expenses?company_id='+company).auth('valid',{type:'bearer'}).send({...payload,...injection})).status,400);
+ assert.equal((await request(app).post('/api/travel-expenses?company_id='+company).auth('valid',{type:'bearer'}).send(payload)).status,201);
+ assert.equal(calls.find(c=>c.name==='travel_expense_save')?.args.target_company,company);
+ assert.equal((await request(app).post('/api/travel-expenses/'+other+'/actions').auth('valid',{type:'bearer'}).send({action:'approve',company_id:company})).status,400);
+ assert.equal((await request(app).post('/api/travel-expenses/'+other+'/actions').auth('valid',{type:'bearer'}).send({action:'approve'})).status,200);
+ assert.equal(calls.find(c=>c.name==='travel_expense_transition')?.args.target_id,other);
+ assert.equal((await request(app).post('/api/travel-expenses/'+other+'/actions').auth('valid',{type:'bearer'}).send({action:'closed'})).status,400);
+});
 test('username login resolves only through narrow server identity operation',async()=>{
  const {deps,calls}=fixture();let resolved='';deps.privileged.resolveUsername=async name=>{resolved=name;return 'test@example.test';};
  const result=await request(createApp(config,deps)).post('/api/auth/login').send({email:'tester',password:'correct'});
