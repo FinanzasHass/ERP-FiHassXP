@@ -41,6 +41,32 @@ function fixture(options:{inactive?:boolean;grants?:string[];companyAllowed?:boo
   };
   return {deps,calls,app:createApp(config,deps)};
 }
+test('receivable endpoints keep company scope, require idempotency and reject bank amount overrides',async()=>{
+ const {app,calls}=fixture({companyAllowed:true}),auth={type:'bearer' as const};
+ assert.equal((await request(fixture({inactive:true}).app).get('/api/receivables?company_id='+company).auth('valid',auth)).status,403);
+ assert.equal((await request(fixture().app).get('/api/customers?company_id='+company).auth('valid',auth)).status,403);
+ assert.equal((await request(app).post('/api/collections?company_id='+company).auth('valid',auth).send({bank_transaction_id:other})).status,400);
+ assert.equal((await request(app).post('/api/collections?company_id='+company).auth('valid',auth).set('Idempotency-Key',other).send({bank_transaction_id:other,amount:10})).status,400);
+ assert.equal((await request(app).post('/api/collections?company_id='+company).auth('valid',auth).set('Idempotency-Key',other).send({bank_transaction_id:other})).status,201);
+ assert.deepEqual(calls.find(c=>c.name==='collection_register')?.args,{target_company:company,payload:{bank_transaction_id:other},operation_key:other});
+ assert.equal((await request(app).post('/api/collections/'+other+'/apply').auth('valid',auth).set('Idempotency-Key',other).send({allocations:[{receivable_id:other,amount:.001}]})).status,400);
+ assert.equal((await request(app).get('/api/receivable-sources?company_id='+company+'&source_type=membership').auth('valid',auth)).status,200);
+ assert.equal((await request(app).get('/api/receivable-sources?company_id='+company+'&source_type=arbitrary').auth('valid',auth)).status,400);
+});
+test('expense endpoints preserve live company scope and reject invented settlement fields',async()=>{
+ const {app,calls}=fixture({companyAllowed:true});
+ const auth={type:'bearer' as const};
+ assert.equal((await request(fixture({inactive:true}).app).get('/api/expense-reports?company_id='+company).auth('valid',auth)).status,403);
+ assert.equal((await request(fixture().app).get('/api/expense-reports?company_id='+company).auth('valid',auth)).status,403);
+ assert.equal((await request(app).post('/api/expense-reports?company_id='+company).auth('valid',auth).send({employee_id:other,currency_id:other,paid_amount:100})).status,400);
+ assert.equal((await request(app).post('/api/expense-reports?company_id='+company).auth('valid',auth).send({employee_id:other,currency_id:other})).status,201);
+ assert.equal(calls.find(c=>c.name==='expense_report_create')?.args.target_company,company);
+ assert.equal((await request(app).post('/api/expense-reports/'+other+'/actions').auth('valid',auth).send({action:'close',actor:user})).status,400);
+ assert.equal((await request(app).post('/api/expense-settlements/'+other+'/returns').auth('valid',auth).send({amount:20,return_date:'2027-01-02',payment_method_id:other,reference:'Fixture',idempotency_key:user,status:'reconciled'})).status,400);
+ assert.equal((await request(app).get('/api/expense-reports/'+other+'/history?page=2&limit=20').auth('valid',auth)).status,404);
+ assert.equal((await request(app).get('/api/expense-reports/'+other+'/history?limit=101').auth('valid',auth)).status,400);
+});
+
 test('master endpoints validate company, input, and use authorized RPC only',async()=>{
   const {app,calls}=fixture({grants:['cost_center.view']});
   assert.equal((await request(app).get('/api/cost-centers').auth('valid',{type:'bearer'})).status,400);

@@ -24,5 +24,9 @@ try {
     runner.on("exit", (code) => resolve(code ?? 1)),
   );
 } finally {
-  server.kill();
+  if(server.exitCode===null){
+    const exited=new Promise(resolve=>server.once('exit',resolve));
+    server.kill();
+    await exited;
+  }
 }

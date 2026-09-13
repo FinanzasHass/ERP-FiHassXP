@@ -45,6 +45,7 @@ export function createSessionRepository(config: Pick<Config, 'SUPABASE_URL' | 'S
         if(query.project_id&&table==='subprojects')builder=builder.eq('project_id',query.project_id);
       }
       const order = table === 'audit_logs'?'created_at':table === 'permissions' ? 'code' : table === 'role_permissions' ? 'permission_id' : table === 'user_companies' ? 'company_id' : 'id';
+      if (table.endsWith('_history')) builder=builder.order('created_at',{ascending:true});
       const { data, error, count } = await builder.order(order,{ascending:table!=='audit_logs'}).range((query.page - 1) * query.limit, query.page * query.limit - 1);
       if (error) databaseError(error);
       return { data: data ?? [], count: count ?? 0 };

@@ -1,3 +1,4 @@
+import { receivablesRouter } from './receivables.js';
 import { Router } from 'express';
 import { rateLimit } from 'express-rate-limit';
 import type { RuntimeConfig } from '../config/env.js';
@@ -13,6 +14,7 @@ import { mastersRouter } from './masters.js';
 import {treasuryRouter} from './treasury.js';
 import { financeRouter } from './finance.js';
 import { employeeExpensesRouter } from './employee-expenses.js';
+import { expenseReportsRouter } from './expense-reports.js';
 export interface Dependencies {
   auth: Authentication; privileged: PrivilegedAuth;
   repository: (token: string) => SessionRepository;
@@ -50,6 +52,8 @@ export function apiRouter(_config: RuntimeConfig, deps: Dependencies) {
   router.use(financeRouter(_config));
   router.use(treasuryRouter());
   router.use(employeeExpensesRouter());
+  router.use(expenseReportsRouter());
+  router.use(receivablesRouter());
   router.get('/auth/workspace',async(req,res)=>res.json(await getActor(req).db.rpc('my_workspace',{})));
   router.get('/auth/me', async (req, res) => {
     const { company_id } = v.companyContext.parse(req.query);

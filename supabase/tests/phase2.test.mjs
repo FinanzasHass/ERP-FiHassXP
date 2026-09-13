@@ -20,7 +20,13 @@ async function asUser(id,sql,params=[]){
   await db.exec(`set role authenticated; select set_config('request.jwt.claim.sub','${id}',false); select set_config('request.jwt.claims','{"sub":"${id}","session_id":"${id}"}',false)`);
   try{return await db.query(sql,params);}finally{await db.exec("reset role; select set_config('request.jwt.claim.sub','',false)");}
 }
-async function rpc(id,name,args){return (await asUser(id,`select public.${name}(${args.map((_,i)=>`$${i+1}`).join(',')}) as result`,args)).rows[0].result;}
+async function rpc(id,name,args){
+  if(process.env.TEST_DATABASE_URL){
+    const types=(await db.query("select t.typname from pg_proc p join pg_namespace n on n.oid=p.pronamespace cross join lateral unnest(p.proargtypes) with ordinality a(oid,idx) join pg_type t on t.oid=a.oid where n.nspname='public' and p.proname=$1 and p.pronargs=$2 order by a.idx",[name,args.length])).rows;
+    args=args.map((value,i)=>value!==null&&['json','jsonb'].includes(types[i]?.typname)?JSON.stringify(value):value);
+  }
+  return (await asUser(id,`select public.${name}(${args.map((_,i)=>`$${i+1}`).join(',')}) as result`,args)).rows[0].result;
+}
 const can=(id,code,company=null)=>rpc(id,'has_permission',[code,company]);
 const grant=(id,role,company=null,assign=true)=>rpc(admin,'admin_set_user_role',[id,role,company,assign]);
 try {
@@ -212,6 +218,8 @@ try {
   const f4=await (await import('./phase4-checks.mjs')).phase4Checks({db,rpc,asUser,scalar,test,admin});
   await (await import('./phase5-checks.mjs')).phase5Checks({db,rpc,asUser,scalar,test,admin,...f4});
   const f6=await (await import('./phase6-foundation-checks.mjs')).phase6FoundationChecks({db,rpc,asUser,scalar,test,admin,...f4});
-  await (await import('./phase6-settlement-checks.mjs')).phase6SettlementChecks({db,rpc,asUser,scalar,test,admin,...f4,...f6});
-  console.log(`PASS ${checks} Phase 2–6 foundation database checks on ${process.version}`);
+  const settlements=await (await import('./phase6-settlement-checks.mjs')).phase6SettlementChecks({db,rpc,asUser,scalar,test,admin,...f4,...f6});
+  if(process.env.TEST_DATABASE_URL)await (await import('./phase6-concurrency-checks.mjs')).phase6ConcurrencyChecks({db,rpc,asUser,scalar,test,admin,...f4,...f6,...settlements});
+  await (await import('./phase7-checks.mjs')).phase7Checks({db,rpc,asUser,scalar,test,admin,...f4,...settlements});
+  console.log(`PASS ${checks} Phase 2–7 database checks on ${process.version}`);
 }catch(error){console.error({message:error.message,code:error.code,position:error.position,where:error.where});process.exitCode=1;}finally{await db.close();}

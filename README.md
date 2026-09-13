@@ -1,6 +1,6 @@
-# Mini ERP Financiero — Fase 5
+# Mini ERP Financiero — Fase 6
 
-**Entrega actual:** [Fase 5: Tesorería, bancos, pagos y conciliación](docs/fase-5/README.md). [Matriz DEV](docs/fase-5/resultado-dev.json) y [migraciones DEV](docs/fase-5/migraciones-dev.json). [Claves versionadas de adjuntos](docs/fase-5/cifrado.md). Sólo fixtures sintéticos; no se inicia Fase 6.
+**Entrega actual:** [Fase 6: viáticos, rendiciones y Tesorería employee](docs/fase-6/README.md). [Matriz DEV vigente](docs/fase-6/resultado-dev.md), [migraciones DEV](docs/fase-6/migraciones-dev.json) y [puerta local](docs/fase-6/puerta-local.json). [Claves versionadas de adjuntos](docs/fase-5/cifrado.md). Sólo fixtures sintéticos; no se inicia Fase 7.
 
 **Fase 4 aprobada:** [entrega](docs/fase-4/README.md), 15 verificaciones DEV PASS y 0 FAIL.
 
@@ -10,7 +10,7 @@
 
 [Fase 2.5: diseño del ERP y sustitución progresiva de Ábasoft](docs/fase-2.5/README.md). Incluye modelos, diagramas, workflows, migración y roadmap; no implementa módulos financieros.
 
-API de autenticación, autorización y administración, frontend React/Vite, selector de empresa, CECO/importación, proyectos/subproyectos, solicitudes, aprobaciones, proveedores, órdenes, conformidades, comprobantes, CxP y auditoría. Incluye registro de pagos externos y conciliación; no envía transferencias a bancos ni implementa contabilidad productiva o SUNAT automático. La base de seguridad de Fases 1–3 se conserva; para actualizar use las instrucciones de Fase 5.
+API de autenticación, autorización y administración, frontend React/Vite, selector de empresa, CECO/importación, proyectos/subproyectos, solicitudes, aprobaciones, proveedores, órdenes, conformidades, comprobantes, CxP y auditoría. Incluye registro de pagos externos y conciliación; no envía transferencias a bancos ni implementa contabilidad productiva o SUNAT automático. La base de seguridad de Fases 1–3 se conserva; para actualizar use las instrucciones de Fase 6.
 
 ## Implementación
 
@@ -161,14 +161,14 @@ Pruebas locales PostgreSQL multiconexión: usar **sólo una base temporal vacía
 4. TRUST_PROXY_HOPS=1 sólo para un ingreso Render. Verificar topología antes de añadir CDN/proxies; no usar trust proxy=true indiscriminadamente.
 5. Aplicar migraciones antes del despliegue, configurar callback Supabase del dominio y verificar `/health`, `/api/auth/me`, archivos estáticos y 404 reales.
 
-Fallback SPA limitado a `/` y `/auth/callback`. Nunca captura `/api/*`, subrutas `/health`, archivos inexistentes ni URLs desconocidas. El rate limiter es en memoria para una única instancia; para múltiples instancias se necesita almacenamiento compartido.
+Fallback SPA limitado a las rutas explícitas de la aplicación. Nunca captura `/api/*`, subrutas `/health`, archivos inexistentes ni URLs desconocidas. El rate limiter es en memoria para una única instancia; para múltiples instancias se necesita almacenamiento compartido.
 
 ## Pendiente / límites
 
-- Configurar y probar Supabase real, entrega SMTP, recuperación inicial y Render. No se desplegó ni se creó un repositorio remoto.
-- Paneles, selector y callback están implementados en Fase 3. La integración remota/SMTP debe verificarse con las credenciales reales.
+- Supabase DEV está configurado y las verificaciones vigentes se documentan por fase. SMTP conserva la excepción externa no bloqueante. Render no se despliega en este trabajo.
+- Paneles y selector multiempresa están implementados. No se incluyen datos productivos ni configuración SMTP.
 - Un rol global financiero o un ALLOW global, asignados explícitamente con company_id=NULL, abarcan todas las empresas activas autorizadas del usuario. Usar company_id para asignaciones financieras normales.
-- React/Vite sólo verifica el empaquetado; el modelo no incluye pagos, facturas, órdenes, viáticos, DJ, reembolsos, cuentas por pagar ni contabilidad.
+- Solicitudes, proveedores, documentos, CxP, Tesorería y rendiciones están implementados; no hay ejecución bancaria externa, contabilidad productiva ni SUNAT automático.
 - Los delegadores pueden conceder poderes a terceros; los controles de autoedición no impiden colusión. No se añadió doble aprobación sin una decisión funcional.
 - Una provisión interrumpida conserva un trabajo pending y quizá una identidad Auth sin profile; permanece sin acceso. Se recupera con el mismo Idempotency-Key. No se borra automáticamente una identidad ante errores ambiguos, porque otro reintento podría haber completado el alta. Limpieza excepcional de reservas abandonadas requiere revisión del operador.
 - Cambio de email de profiles existentes pasa por la API administrativa; el trigger rechaza cambios Auth fuera de una intención autorizada reciente. La UI conserva el bloqueo de cambio propio de identidad.

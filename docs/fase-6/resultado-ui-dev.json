@@ -1,0 +1,16 @@
+{
+  "executedAt": "2026-09-13T13:32:57.880Z",
+  "sourceRun": "F6_20260913045729",
+  "environment": "DEV",
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "Historial persistido visible en UI real",
+      "status": "PASS"
+    },
+    {
+      "name": "Representación imprimible de expediente DEV con dimensiones históricas",
+      "status": "PASS"
+    }
+  ]
+}

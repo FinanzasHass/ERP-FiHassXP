@@ -1,0 +1,36 @@
+{
+  "status": "PASS",
+  "executedAt": "2026-09-13T04:56:02.335296+00:00",
+  "environment": "LOCAL_ONLY",
+  "postgres": {
+    "pass": 77,
+    "fail": 0,
+    "concurrent": 5,
+    "source": "resultado-postgres-local.json"
+  },
+  "application": {
+    "pass": 37,
+    "fail": 0
+  },
+  "playwright": {
+    "pass": 8,
+    "fail": 0
+  },
+  "backendTypecheck": "PASS",
+  "frontendTypecheck": "PASS",
+  "viteBuild": "PASS",
+  "secretBoundary": "PASS",
+  "migrationHashes": {
+    "202609110022_employee_expense_foundation.sql": "d1bbc8459b0f448aecb67dd58faf4e4ae05ed739cbbc723dc288d04dc912fba7",
+    "202609110023_travel_requests.sql": "02b0566a400e70193b9800ae45677fbd75dc522fcf6d4f8178ca6bd781d7d0db",
+    "202609120024_employee_treasury_model.sql": "5e55dd74a48fb385a9ab2b8e5c55678ab195cd808fcf7fe8d92cd998b95119a4",
+    "202609120025_employee_treasury_rpc.sql": "c32ee0061ccea85ec3bef116701fd79228885909f19dc797796717d3ca1e35cc",
+    "202609120026_employee_bank_administration.sql": "5b589ad3183e820ce6233976ca33d1aa2e0258bfccfb97466614ad9f4b3f9847",
+    "202609120027_expense_report_model.sql": "1cb8ab1ee465e0d10ae06499058832990ac1fe521403e7e93527c9df699cb139",
+    "202609120028_expense_report_rpc.sql": "794d86d9aed2f93e643ece32a94520000ed2ac017cdf99ede92a7329c02b5af9",
+    "202609120029_expense_settlement_rpc.sql": "a61f71bb128200dce4e2f9f822ab5e9dda93975d4f361664facc5ab2ea3d7e51",
+    "202609120030_expense_documents_storage.sql": "156cb783901fdb4d830b9aa06e76369717fdf14091a890e498a5125ed3b35cfe",
+    "202609120031_employee_return_reconciliation.sql": "b10c6a7ba01c1022cdc49eaf6d5c6ba5e0f678145ce473c22af2cc342d487a0c",
+    "202609120032_expense_options_reports.sql": "c299fb2947252d6e92128a1c19e89fa253acba4e5241b097df4c47bea1297347"
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "executedAt": "2026-09-13T13:39:13.283Z",
+  "status": "FAIL",
+  "checks": [
+    {
+      "name": "backend types",
+      "status": "PASS",
+      "evidence": []
+    },
+    {
+      "name": "client types",
+      "status": "PASS",
+      "evidence": []
+    },
+    {
+      "name": "application tests",
+      "status": "PASS",
+      "evidence": [
+        "ℹ tests 39",
+        "ℹ pass 39",
+        "ℹ fail 0"
+      ]
+    },
+    {
+      "name": "production client build",
+      "status": "PASS",
+      "evidence": []
+    },
+    {
+      "name": "secret boundary",
+      "status": "PASS",
+      "evidence": []
+    },
+    {
+      "name": "PostgreSQL regressions and concurrency",
+      "status": "PASS",
+      "evidence": [
+        "PASS 91 Phase 2–7 database checks on v24.18.0"
+      ]
+    },
+    {
+      "name": "browser regressions",
+      "status": "FAIL"
+    }
+  ],
+  "migrationHashes": {
+    "202609130033_receivable_model.sql": "6818f8413d365e736f70453a9977bdaa08da420fba43ea0871983b421a3ad67a",
+    "202609130034_receivable_rpc.sql": "be05377c0b65d467ecb0034d9b112475a1cfbf601ddc9eacfc231b3f478e4f08",
+    "202609130035_collection_rpc.sql": "f0ffae482404f22aa9e77edbc163d6526e4570cfd14090030eeb2e9cd1fe7ef5",
+    "202609130036_collection_reconciliation.sql": "5d486d7f060fa2575296f569958dff9f3febd6570b09535ca1a9526bc3b317c0",
+    "202609130037_receivable_reports.sql": "73f80be6356fea0d27c92d0bdff8ec50df6f7215f11ab167ddb207422bf6a70d"
+  },
+  "supabaseDevModified": false
+}

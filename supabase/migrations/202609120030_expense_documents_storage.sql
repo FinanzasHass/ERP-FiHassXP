@@ -38,6 +38,19 @@ begin
  if new.tax_document_id is not null and exists(select 1 from public.expense_report_items where tax_document_id=new.tax_document_id) then raise exception using errcode='23514',message='Document belongs to employee expense';end if;return new;
 end $$;
 create trigger prevent_double_expense_obligation before insert or update of tax_document_id on public.payables for each row execute function private.prevent_double_expense_obligation();
+-- Legacy financial RPCs must not invalidate documentary support of an accepted expense.
+-- A controlled report reopening and subsequent review must release the item first.
+create function private.protect_accepted_expense_document() returns trigger language plpgsql security definer set search_path='' as $$
+begin
+ perform private.treasury_lock();
+ if to_jsonb(new)-'updated_at' is distinct from to_jsonb(old)-'updated_at'
+ and exists(select 1 from public.expense_report_items i where i.tax_document_id=old.id and i.status='accepted') then
+  raise exception using errcode='23514',message='Accepted expense document immutable; controlled reopening and review required';
+ end if;
+ return new;
+end $$;
+create trigger protect_accepted_expense_document before update on public.tax_documents for each row execute function private.protect_accepted_expense_document();
+revoke all on function private.protect_accepted_expense_document() from public,anon,authenticated,service_role;
 create policy expense_tax_read on public.tax_documents for select to authenticated using(exists(select 1 from public.expense_report_items i where i.tax_document_id=public.tax_documents.id and private.expense_visible(i.report_id)));
 
 alter function private.attachment_access(text,uuid,uuid,boolean) rename to attachment_access_before_expense;

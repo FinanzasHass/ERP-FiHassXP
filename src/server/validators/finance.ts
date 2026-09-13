@@ -216,6 +216,8 @@ export const uploadSchema = z
       "payable",
       "supplier_bank_change",
       "payment",
+      "expense_receipt", "tax_support", "declaration_support", "employee_payment_evidence",
+      "employee_return_evidence", "employee_reimbursement_support", "expense_representation","collection_support","issued_document",
     ]),
     entity_id: uuid,
     filename: z

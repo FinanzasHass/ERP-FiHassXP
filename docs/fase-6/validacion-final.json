@@ -1,0 +1,29 @@
+{
+  "executedAt": "2026-09-13T05:10:51.794827+00:00",
+  "status": "PASS",
+  "databaseLocal": {
+    "pass": 77,
+    "concurrent": 5,
+    "source": "resultado-postgres-local.json"
+  },
+  "application": {
+    "pass": 37
+  },
+  "uiLocal": {
+    "distinctPass": 9,
+    "priorRegression": 6,
+    "latestPhase6Run": 3,
+    "note": "Última ejecución focalizada: 3 PASS después de enriquecer la representación DJ; seis regresiones previas PASS sin cambios en esos módulos."
+  },
+  "backendTypecheck": "PASS",
+  "frontendTypecheck": "PASS",
+  "viteBuild": "PASS",
+  "secretBoundary": "PASS",
+  "dev": {
+    "pass": 30,
+    "fail": 0,
+    "concurrentPass": 4,
+    "uiSupplementPass": 2
+  },
+  "phase7Started": false
+}

@@ -1,0 +1,194 @@
+{
+  "run": "F6_20260913045729",
+  "environment": "DEV",
+  "sameProjectAsApplication": true,
+  "startedAt": "2026-09-13T04:57:29.520Z",
+  "status": "PASS",
+  "results": [
+    {
+      "id": 1,
+      "name": "Empresa A no accede expediente B",
+      "status": "PASS"
+    },
+    {
+      "id": 2,
+      "name": "Solicitud VIA y numeración",
+      "status": "PASS"
+    },
+    {
+      "id": 3,
+      "name": "Autoaprobación rechazada",
+      "status": "PASS"
+    },
+    {
+      "id": 4,
+      "name": "Anticipo aprobado no pagado",
+      "status": "PASS"
+    },
+    {
+      "id": 5,
+      "name": "Tesorería entrega anticipo",
+      "status": "PASS"
+    },
+    {
+      "id": 6,
+      "name": "Rendición menor al anticipo",
+      "status": "PASS"
+    },
+    {
+      "id": 7,
+      "name": "Devolución calculada exacta",
+      "status": "PASS"
+    },
+    {
+      "id": 8,
+      "name": "Devolución y conciliación",
+      "status": "PASS"
+    },
+    {
+      "id": 9,
+      "name": "Rendición mayor al anticipo",
+      "status": "PASS"
+    },
+    {
+      "id": 10,
+      "name": "Reembolso calculado exacto",
+      "status": "PASS"
+    },
+    {
+      "id": 11,
+      "name": "Reembolso integrado con Tesorería",
+      "status": "PASS"
+    },
+    {
+      "id": 12,
+      "name": "Rendición exacta",
+      "status": "PASS"
+    },
+    {
+      "id": 13,
+      "name": "Comprobante duplicado rechazado",
+      "status": "PASS"
+    },
+    {
+      "id": 14,
+      "name": "DJ vinculada al gasto",
+      "status": "PASS"
+    },
+    {
+      "id": 15,
+      "name": "DJ respeta políticas",
+      "status": "PASS"
+    },
+    {
+      "id": 16,
+      "name": "Ítem observado",
+      "status": "PASS"
+    },
+    {
+      "id": 17,
+      "name": "Ítem rechazado",
+      "status": "PASS"
+    },
+    {
+      "id": 18,
+      "name": "Aceptación parcial por política",
+      "status": "PASS"
+    },
+    {
+      "id": 19,
+      "name": "Dimensiones históricas",
+      "status": "PASS"
+    },
+    {
+      "id": 20,
+      "name": "Adjuntos cifrados",
+      "status": "PASS"
+    },
+    {
+      "id": 21,
+      "name": "Revocación bloquea documentos",
+      "status": "PASS"
+    },
+    {
+      "id": 22,
+      "name": "Cierre con saldo rechazado",
+      "status": "PASS"
+    },
+    {
+      "id": 23,
+      "name": "Cierre correcto",
+      "status": "PASS"
+    },
+    {
+      "id": 24,
+      "name": "Reapertura auditada",
+      "status": "PASS"
+    },
+    {
+      "id": 25,
+      "name": "REST directo bloqueado",
+      "status": "PASS"
+    },
+    {
+      "id": 26,
+      "name": "Auditoría financiera",
+      "status": "PASS"
+    },
+    {
+      "id": 27,
+      "name": "Dashboard propio aislado",
+      "status": "PASS"
+    },
+    {
+      "id": 28,
+      "name": "Dashboard Finanzas",
+      "status": "PASS"
+    },
+    {
+      "id": 29,
+      "name": "UI DEV sin mocks",
+      "status": "PASS"
+    },
+    {
+      "id": 30,
+      "name": "Secretos fuera del bundle",
+      "status": "PASS"
+    }
+  ],
+  "additional": [
+    {
+      "name": "Dos aprobaciones RPC concurrentes generan una obligación",
+      "status": "PASS"
+    },
+    {
+      "name": "Dos cierres concurrentes aplican una liquidación",
+      "status": "PASS"
+    },
+    {
+      "name": "Retry concurrente VIA no duplica anticipo",
+      "status": "PASS"
+    },
+    {
+      "name": "Dos devoluciones concurrentes consumen una vez el mismo remanente",
+      "status": "PASS"
+    }
+  ],
+  "fixtures": {
+    "companyA": "e6defe20-5431-48f1-8cc5-d2d77a6637b6",
+    "companyB": "18fee055-9e5d-4973-b8b1-7b3d2658ea6c",
+    "users": [
+      "28977d00-97c2-41f2-8599-2365afda2119",
+      "1e67b819-8958-4424-88fd-b7a70e149312",
+      "8be803f1-4cbe-4233-9a7d-8f633442dc8a",
+      "4689d06a-ee35-461d-ab40-c1dfedad6627",
+      "1bdbe103-4f87-4843-a73a-3f0e9a73e777"
+    ]
+  },
+  "updatedAt": "2026-09-13T05:01:44.552Z",
+  "summary": {
+    "pass": 30,
+    "fail": 0,
+    "notRun": 0
+  }
+}

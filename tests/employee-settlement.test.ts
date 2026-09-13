@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { validateSettlementContract } from "../src/server/services/settlement-contract.js";
 import {
   employeeSettlement,
   minorUnits,
@@ -7,6 +8,13 @@ import {
 } from "../src/server/services/employee-settlement.js";
 
 const money = (amount: string) => ({ currencyId: "synthetic-PEN", amount });
+test("RPC settlement contract rejects contradictory totals and over-settled balances", () => {
+  const row = {advance_paid:"180.00",accepted_expenses:"220.00",return_due:"0.00",return_outstanding:"0.00",reimbursement_due:"40.00",reimbursement_outstanding:"20.00"};
+  assert.equal(validateSettlementContract(row), row);
+  assert.throws(() => validateSettlementContract({...row, return_due:"1.00"}));
+  assert.throws(() => validateSettlementContract({...row, reimbursement_outstanding:"40.01"}));
+  assert.throws(() => validateSettlementContract({...row, accepted_expenses:"NaN"}));
+});
 const settle = (
   advance: string,
   accepted: string,

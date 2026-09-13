@@ -1,3 +1,4 @@
+import {ReceivablePage,ReceivableDashboard,receivablePages} from './receivables';
 import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
@@ -21,6 +22,7 @@ import { AuditPage, PermissionMatrix, UserDetail } from "./admin";
 import { CostCenterImport } from "./imports";
 import {TreasuryPage,TreasuryDashboard,treasuryPages} from "./treasury";
 import { FinancePage, FinancialDashboard, financePages } from "./finance";
+import { EmployeeExpensePage, EmployeeExpenseDashboard, expensePages } from "./employee-expenses";
 import "./styles.css";
 
 function Login({ onLogin }: { onLogin: () => void }) {
@@ -380,14 +382,16 @@ function App() {
             ['DOCUMENTOS', [['Comprobantes','tax-documents',['tax_document.view']]]],
             ['FINANZAS', [['Cuentas por pagar','payables',['payable.view']],['Órdenes de pago','payment-orders',['payment_order.view']],['Programación','schedule',['payment_order.view']],['Reportes operativos','reports',['request.view_own','request.view_area','request.view_company','payable.view']]]],
           ].map(([title, entries])=><div className="nav-group" key={String(title)}><p>{String(title)}</p>{(entries as [string,string,string[]][]).filter(([, ,permissions])=>permissions.some(can)).map(([label,url])=>nav(label,'/app/'+url))}</div>)}
-          <div className="nav-group"><p>TESORERÍA</p>{Object.entries(treasuryPages).filter(([key,d])=>key!=='payment-orders'&&can(d.permission+'.view')).map(([key,d])=>nav(d.title,'/app/'+key))}{can('payment_order.view')&&nav('Panel de Tesorería','/app/treasury')}{can('cashflow.view')&&nav('Cash Flow','/app/cashflow')}</div>
+          <div className="nav-group"><p>COBRANZAS Y COMERCIAL</p>{Object.entries(receivablePages).filter(([,d])=>can(d.permission)).map(([key,d])=>nav(d.title,'/app/'+key))}{(can('receivable_report.view')||can('collection_report.view'))&&<>{nav('Panel de Cobranzas','/app/receivable-dashboard')}{nav('Saldos a favor','/app/customer-credits')}</>}</div>
+          <div className="nav-group"><p>TESORERÍA</p>{Object.entries(treasuryPages).filter(([key,d])=>key!=='payment-orders'&&can(d.permission+'.view')).map(([key,d])=>nav(key==='travel-expenses'&&!can('travel_expense.view_company')?'Mis solicitudes':key==='expense-reports'&&!can('expense_report.view_company')?'Mis rendiciones':d.title,'/app/'+key))}{can('payment_order.view')&&nav('Panel de Tesorería','/app/treasury')}{can('cashflow.view')&&nav('Cash Flow','/app/cashflow')}</div>
+          <div className="nav-group"><p>GASTOS Y VIÁTICOS</p>{Object.entries(expensePages).filter(([,d])=>d.permissions.some(can)).map(([key,d])=>nav(key==='travel-expenses'&&!can('travel_expense.view_company')?'Mis solicitudes':key==='expense-reports'&&!can('expense_report.view_company')?'Mis rendiciones':d.title,'/app/'+key))}{['expense_report.view_own','expense_report.view_company','employee_advance.view'].some(can)&&nav('Reportes de gastos','/app/employee-expense-dashboard')}</div>
           {futureGroups.map(
             (group) =>
-              group.items.some((i) => !['requests','suppliers','purchase-orders','tax-documents','payables','approvals','service-acceptances','payments','banks','cashflow','payment-batches','bank-reconciliation'].includes(i[1]!) && i.slice(2).some(can)) && (
+              group.items.some((i) => !['requests','suppliers','purchase-orders','tax-documents','payables','approvals','service-acceptances','payments','banks','cashflow','payment-batches','bank-reconciliation','collections'].includes(i[1]!) && i.slice(2).some(can)) && (
                 <div className="nav-group" key={group.title}>
                   <p>{group.title}</p>
                   {group.items
-                    .filter((i) => !['requests','suppliers','purchase-orders','tax-documents','payables','approvals','service-acceptances','payments','banks','cashflow','payment-batches','bank-reconciliation'].includes(i[1]!) && i.slice(2).some(can))
+                    .filter((i) => !['requests','suppliers','purchase-orders','tax-documents','payables','approvals','service-acceptances','payments','banks','cashflow','payment-batches','bank-reconciliation','collections'].includes(i[1]!) && i.slice(2).some(can))
                     .map((i) => nav(i[0], "/app/future/" + i[1]))}
                 </div>
               ),
@@ -414,7 +418,7 @@ function App() {
         </nav>
         <div className="sidebar-foot">
           <span className="status-dot" /> Plataforma administrativa{" "}
-          <small>Fase 5</small>
+          <small>Fase 6</small>
         </div>
       </aside>
       <div className="main-column">
@@ -497,6 +501,10 @@ function App() {
           ) : (
             me && (
               <div key={company + key + mode}>
+                {receivablePages[key]&&<ReceivablePage key={company+key} page={key} company={company} can={can}/>}
+                {['receivable-dashboard','customer-credits'].includes(key)&&<ReceivableDashboard company={company} creditsOnly={key==='customer-credits'}/>}
+                {expensePages[key]&&<EmployeeExpensePage key={company+key} page={key} company={company} can={can} actor={me.profile.id}/>}
+                {key==='employee-expense-dashboard'&&<EmployeeExpenseDashboard company={company}/>}
                 {treasuryPages[key]&&<TreasuryPage key={company+key} page={key} company={company} can={can}/>}
                 {['treasury','schedule','cashflow'].includes(key)&&<TreasuryDashboard key={company+key} page={key} company={company} can={can}/>}
                 {(financePages[key]||key==='approvals')&&<FinancePage page={key} company={company} can={can} actor={me.profile.id}/>}
@@ -659,7 +667,7 @@ function App() {
           )}
         </main>
         <footer className="app-footer">
-          Mini ERP Financiero <span>Tesorería y control financiero · Fase 5</span>
+          Mini ERP Financiero <span>Tesorería y control financiero · Fase 6</span>
         </footer>
       </div>
       {selected && key === "users" && (

@@ -1052,3 +1052,13 @@ pre {
 .finance-stats p{margin:8px 0;font-variant-numeric:tabular-nums}
 @media(max-width:1000px){.finance-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:650px){.finance-stats{grid-template-columns:1fr}}
+
+/* Employee expense detail retains the existing corporate panels and grid. */
+.expense-detail { margin-top: 24px; padding: 24px; }
+.expense-item { border-top: 1px solid var(--line, #dce4ea); padding: 18px 0; }
+.expense-detail .actions { display:flex; flex-wrap:wrap; gap:8px; margin:14px 0; }
+.expense-detail dt { color:#687988; font-size:.8rem; }
+.expense-detail dd { margin:6px 0 16px; font-weight:600; }
+.expense-detail .finance-stats > article { background:#fff; border:1px solid #d8e3e3; border-radius:12px; padding:20px; }
+.expense-detail .finance-stats > article span { display:block; color:#526b73; margin-bottom:12px; }
+.expense-detail .finance-stats > article strong { display:block; font-size:1.4rem; font-variant-numeric:tabular-nums; }

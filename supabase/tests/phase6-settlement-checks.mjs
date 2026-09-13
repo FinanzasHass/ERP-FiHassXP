@@ -35,7 +35,7 @@ export async function phase6SettlementChecks({db,rpc,asUser,scalar,test,admin,c,
   const item=await rpc(owner,'expense_item_save',[report.id,null,{expense_date:'2027-01-02',category_id:category.id,description:'Gasto sintético',reported_amount:amount,support_type:support,cost_center_id:base.cost_center_id,project_id:base.project_id}]);
   return {report,item,advanceRow,advancePayment};
  }
- async function review(f,accepted=Number(f.item.reported_amount)){
+ async function review(f,accepted=Number(f.item.reported_amount),approve=true){
   if(f.item.support_type==='declaration'){
    const declaration=await rpc(owner,'expense_declaration_create',[f.item.id,'2027-01-02','Declaración sintética estructurada']);
    await assert.rejects(()=>rpc(owner,'expense_declaration_decide',[declaration.id,true,'Auto aprobación']),/segregation/);
@@ -45,6 +45,7 @@ export async function phase6SettlementChecks({db,rpc,asUser,scalar,test,admin,c,
   await reportAction(owner,f.report.id,'submit');
   await rpc(reviewer,'expense_item_review',[f.item.id,'accepted',accepted,'Revisión sintética']);
   await assert.rejects(()=>reportAction(reviewer,f.report.id,'approve'),/Reviewer and approver/);
+  if(!approve)return null;
   await reportAction(approver,f.report.id,'approve');
   return rpc(approver,'expense_settlement_detail',[f.report.id]);
  }
@@ -115,6 +116,19 @@ export async function phase6SettlementChecks({db,rpc,asUser,scalar,test,admin,c,
   const duplicate=await reportWithItem(0,100,'tax_document');await assert.rejects(()=>rpc(owner,'expense_tax_document',[duplicate.item.id,data]),/unique/);
   await evidence(owner,'tax_support',f.item.id);await rpc(reviewer,'expense_tax_document_review',[doc.id]);
   await review(f);assert.equal(Number((await rpc(owner,'expense_settlement_detail',[f.report.id])).reimbursement_due),100);
+  await assert.rejects(()=>rpc(reviewer,'financial_transition',['tax_document',doc.id,'cancel','Intento de invalidar sustento aceptado']),/Accepted expense document immutable/);
+ });
+ await test('F6 unpaid approved VIA cancellation requires policy, reason and no delivered money',async()=>{
+  const make=async()=>{const t=await rpc(owner,'travel_expense_save',[null,c,{...base,employee_id:offline.id,requested_advance_amount:100,items:[{...base.items[0],estimated_amount:100}]}]);await rpc(owner,'travel_expense_transition',[t.id,'submit',null]);await rpc(reviewer,'travel_expense_transition',[t.id,'approve',null]);return t;};
+  const denied=await make();await assert.rejects(()=>rpc(owner,'travel_cancel_unpaid',[denied.id,'Fixture cancellation']),/Policy/);
+  await rpc(owner,'employee_foundation_save',['policy',null,c,{currency_id:currency,allow_declarations:true,category_ids:[category.id],declaration_max_amount:500,allow_partial_acceptance:true,allow_reopen:true,allow_cancel_unpaid_travel:true,allow_other_support:true}]);
+  const t=await make();await assert.rejects(()=>rpc(owner,'travel_cancel_unpaid',[t.id,'']),/reason/);
+  await rpc(owner,'travel_cancel_unpaid',[t.id,'Cancelación sin desembolso sintético']);
+  await rpc(owner,'travel_cancel_unpaid',[t.id,'Reintento idempotente']);
+  assert.equal(await scalar('select status from public.employee_advances where travel_request_id=$1',[t.id]),'cancelled');
+  assert.equal(await scalar("select count(*)::int from public.travel_expense_history where request_id=$1 and action='cancel_unpaid'",[t.id]),1);
+  const delivered=await reportWithItem(100,100);await assert.rejects(()=>rpc(owner,'travel_cancel_unpaid',[delivered.advanceRow.travel_request_id,'No debe cancelar']),/Financial effects/);
  });
  await rpc(admin,'admin_set_override',[owner,delegate,c,'inherit','Restore fixture']);
+ return {reportWithItem,review,bank,method,approver};
 }

@@ -170,6 +170,8 @@ export const treasuryPages: Record<string, Def> = {
     columns: [
       "bank_transaction_id",
       "payment_id",
+      "employee_return_id",
+      "collection_id",
       "amount",
       "status",
       "matched_at",
@@ -253,6 +255,8 @@ const labels: Record<string, string> = {
   requires_beneficiary_account: "Exige cuenta",
   bank_transaction_id: "Movimiento",
   payment_id: "Pago",
+  employee_return_id: "Devolución de colaborador",
+  collection_id: "Cobro de cliente",
   matched_at: "Vinculado el",
   reconciled_at: "Conciliado el",
 };
@@ -1303,7 +1307,7 @@ export function TreasuryDashboard({
               Comprometido: saldo de CxP aprobadas, contado una sola vez. No
               representa saldo disponible garantizado.
             </p>
-            {["position", "actual", "committed", "forecast"].map((k) => (
+            {["position", "actual", "committed", "expected_receivables", "forecast"].map((k) => (
               <section key={k}>
                 <h2>
                   {
@@ -1311,6 +1315,7 @@ export function TreasuryDashboard({
                       position: "Posición bancaria registrada",
                       actual: "Actual · por fecha",
                       committed: "Comprometido · por vencimiento",
+                      expected_receivables: "CxC esperadas · no son ingresos bancarios",
                       forecast: "Forecast · sin fuentes adicionales",
                     }[k]
                   }

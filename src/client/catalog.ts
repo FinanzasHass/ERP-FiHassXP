@@ -265,20 +265,6 @@ export const futureGroups = [
     ],
   },
   {
-    title: "GASTOS",
-    items: [
-      ["Viáticos", "travel", "advance.view_own", "advance.view_all"],
-      ["Rendiciones", "expenses", "expense_report.view"],
-      ["Declaraciones juradas", "declarations", "sworn_declaration.view"],
-      [
-        "Reembolsos",
-        "refunds",
-        "employee_reimbursement.view",
-        "vendor_refund.view",
-      ],
-    ],
-  },
-  {
     title: "CONTABILIDAD",
     items: [
       ["Provisiones", "provisions", "journal.view"],
