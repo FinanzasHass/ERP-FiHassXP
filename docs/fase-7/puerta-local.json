@@ -1,7 +1,14 @@
 {
-  "executedAt": "2026-09-13T13:44:07.928Z",
-  "status": "FAIL",
+  "executedAt": "2026-09-13T18:17:50.043Z",
+  "status": "PASS",
   "checks": [
+    {
+      "name": "PostgreSQL regressions and concurrency",
+      "status": "PASS",
+      "evidence": [
+        "PASS 91 Phase 2–7 database checks on v24.18.0"
+      ]
+    },
     {
       "name": "backend types",
       "status": "PASS",
@@ -32,30 +39,25 @@
       "evidence": []
     },
     {
-      "name": "PostgreSQL regressions and concurrency",
-      "status": "PASS",
-      "evidence": [
-        "PASS 91 Phase 2–7 database checks on v24.18.0"
-      ]
-    },
-    {
       "name": "browser base regressions",
       "status": "PASS",
       "evidence": [
-        "  6 passed (11.1s)"
+        "  6 passed (10.5s)"
       ]
     },
     {
       "name": "browser expense regressions",
       "status": "PASS",
       "evidence": [
-        "  3 passed (6.4s)"
+        "  3 passed (5.3s)"
       ]
     },
     {
       "name": "browser receivable regressions",
-      "status": "FAIL",
-      "diagnostic": "TIMEOUT"
+      "status": "PASS",
+      "evidence": [
+        "  3 passed (4.2s)"
+      ]
     }
   ],
   "migrationHashes": {

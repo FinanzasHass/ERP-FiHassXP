@@ -221,5 +221,7 @@ try {
   const settlements=await (await import('./phase6-settlement-checks.mjs')).phase6SettlementChecks({db,rpc,asUser,scalar,test,admin,...f4,...f6});
   if(process.env.TEST_DATABASE_URL)await (await import('./phase6-concurrency-checks.mjs')).phase6ConcurrencyChecks({db,rpc,asUser,scalar,test,admin,...f4,...f6,...settlements});
   await (await import('./phase7-checks.mjs')).phase7Checks({db,rpc,asUser,scalar,test,admin,...f4,...settlements});
-  console.log(`PASS ${checks} Phase 2–7 database checks on ${process.version}`);
+  const f8a=await (await import('./phase8a-checks.mjs')).phase8aChecks({db,rpc,asUser,scalar,test,admin,...f4,...settlements});
+  if(process.env.TEST_DATABASE_URL)await (await import('./phase8a-concurrency-checks.mjs')).phase8aConcurrencyChecks({db,rpc,asUser,scalar,test,admin,...f4,...f8a});
+  console.log(`PASS ${checks} Phase 2–8A database checks on ${process.version}`);
 }catch(error){console.error({message:error.message,code:error.code,position:error.position,where:error.where});process.exitCode=1;}finally{await db.close();}

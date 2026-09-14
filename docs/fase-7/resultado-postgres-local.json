@@ -1,6 +1,13 @@
 {
-  "executedAt": "2026-09-13T13:44:19.336Z",
+  "executedAt": "2026-09-13T18:17:42.867Z",
   "environment": "disposable_loopback_postgresql",
+  "migrationHashes": {
+    "202609130033_receivable_model.sql": "6818f8413d365e736f70453a9977bdaa08da420fba43ea0871983b421a3ad67a",
+    "202609130034_receivable_rpc.sql": "be05377c0b65d467ecb0034d9b112475a1cfbf601ddc9eacfc231b3f478e4f08",
+    "202609130035_collection_rpc.sql": "f0ffae482404f22aa9e77edbc163d6526e4570cfd14090030eeb2e9cd1fe7ef5",
+    "202609130036_collection_reconciliation.sql": "5d486d7f060fa2575296f569958dff9f3febd6570b09535ca1a9526bc3b317c0",
+    "202609130037_receivable_reports.sql": "49e87f9f849a2e67380f75211eaf37052640cde9550a10db6084a44445c18e36"
+  },
   "status": "PASS",
   "cases": [
     "OK migrations and system admin separates delegation from execution",

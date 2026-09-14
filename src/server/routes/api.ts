@@ -1,4 +1,5 @@
 import { receivablesRouter } from './receivables.js';
+import { accountingRouter } from './accounting.js';
 import { Router } from 'express';
 import { rateLimit } from 'express-rate-limit';
 import type { RuntimeConfig } from '../config/env.js';
@@ -54,6 +55,7 @@ export function apiRouter(_config: RuntimeConfig, deps: Dependencies) {
   router.use(employeeExpensesRouter());
   router.use(expenseReportsRouter());
   router.use(receivablesRouter());
+  router.use(accountingRouter());
   router.get('/auth/workspace',async(req,res)=>res.json(await getActor(req).db.rpc('my_workspace',{})));
   router.get('/auth/me', async (req, res) => {
     const { company_id } = v.companyContext.parse(req.query);

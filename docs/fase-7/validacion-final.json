@@ -1,0 +1,34 @@
+{
+  "executedAt": "2026-09-13T18:30:18.033233+00:00",
+  "status": "PASS",
+  "environment": "DEV only",
+  "devCases": 34,
+  "devConcurrency": 4,
+  "storageAndInstallmentSupplement": 3,
+  "finalUiSupplement": 2,
+  "localPostgresqlCases": 91,
+  "applicationTests": 39,
+  "browserTests": 12,
+  "migrationVersions": [
+    "202609130033",
+    "202609130034",
+    "202609130035",
+    "202609130036",
+    "202609130037"
+  ],
+  "migrationsMatchLocalGate": true,
+  "finalPresentationBuild": "PASS",
+  "criticalFailures": 0,
+  "phase8Started": false,
+  "externalExceptions": [
+    "SMTP/callback previously accepted; unchanged",
+    "Direct SQL diagnostic 28P01 unchanged; CLI/API/RPC used"
+  ],
+  "reports": [
+    "puerta-local.json",
+    "migraciones-dev.json",
+    "resultado-dev.json",
+    "resultado-storage-dev.json",
+    "resultado-ui-dev.json"
+  ]
+}

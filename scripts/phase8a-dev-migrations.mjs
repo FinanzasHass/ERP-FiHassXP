@@ -1,0 +1,25 @@
+import {execFile} from 'node:child_process';
+import {promisify} from 'node:util';
+import {readFile,writeFile,mkdir} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
+const run=promisify(execFile),folder='docs/fase-8a';
+await mkdir(folder,{recursive:true});
+const ref=(await readFile('supabase/.temp/project-ref','utf8')).trim();
+if(process.env.NODE_ENV==='production'||new URL(process.env.SUPABASE_URL).hostname!==ref+'.supabase.co')throw new Error('DEV project mismatch');
+const cli='node_modules/@supabase/cli-windows-x64/bin/supabase.exe';
+const report={executedAt:new Date().toISOString(),sameProjectAsApplication:true,projectFingerprint:createHash('sha256').update(ref).digest('hex').slice(0,16),status:'BLOCKED_EXTERNAL',steps:[]};
+async function command(args){try{const r=await run(cli,args,{timeout:60000,windowsHide:true,maxBuffer:1024*1024});return{ok:true,text:r.stdout+'\n'+r.stderr};}catch(e){const text=String(e.stdout||'')+'\n'+String(e.stderr||'');return{ok:false,text,code:/28P01/.test(text)?'28P01':/access token|supabase login|not logged/i.test(text)?'CLI_LOGIN_REQUIRED':/password/i.test(text)?'DATABASE_AUTHENTICATION_REQUIRED':/denied|forbidden/i.test(text)?'ACCESS_DENIED':/network|connect|resolve|dial tcp/i.test(text)?'NETWORK_CONNECTION':e.killed?'TIMEOUT':typeof e.code==='string'&&/^[A-Z_]+$/.test(e.code)?e.code:'CLI_FAILED'};}}
+try { const old=await readFile(folder+'/migraciones-dev.json','utf8'); await mkdir(folder+'/historico',{recursive:true}); await writeFile(folder+'/historico/migraciones-dev-'+Date.now()+'.json',old); } catch(e) { if(e.code!=='ENOENT') throw e; }
+const gate=JSON.parse(await readFile(folder+'/puerta-local.json','utf8')); if(gate.status!=='PASS')throw new Error('Local gate required');
+for(const [name,hash] of Object.entries(gate.migrationHashes))if(createHash('sha256').update(await readFile('supabase/migrations/'+name)).digest('hex')!==hash)throw new Error('Migration changed after local gate');
+const before=await command(['migration','list','--linked']);
+function migrations(text){try{return JSON.parse(text.slice(0,text.lastIndexOf('}')+1)).migrations.map(r=>({local:/^\d{12}$/.test(r.local)?r.local:null,remote:/^\d{12}$/.test(r.remote)?r.remote:null}));}catch{return [];}}
+report.steps.push({operation:'migration list before',status:before.ok?'PASS':'BLOCKED_EXTERNAL',diagnostic:before.code,versions:before.ok?migrations(before.text):[]});
+if(before.ok&&process.argv.includes('--apply')){
+ const listed=migrations(before.text),approved=Object.keys(gate.migrationHashes).map(n=>n.split('_')[0]);
+ if(listed.length<43||listed.some(r=>r.local!==r.remote&&!approved.includes(r.local)))throw new Error('Unexpected DEV migration drift');
+ const pushed=await command(['db','push','--linked','--yes']);report.steps.push({operation:'db push DEV',status:pushed.ok?'PASS':'BLOCKED_EXTERNAL',diagnostic:pushed.code});
+ if(pushed.ok){const after=await command(['migration','list','--linked']);const versions=Array.from({length:6},(_,i)=>'2026091300'+(38+i));const all=after.ok&&versions.every(v=>migrations(after.text).some(r=>r.local===v&&r.remote===v));report.steps.push({operation:'migration list after',status:all?'PASS':'FAIL',versions:migrations(after.text)});report.status=all?'PASS':'FAIL';}
+}else if(before.ok)report.status='PREFLIGHT_PASS';
+await writeFile(folder+'/migraciones-dev.json',JSON.stringify(report,null,2));
+console.log(JSON.stringify(report));

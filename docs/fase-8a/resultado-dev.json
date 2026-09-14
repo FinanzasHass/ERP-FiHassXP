@@ -1,0 +1,212 @@
+{
+  "run": "F8A_20260914000108",
+  "environment": "DEV",
+  "sameProjectAsApplication": true,
+  "startedAt": "2026-09-14T00:01:08.969Z",
+  "status": "PASS",
+  "results": [
+    {
+      "id": 1,
+      "name": "Empresa A no lee B",
+      "status": "PASS"
+    },
+    {
+      "id": 2,
+      "name": "Crear cuenta raíz e hija",
+      "status": "PASS"
+    },
+    {
+      "id": 3,
+      "name": "Código duplicado rechazado",
+      "status": "PASS"
+    },
+    {
+      "id": 4,
+      "name": "Ciclo jerárquico rechazado",
+      "status": "PASS"
+    },
+    {
+      "id": 5,
+      "name": "Cuenta usada no se elimina",
+      "status": "PASS"
+    },
+    {
+      "id": 6,
+      "name": "Importación preview sin persistencia",
+      "status": "PASS"
+    },
+    {
+      "id": 7,
+      "name": "Confirmación idempotente",
+      "status": "PASS"
+    },
+    {
+      "id": 8,
+      "name": "Crear período abierto",
+      "status": "PASS"
+    },
+    {
+      "id": 9,
+      "name": "Período cerrado rechaza posteo",
+      "status": "PASS"
+    },
+    {
+      "id": 10,
+      "name": "Crear asiento borrador",
+      "status": "PASS"
+    },
+    {
+      "id": 11,
+      "name": "Descuadre rechazado",
+      "status": "PASS"
+    },
+    {
+      "id": 12,
+      "name": "Debe y haber simultáneos rechazados",
+      "status": "PASS"
+    },
+    {
+      "id": 13,
+      "name": "Cuenta no imputable rechazada",
+      "status": "PASS"
+    },
+    {
+      "id": 14,
+      "name": "Validar asiento balanceado",
+      "status": "PASS"
+    },
+    {
+      "id": 15,
+      "name": "Posteo independiente",
+      "status": "PASS"
+    },
+    {
+      "id": 16,
+      "name": "Posteo idempotente",
+      "status": "PASS"
+    },
+    {
+      "id": 17,
+      "name": "Asiento posteado inmutable",
+      "status": "PASS"
+    },
+    {
+      "id": 18,
+      "name": "Reverso conserva original",
+      "status": "PASS"
+    },
+    {
+      "id": 19,
+      "name": "Doble reverso rechazado",
+      "status": "PASS"
+    },
+    {
+      "id": 20,
+      "name": "Dimensiones e identidad histórica",
+      "status": "PASS"
+    },
+    {
+      "id": 21,
+      "name": "Tercero obligatorio y empleado sin Auth",
+      "status": "PASS"
+    },
+    {
+      "id": 22,
+      "name": "Moneda y tipo de cambio explícito",
+      "status": "PASS"
+    },
+    {
+      "id": 23,
+      "name": "Simulación no persiste asientos",
+      "status": "PASS"
+    },
+    {
+      "id": 24,
+      "name": "Regla versionada inmutable",
+      "status": "PASS"
+    },
+    {
+      "id": 25,
+      "name": "Cuentas configuradas sin hardcode ni seed",
+      "status": "PASS"
+    },
+    {
+      "id": 26,
+      "name": "Mayor contable",
+      "status": "PASS"
+    },
+    {
+      "id": 27,
+      "name": "Balance de comprobación",
+      "status": "PASS"
+    },
+    {
+      "id": 28,
+      "name": "Solo posteados afectan balances",
+      "status": "PASS"
+    },
+    {
+      "id": 29,
+      "name": "Reapertura auditada",
+      "status": "PASS"
+    },
+    {
+      "id": 30,
+      "name": "REST directo no evade controles",
+      "status": "PASS"
+    },
+    {
+      "id": 31,
+      "name": "Revocación de membership inmediata",
+      "status": "PASS"
+    },
+    {
+      "id": 32,
+      "name": "Auditoría con actor y empresa",
+      "status": "PASS"
+    },
+    {
+      "id": 33,
+      "name": "UI DEV real sin mocks",
+      "status": "PASS"
+    },
+    {
+      "id": 34,
+      "name": "Secretos fuera del bundle y logs",
+      "status": "PASS"
+    }
+  ],
+  "additional": [
+    {
+      "name": "Dos posteos del mismo asiento",
+      "status": "PASS"
+    },
+    {
+      "name": "Dos reversos del mismo asiento",
+      "status": "PASS"
+    },
+    {
+      "name": "Cierre de período contra posteo",
+      "status": "PASS"
+    },
+    {
+      "name": "Dos versiones activadas simultáneamente",
+      "status": "PASS"
+    }
+  ],
+  "fixtures": {
+    "companyA": "89117e8f-2b4e-4155-86e1-ae14e249a263",
+    "companyB": "111df918-9857-4931-9244-04aee6dff5b2",
+    "users": [
+      "a9f3b066-159f-47a3-943b-6f2d4dc449d3",
+      "deea8ca5-82de-486a-9b52-8ae6da56c0d7",
+      "4a91ef7a-4280-4097-af82-eb1ca2c2d13d"
+    ]
+  },
+  "updatedAt": "2026-09-14T00:03:50.035Z",
+  "summary": {
+    "pass": 34,
+    "fail": 0,
+    "notRun": 0
+  }
+}

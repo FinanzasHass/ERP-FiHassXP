@@ -1,0 +1,19 @@
+{
+  "executedAt": "2026-09-13T18:24:39.952Z",
+  "sourceRun": "F7_20260913181951",
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "Cobro no bancario exige evidencia cifrada, descarga fiel y aislamiento empresarial",
+      "status": "PASS"
+    },
+    {
+      "name": "Documento emitido usa Storage cifrado y empresa autorizada",
+      "status": "PASS"
+    },
+    {
+      "name": "API de cuotas devuelve saldos y estados derivados",
+      "status": "PASS"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "name": "mini-erp-financiero",
-  "version": "0.6.0",
+  "version": "0.8.0",
   "private": true,
   "type": "module",
   "engines": {
@@ -21,7 +21,18 @@
     "dev:client": "vite --host 127.0.0.1",
     "verify:phase5:dev": "node --env-file=.env --import tsx scripts/verify-phase5-dev.ts",
     "verify:phase6:dev": "node --env-file=.env --import tsx scripts/verify-phase6-dev.ts",
-    "test:phase6:postgres": "node scripts/phase6-local-postgres.mjs"
+    "test:phase6:postgres": "node scripts/phase6-local-postgres.mjs",
+    "test:phase7:postgres": "node scripts/phase7-local-postgres.mjs",
+    "verify:phase7:local": "node scripts/phase7-local-gate.mjs",
+    "db:phase7:dev:apply": "node --env-file=.env scripts/phase7-dev-migrations.mjs --apply",
+    "verify:phase7:dev": "node --env-file=.env --import tsx scripts/verify-phase7-dev.ts",
+    "verify:phase7:storage:dev": "node --env-file=.env --import tsx scripts/verify-phase7-storage-dev.ts",
+    "verify:phase7:ui:dev": "node --env-file=.env --import tsx scripts/verify-phase7-ui-dev.ts",
+    "test:phase8a:postgres": "node scripts/phase8a-local-postgres.mjs",
+    "verify:phase8a:local": "node scripts/phase8a-local-gate.mjs",
+    "db:phase8a:dev:apply": "node --env-file=.env scripts/phase8a-dev-migrations.mjs --apply",
+    "verify:phase8a:dev": "node --env-file=.env --import tsx scripts/verify-phase8a-dev.ts",
+    "verify:phase8a:ui:dev": "node --env-file=.env --import tsx scripts/verify-phase8a-ui-dev.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.116.0",

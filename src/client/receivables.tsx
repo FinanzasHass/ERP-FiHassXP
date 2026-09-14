@@ -157,6 +157,7 @@ const labels: Row = {
   score: "Coincidencia",
   qualification: "Criterio",
   current: "Al día",
+  al_dia: "Al día",
   "1_30": "1–30 días",
   "31_60": "31–60 días",
   "61_90": "61–90 días",

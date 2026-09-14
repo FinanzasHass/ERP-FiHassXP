@@ -1,0 +1,16 @@
+{
+  "executedAt": "2026-09-13T18:29:03.205Z",
+  "sourceRun": "F7_20260913181951",
+  "status": "PASS",
+  "readOnlyFinancialData": true,
+  "checks": [
+    {
+      "name": "Panel DEV final muestra aging en español y versión Fase 7",
+      "status": "PASS"
+    },
+    {
+      "name": "Listado real de cobros con saldos derivados visible",
+      "status": "PASS"
+    }
+  ]
+}

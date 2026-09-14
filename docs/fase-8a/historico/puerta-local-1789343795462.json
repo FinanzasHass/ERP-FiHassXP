@@ -1,0 +1,79 @@
+{
+  "executedAt": "2026-09-13T23:53:29.668Z",
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "PostgreSQL regressions and concurrency",
+      "status": "PASS",
+      "evidence": [
+        "PASS 107 Phase 2–8A database checks on v24.18.0"
+      ]
+    },
+    {
+      "name": "backend types",
+      "status": "PASS",
+      "evidence": []
+    },
+    {
+      "name": "client types",
+      "status": "PASS",
+      "evidence": []
+    },
+    {
+      "name": "application tests",
+      "status": "PASS",
+      "evidence": [
+        "ℹ tests 42",
+        "ℹ pass 42",
+        "ℹ fail 0"
+      ]
+    },
+    {
+      "name": "production client build",
+      "status": "PASS",
+      "evidence": []
+    },
+    {
+      "name": "secret boundary",
+      "status": "PASS",
+      "evidence": []
+    },
+    {
+      "name": "browser base regressions",
+      "status": "PASS",
+      "evidence": [
+        "  6 passed (11.2s)"
+      ]
+    },
+    {
+      "name": "browser expense regressions",
+      "status": "PASS",
+      "evidence": [
+        "  3 passed (5.1s)"
+      ]
+    },
+    {
+      "name": "browser receivable regressions",
+      "status": "PASS",
+      "evidence": [
+        "  3 passed (5.1s)"
+      ]
+    },
+    {
+      "name": "browser accounting",
+      "status": "PASS",
+      "evidence": [
+        "  3 passed (5.1s)"
+      ]
+    }
+  ],
+  "migrationHashes": {
+    "202609130038_accounting_foundation.sql": "a03e82bdd2949d1f697097f45d1e1d2c73d5362ba2b6de59902dfc65d6705a46",
+    "202609130039_accounting_guards.sql": "bf32f83067da21dd46e029511213ff3efe845728669386f95c47fc33ce1db66f",
+    "202609130040_accounting_masters.sql": "6bbe5731360a0a101d89ee6316b79347e12090cc2613f622942f2cd0deed968f",
+    "202609130041_journal_operations.sql": "4c2d8fe57958da1127b2b8512ba74fc4c61882bb2a3d685fb0b61eb940087855",
+    "202609130042_accounting_reports.sql": "0545ba2c45d566f7f6935b8d6c7f4cba35ea8f46dbc75af9c951fd7333bc3ba5",
+    "202609130043_accounting_rules.sql": "536e0e9a780756114ccdcc58f97f1102d00e3ccfc5c193a0e1768d36fc57cb32"
+  },
+  "supabaseDevModified": false
+}

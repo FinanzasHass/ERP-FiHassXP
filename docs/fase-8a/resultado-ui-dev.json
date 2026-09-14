@@ -1,0 +1,20 @@
+{
+  "executedAt": "2026-09-14T14:27:00.839Z",
+  "sourceRun": "F8A_20260914000108",
+  "status": "PASS",
+  "readOnlyFinancialData": true,
+  "checks": [
+    {
+      "name": "Asientos DEV y versión final",
+      "status": "PASS"
+    },
+    {
+      "name": "Detalle conserva CECO histórico, tercero e historial auditado",
+      "status": "PASS"
+    },
+    {
+      "name": "Balance real y paginación final",
+      "status": "PASS"
+    }
+  ]
+}

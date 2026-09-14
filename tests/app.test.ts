@@ -41,6 +41,20 @@ function fixture(options:{inactive?:boolean;grants?:string[];companyAllowed?:boo
   };
   return {deps,calls,app:createApp(config,deps)};
 }
+test('accounting API rejects scope bypass, forged status, implicit rounding and productive rule activation',async()=>{
+ const {app,calls}=fixture({companyAllowed:true}),auth={type:'bearer' as const};
+ assert.equal((await request(fixture().app).get('/api/accounting/accounts?company_id='+company).auth('valid',auth)).status,403);
+ assert.equal((await request(fixture({inactive:true}).app).get('/api/accounting/accounts?company_id='+company).auth('valid',auth)).status,403);
+ const payload={company_id:company,entry_date:'2026-09-13',accounting_period_id:other,entry_type_id:other,description:'Sintético',currency_id:other,lines:[{account_id:other,description:'Debe',debit:10,credit:0},{account_id:user,description:'Haber',debit:0,credit:10}]};
+ const send=(body:unknown,key=true)=>{const q=request(app).post('/api/accounting/journals').auth('valid',auth);return(key?q.set('Idempotency-Key',other):q).send(body);};
+ assert.equal((await send(payload,false)).status,400);
+ assert.equal((await send({...payload,status:'posted'})).status,400);
+ assert.equal((await send({...payload,lines:[{...payload.lines[0],debit:.001},payload.lines[1]]})).status,400);
+ assert.equal((await send(payload)).status,201);
+ const call=calls.find(x=>x.name==='journal_save');assert.equal(call?.args.target_company,company);assert.equal(call?.args.operation_key,other);
+ assert.equal((await request(app).post('/api/accounting/rules/'+other+'/action').auth('valid',auth).send({action:'activate_production',reason:'No autorizado'})).status,400);
+ assert.equal((await request(app).post('/api/accounting/journals/'+other+'/post').auth('valid',auth).set('Idempotency-Key',other).send({posted_by:user})).status,400);
+});
 test('receivable endpoints keep company scope, require idempotency and reject bank amount overrides',async()=>{
  const {app,calls}=fixture({companyAllowed:true}),auth={type:'bearer' as const};
  assert.equal((await request(fixture({inactive:true}).app).get('/api/receivables?company_id='+company).auth('valid',auth)).status,403);

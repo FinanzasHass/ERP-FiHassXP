@@ -328,6 +328,8 @@ export async function phase7Checks({
       randomUUID(),
     ]);
     assert.equal(Number(schedule.total_amount), 50);
+    const installments=await rpc(owner,'receivable_schedule_installments',[schedule.id,1,100]);assert.equal(installments.count,2);assert.equal(Number(installments.data[0].outstanding_amount),25);
+    await assert.rejects(()=>rpc(outsider,'receivable_schedule_installments',[schedule.id,1,100]));
     await assert.rejects(
       () =>
         rpc(owner, "receivable_schedule_generate", [

@@ -1,0 +1,197 @@
+{
+  "run": "F8A_20260913235830",
+  "environment": "DEV",
+  "sameProjectAsApplication": true,
+  "startedAt": "2026-09-13T23:58:30.969Z",
+  "status": "FAIL",
+  "results": [
+    {
+      "id": 1,
+      "name": "Empresa A no lee B",
+      "status": "PASS"
+    },
+    {
+      "id": 2,
+      "name": "Crear cuenta raíz e hija",
+      "status": "PASS"
+    },
+    {
+      "id": 3,
+      "name": "Código duplicado rechazado",
+      "status": "PASS"
+    },
+    {
+      "id": 4,
+      "name": "Ciclo jerárquico rechazado",
+      "status": "PASS"
+    },
+    {
+      "id": 5,
+      "name": "Cuenta usada no se elimina",
+      "status": "PASS"
+    },
+    {
+      "id": 6,
+      "name": "Importación preview sin persistencia",
+      "status": "PASS"
+    },
+    {
+      "id": 7,
+      "name": "Confirmación idempotente",
+      "status": "PASS"
+    },
+    {
+      "id": 8,
+      "name": "Crear período abierto",
+      "status": "PASS"
+    },
+    {
+      "id": 9,
+      "name": "Período cerrado rechaza posteo",
+      "status": "PASS"
+    },
+    {
+      "id": 10,
+      "name": "Crear asiento borrador",
+      "status": "PASS"
+    },
+    {
+      "id": 11,
+      "name": "Descuadre rechazado",
+      "status": "PASS"
+    },
+    {
+      "id": 12,
+      "name": "Debe y haber simultáneos rechazados",
+      "status": "PASS"
+    },
+    {
+      "id": 13,
+      "name": "Cuenta no imputable rechazada",
+      "status": "PASS"
+    },
+    {
+      "id": 14,
+      "name": "Validar asiento balanceado",
+      "status": "PASS"
+    },
+    {
+      "id": 15,
+      "name": "Posteo independiente",
+      "status": "PASS"
+    },
+    {
+      "id": 16,
+      "name": "Posteo idempotente",
+      "status": "PASS"
+    },
+    {
+      "id": 17,
+      "name": "Asiento posteado inmutable",
+      "status": "PASS"
+    },
+    {
+      "id": 18,
+      "name": "Reverso conserva original",
+      "status": "PASS"
+    },
+    {
+      "id": 19,
+      "name": "Doble reverso rechazado",
+      "status": "PASS"
+    },
+    {
+      "id": 20,
+      "name": "Dimensiones e identidad histórica",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": 21,
+      "name": "Tercero obligatorio y empleado sin Auth",
+      "status": "FAIL",
+      "evidence": "employee_foundation_save: 23514"
+    },
+    {
+      "id": 22,
+      "name": "Moneda y tipo de cambio explícito",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": 23,
+      "name": "Simulación no persiste asientos",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": 24,
+      "name": "Regla versionada inmutable",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": 25,
+      "name": "Cuentas configuradas sin hardcode ni seed",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": 26,
+      "name": "Mayor contable",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": 27,
+      "name": "Balance de comprobación",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": 28,
+      "name": "Solo posteados afectan balances",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": 29,
+      "name": "Reapertura auditada",
+      "status": "PASS"
+    },
+    {
+      "id": 30,
+      "name": "REST directo no evade controles",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": 31,
+      "name": "Revocación de membership inmediata",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": 32,
+      "name": "Auditoría con actor y empresa",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": 33,
+      "name": "UI DEV real sin mocks",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": 34,
+      "name": "Secretos fuera del bundle y logs",
+      "status": "NOT_RUN"
+    }
+  ],
+  "additional": [],
+  "fixtures": {
+    "companyA": "068e8a89-f2fd-47f6-9084-a2bd271661d0",
+    "companyB": "4bcd3d1e-3b77-4f23-b2e7-c4121edf0d42",
+    "users": [
+      "7abe57b0-ab80-4d30-8033-30fd0a36f03b",
+      "cf0ab2ff-9f24-4707-80c6-204958b1b69f",
+      "0e8ab134-c7bf-4b40-aa15-87d55735a88a"
+    ]
+  },
+  "updatedAt": "2026-09-13T23:59:56.655Z",
+  "summary": {
+    "pass": 20,
+    "fail": 1,
+    "notRun": 13
+  },
+  "incident": "employee_foundation_save: 23514"
+}

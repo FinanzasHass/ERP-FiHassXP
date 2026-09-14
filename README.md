@@ -1,6 +1,10 @@
-# Mini ERP Financiero — Fase 6
+# Mini ERP Financiero — Fase 8A
 
-**Entrega actual:** [Fase 6: viáticos, rendiciones y Tesorería employee](docs/fase-6/README.md). [Matriz DEV vigente](docs/fase-6/resultado-dev.md), [migraciones DEV](docs/fase-6/migraciones-dev.json) y [puerta local](docs/fase-6/puerta-local.json). [Claves versionadas de adjuntos](docs/fase-5/cifrado.md). Sólo fixtures sintéticos; no se inicia Fase 7.
+**Entrega actual:** [Fase 8A: núcleo contable](docs/fase-8a/README.md). [Matriz DEV: 34 PASS, 0 FAIL](docs/fase-8a/resultado-dev.md), cuatro concurrencias PASS y migraciones 038–043 verificadas en el mismo proyecto DEV. Plan de cuentas configurable, importador CSV/XLSX, períodos, asientos manuales, reglas solo para simulación, mayor y balance. [Recorrido manual](docs/fase-8a/recorrido-manual.md). No se inicia Fase 8B.
+
+**Fase 7 aprobada:** [Fase 7: CxC, clientes y cobranzas](docs/fase-7/README.md). [Matriz DEV: 34 PASS](docs/fase-7/resultado-dev.md), cuatro casos de concurrencia PASS, [Storage adicional PASS](docs/fase-7/resultado-storage-dev.json) y [migraciones 033–037 DEV](docs/fase-7/migraciones-dev.json). [Puerta local](docs/fase-7/puerta-local.json): 91 PostgreSQL, 39 aplicación y 12 UI PASS. Sólo fixtures sintéticos; evidencia histórica de Fase 7.
+
+**Fase 6 aceptada:** [viáticos, rendiciones y Tesorería employee](docs/fase-6/README.md). [PDF con resultado original y saldo actual](docs/fase-6/capturas/representacion-dev-sintetica.pdf). [Claves versionadas de adjuntos](docs/fase-5/cifrado.md).
 
 **Fase 4 aprobada:** [entrega](docs/fase-4/README.md), 15 verificaciones DEV PASS y 0 FAIL.
 
@@ -10,7 +14,7 @@
 
 [Fase 2.5: diseño del ERP y sustitución progresiva de Ábasoft](docs/fase-2.5/README.md). Incluye modelos, diagramas, workflows, migración y roadmap; no implementa módulos financieros.
 
-API de autenticación, autorización y administración, frontend React/Vite, selector de empresa, CECO/importación, proyectos/subproyectos, solicitudes, aprobaciones, proveedores, órdenes, conformidades, comprobantes, CxP y auditoría. Incluye registro de pagos externos y conciliación; no envía transferencias a bancos ni implementa contabilidad productiva o SUNAT automático. La base de seguridad de Fases 1–3 se conserva; para actualizar use las instrucciones de Fase 6.
+API de autenticación, autorización y administración, frontend React/Vite, selector de empresa, CECO/importación, proyectos/subproyectos, solicitudes, aprobaciones, proveedores, órdenes, conformidades, comprobantes, CxP y auditoría. Incluye registro de pagos externos y conciliación; no envía transferencias a bancos ni genera asientos automáticos o validaciones SUNAT automáticas. La base de seguridad de Fases 1–3 se conserva; para actualizar use las instrucciones de Fase 8A.
 
 ## Implementación
 

@@ -1,3 +1,5 @@
+import {createHash} from 'node:crypto';
+import {readdir} from 'node:fs/promises';
 import {execFile,spawn} from 'node:child_process';
 import {promisify} from 'node:util';
 import {mkdir,access,writeFile,readFile} from 'node:fs/promises';
@@ -26,10 +28,11 @@ try{
  child.stderr.on('data',b=>{output+=String(b);process.stderr.write(b);});
  const code=await new Promise(resolve=>child.on('exit',resolve));
  await mkdir('docs/fase-7',{recursive:true});
+ const migrationHashes={};for(const name of (await readdir('supabase/migrations')).filter(n=>/^2026091300(33|34|35|36|37)_/.test(n)))migrationHashes[name]=createHash('sha256').update(await readFile('supabase/migrations/'+name)).digest('hex');
  const resultPath='docs/fase-7/resultado-postgres-local.json';
  await mkdir('docs/fase-7/historico',{recursive:true});
  try{const previous=await readFile(resultPath,'utf8');await writeFile('docs/fase-7/historico/postgres-'+Date.now()+'.json',previous);}catch(error){if(error.code!=='ENOENT')throw error;}
- await writeFile(resultPath,JSON.stringify({executedAt:new Date().toISOString(),environment:'disposable_loopback_postgresql',status:code===0?'PASS':'FAIL',cases:output.split(/\r?\n/).filter(x=>x.startsWith('OK ')||x.startsWith('PASS ')),supabaseDevModified:false},null,2));
+ await writeFile(resultPath,JSON.stringify({executedAt:new Date().toISOString(),environment:'disposable_loopback_postgresql',migrationHashes,status:code===0?'PASS':'FAIL',cases:output.split(/\r?\n/).filter(x=>x.startsWith('OK ')||x.startsWith('PASS ')),supabaseDevModified:false},null,2));
  process.exitCode=code??1;
 }catch(error){console.error({error:typeof error.code==='string'?error.code:'LOCAL_POSTGRES_FAILED'});process.exitCode=1;}
 finally{if(started)await control(['stop','-D',data,'-m','fast','-w']);}

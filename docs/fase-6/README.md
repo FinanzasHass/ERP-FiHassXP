@@ -143,3 +143,7 @@ Ver historico para fallos conservados y resultado-dev para estado vigente; no ha
 - Ejecución DEV: scripts/phase6-dev-migrations.mjs, verify-phase6-dev.ts, verify-phase6-ui-dev.ts.
 
 [Validación final](validacion-final.json): nueve pruebas UI distintas PASS (seis regresiones y tres de Fase 6). La última prueba añadida comprueba que la DJ impresa conserva declarante, gasto y CECO originales. Se repitieron typecheck cliente, Vite y secret boundary para ese ajuste de representación, sin modificar BD. La puerta anterior a DEV conserva su evidencia original de ocho pruebas UI.
+
+## Presentación de la liquidación actualizada
+
+El PDF distingue el resultado original de la liquidación y el saldo vigente. La devolución recibida y conciliada se muestra separada de la devolución determinada. Se verificó visualmente la muestra DEV sintética 180 / 160 / 20 determinado / 20 recibido y conciliado / 0 pendiente. No cambian el cálculo financiero ni las RPC de Fase 6. [PDF actualizado](capturas/representacion-dev-sintetica.pdf).

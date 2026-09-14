@@ -1,0 +1,212 @@
+{
+  "run": "F7_20260913181951",
+  "environment": "DEV",
+  "sameProjectAsApplication": true,
+  "startedAt": "2026-09-13T18:19:51.512Z",
+  "status": "PASS",
+  "results": [
+    {
+      "id": 1,
+      "name": "Cliente A no visible en B",
+      "status": "PASS"
+    },
+    {
+      "id": 2,
+      "name": "Crear cliente independiente de Auth",
+      "status": "PASS"
+    },
+    {
+      "id": 3,
+      "name": "Documento duplicado rechazado",
+      "status": "PASS"
+    },
+    {
+      "id": 4,
+      "name": "Crear CxC autorizada",
+      "status": "PASS"
+    },
+    {
+      "id": 5,
+      "name": "Generar cronograma",
+      "status": "PASS"
+    },
+    {
+      "id": 6,
+      "name": "Cobro parcial",
+      "status": "PASS"
+    },
+    {
+      "id": 7,
+      "name": "Cobro completo",
+      "status": "PASS"
+    },
+    {
+      "id": 8,
+      "name": "Varios cobros sobre una CxC",
+      "status": "PASS"
+    },
+    {
+      "id": 9,
+      "name": "Un cobro aplicado a varias CxC",
+      "status": "PASS"
+    },
+    {
+      "id": 10,
+      "name": "Saldo pendiente derivado",
+      "status": "PASS"
+    },
+    {
+      "id": 11,
+      "name": "Estado collected no editable",
+      "status": "PASS"
+    },
+    {
+      "id": 12,
+      "name": "Depósito sin identificar",
+      "status": "PASS"
+    },
+    {
+      "id": 13,
+      "name": "Identificar cliente",
+      "status": "PASS"
+    },
+    {
+      "id": 14,
+      "name": "Identificar no concilia banco",
+      "status": "PASS"
+    },
+    {
+      "id": 15,
+      "name": "Aplicar depósito",
+      "status": "PASS"
+    },
+    {
+      "id": 16,
+      "name": "Candidatos sugeridos sin asignación automática",
+      "status": "PASS"
+    },
+    {
+      "id": 17,
+      "name": "Saldo a favor preservado",
+      "status": "PASS"
+    },
+    {
+      "id": 18,
+      "name": "Aplicar saldo a favor posteriormente",
+      "status": "PASS"
+    },
+    {
+      "id": 19,
+      "name": "Reverso restaura CxC",
+      "status": "PASS"
+    },
+    {
+      "id": 20,
+      "name": "Moneda distinta rechazada",
+      "status": "PASS"
+    },
+    {
+      "id": 21,
+      "name": "Empresa distinta rechazada",
+      "status": "PASS"
+    },
+    {
+      "id": 22,
+      "name": "Cuota vencida derivada",
+      "status": "PASS"
+    },
+    {
+      "id": 23,
+      "name": "Aging por vencimiento",
+      "status": "PASS"
+    },
+    {
+      "id": 24,
+      "name": "Membresía respeta configuración",
+      "status": "PASS"
+    },
+    {
+      "id": 25,
+      "name": "Contrato de lote y cronograma",
+      "status": "PASS"
+    },
+    {
+      "id": 26,
+      "name": "Cash Flow sin doble conteo",
+      "status": "PASS"
+    },
+    {
+      "id": 27,
+      "name": "Conciliación bancaria de cobro",
+      "status": "PASS"
+    },
+    {
+      "id": 28,
+      "name": "Revocación de membership inmediata",
+      "status": "PASS"
+    },
+    {
+      "id": 29,
+      "name": "REST directo no evade controles",
+      "status": "PASS"
+    },
+    {
+      "id": 30,
+      "name": "Auditoría con empresa y actor",
+      "status": "PASS"
+    },
+    {
+      "id": 31,
+      "name": "Dashboard Cobranzas",
+      "status": "PASS"
+    },
+    {
+      "id": 32,
+      "name": "Dashboard Finanzas y Cash Flow",
+      "status": "PASS"
+    },
+    {
+      "id": 33,
+      "name": "UI DEV real sin mocks",
+      "status": "PASS"
+    },
+    {
+      "id": 34,
+      "name": "Secretos fuera del bundle y logs",
+      "status": "PASS"
+    }
+  ],
+  "additional": [
+    {
+      "name": "Dos cobros sobre el mismo pendiente",
+      "status": "PASS"
+    },
+    {
+      "name": "Dos aplicaciones del mismo saldo a favor",
+      "status": "PASS"
+    },
+    {
+      "name": "Reintento identificar y aplicar",
+      "status": "PASS"
+    },
+    {
+      "name": "Reverso concurrente",
+      "status": "PASS"
+    }
+  ],
+  "fixtures": {
+    "companyA": "33add6b6-07fd-4eb8-9afc-b85e3c122503",
+    "companyB": "48889251-efbe-4522-b860-91ec627b3878",
+    "users": [
+      "2e59c100-a6b3-4b41-9d6a-b19423649da5",
+      "9e34dd1f-abbc-4563-bb3e-0518a4632938",
+      "f4fe7c8d-d953-4602-a1b8-0ecdf7ca0e1d"
+    ]
+  },
+  "updatedAt": "2026-09-13T18:23:11.678Z",
+  "summary": {
+    "pass": 34,
+    "fail": 0,
+    "notRun": 0
+  }
+}

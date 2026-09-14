@@ -1,0 +1,62 @@
+{
+  "verifiedAt": "2026-09-14T14:28:19.082Z",
+  "phase": "8A",
+  "status": "PASS",
+  "devRun": "F8A_20260914000108",
+  "devCases": {
+    "pass": 34,
+    "fail": 0,
+    "notRun": 0
+  },
+  "devConcurrency": [
+    {
+      "name": "Dos posteos del mismo asiento",
+      "status": "PASS"
+    },
+    {
+      "name": "Dos reversos del mismo asiento",
+      "status": "PASS"
+    },
+    {
+      "name": "Cierre de período contra posteo",
+      "status": "PASS"
+    },
+    {
+      "name": "Dos versiones activadas simultáneamente",
+      "status": "PASS"
+    }
+  ],
+  "finalReadOnlyUi": [
+    {
+      "name": "Asientos DEV y versión final",
+      "status": "PASS"
+    },
+    {
+      "name": "Detalle conserva CECO histórico, tercero e historial auditado",
+      "status": "PASS"
+    },
+    {
+      "name": "Balance real y paginación final",
+      "status": "PASS"
+    }
+  ],
+  "localPostgresql": 107,
+  "applicationTests": 42,
+  "browserTests": 16,
+  "migrations": [
+    "202609130038_accounting_foundation.sql",
+    "202609130039_accounting_guards.sql",
+    "202609130040_accounting_masters.sql",
+    "202609130041_journal_operations.sql",
+    "202609130042_accounting_reports.sql",
+    "202609130043_accounting_rules.sql"
+  ],
+  "sameDevProject": true,
+  "secretBoundary": "PASS",
+  "fixturesOnly": true,
+  "phase8BStarted": false,
+  "externalExceptions": [
+    "SMTP/callback permanece como excepción aceptada",
+    "SQL directo: diagnóstico histórico 28P01; migraciones verificadas mediante CLI"
+  ]
+}
