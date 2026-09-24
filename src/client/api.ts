@@ -46,6 +46,8 @@ const messages: Record<string, string> = {
   AUTH_RATE_LIMIT: "Demasiados intentos. Inténtelo más tarde.",
   DATABASE_UNAVAILABLE: "No se pudo conectar con la base de datos.",
   AUTH_UNAVAILABLE: "El servicio de autenticación no está disponible.",
+  AUTH_PASSWORD_UPDATE_FAILED: "No se pudo establecer la contraseña provisional.",
+  PASSWORD_CHANGE_REQUIRED: "Debe cambiar su contraseña provisional para continuar.",
 };
 export async function api(
   path: string,
@@ -54,7 +56,9 @@ export async function api(
   headers: Record<string, string> = {},
   retry = true,
 ): Promise<any> {
-  const response = await fetch("/api" + path, {
+  let response: Response;
+  try {
+    response = await fetch("/api" + path, {
     method,
     headers: {
       "Content-Type": "application/json",
@@ -62,7 +66,11 @@ export async function api(
       ...headers,
     },
     ...(body === undefined ? {} : { body: JSON.stringify(body) }),
-  });
+      signal: AbortSignal.timeout(20000),
+    });
+  } catch {
+    throw new ApiError(503, "DATABASE_UNAVAILABLE");
+  }
   if (
     response.status === 401 &&
     tokens &&
@@ -92,7 +100,7 @@ export async function api(
     return api(path, method, body, headers, false);
   }
   if (response.status === 204) return null;
-  const data = await response.json();
+  const data = await response.json().catch(() => ({ error: 'DATABASE_UNAVAILABLE' }));
   if (!response.ok) {
     if (data.error === "PROFILE_DISABLED") {
       setSession(null);

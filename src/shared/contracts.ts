@@ -1,6 +1,7 @@
 export type Profile = {
   id: string; email: string; username: string; full_name: string;
   status: 'active' | 'inactive' | 'blocked';
+  must_change_password: boolean;
   area_id: string | null; position_id: string | null; manager_id: string | null;
 };
 export type Permission = { code: string; scope: string; requires_company: boolean };

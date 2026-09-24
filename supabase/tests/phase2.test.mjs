@@ -84,6 +84,17 @@ try {
     assert.equal(await can(gianella,'payment.execute',b),false);
     assert.equal(await can(gianella,'payment.view',b),true);
   });
+  await test('temporary password requirement revokes sessions and clears exactly once',async()=>{
+    await rpc(admin,'admin_require_temporary_password',[gianella]);
+    assert.equal(await scalar('select must_change_password from public.profiles where id=$1',[gianella]),true);
+    assert.equal(await scalar('select count(*)::int from auth.sessions where user_id=$1',[gianella]),0);
+    assert.equal(await scalar("select count(*)::int from public.audit_logs where action='user.temporary_password.required' and entity_id=$1",[gianella]),1);
+    await db.query('insert into auth.sessions(id,user_id) values($1,$1)',[gianella]);
+    await rpc(gianella,'complete_forced_password_change',[]);
+    assert.equal(await scalar('select must_change_password from public.profiles where id=$1',[gianella]),false);
+    await rpc(gianella,'complete_forced_password_change',[]);
+    assert.equal(await scalar("select count(*)::int from public.audit_logs where action='user.password.changed' and entity_id=$1",[gianella]),1);
+  });
   await test('null-scope uniqueness and multiple company roles',async()=>{
     await grant(gianella,treasury,b); assert.equal(await can(gianella,'payment.execute',b),true);
     await grant(gianella,treasury,b); // Idempotent, no duplicate.

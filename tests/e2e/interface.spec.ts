@@ -8,6 +8,7 @@ const grants = [
   "user.view",
   "user.create",
   "user.edit",
+  "user.disable",
   "role.view",
   "permission.assign",
   "company.view",
@@ -22,8 +23,9 @@ const grants = [
   "subproject.view",
   "currency.view",
 ];
-async function fixture(page: Page, blocked = false) {
+async function fixture(page: Page, blocked = false, forced = false) {
   const writes: Record<string, any>[] = [];
+  let forceChange = forced;
   await page.route("**/api/**", async (route) => {
     const req = route.request(),
       url = new URL(req.url()),
@@ -63,12 +65,18 @@ async function fixture(page: Page, blocked = false) {
           full_name: "Usuario de prueba",
           username: "prueba",
           status: "active",
+          must_change_password: forceChange,
         },
         permissions: (url.searchParams.get("company_id") === b
           ? ["company.view"]
           : grants
         ).map((code) => ({ code })),
       };
+    else if (p === "/api/auth/password" && req.method() === "POST") {
+      forceChange = false;
+      status = 204;
+      body = null;
+    }
     else if (p === "/api/cost-centers/import") {
       writes.push(req.postDataJSON());
       body = {
@@ -185,6 +193,18 @@ test("blocked profile cannot enter app", async ({ page }) => {
   await page.getByLabel("Contraseña", { exact: true }).fill("password");
   await page.getByRole("button", { name: "Ingresar a la plataforma" }).click();
   await expect(page.getByRole("alert")).toContainText("inactiva o bloqueada");
+});
+test("provisional password is required once and the application resumes after saving it", async ({page}) => {
+  await fixture(page,false,true);
+  await page.goto('/login');
+  await page.getByLabel('Correo o usuario').fill('prueba');
+  await page.getByLabel('Contraseña',{exact:true}).fill('temporary-password');
+  await page.getByRole('button',{name:'Ingresar a la plataforma'}).click();
+  await expect(page.getByRole('heading',{name:'Defina su contraseña'})).toBeVisible();
+  await page.getByLabel(/Nueva contraseña/).fill('Personal-password-2026!');
+  await page.getByLabel(/Confirmar nueva contraseña/).fill('Personal-password-2026!');
+  await page.getByRole('button',{name:'Guardar y continuar'}).click();
+  await expect(page.getByRole('heading',{name:'Su espacio de gestión'})).toBeVisible();
 });
 test("CECO subcenter form, hierarchy, import preview and explicit confirmation", async ({
   page,

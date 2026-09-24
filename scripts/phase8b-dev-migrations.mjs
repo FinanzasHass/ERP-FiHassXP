@@ -19,6 +19,7 @@ const approved = [
   "202609230049",
   "202609230050",
   "202609230051",
+  "202609240052",
 ];
 
 await mkdir(folder, { recursive: true });

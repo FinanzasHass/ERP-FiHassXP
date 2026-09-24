@@ -1,5 +1,5 @@
 {
-  "executedAt": "2026-09-24T17:54:16.698Z",
+  "executedAt": "2026-09-24T17:51:04.112Z",
   "status": "PASS",
   "checks": [
     {
@@ -23,8 +23,8 @@
       "name": "application tests",
       "status": "PASS",
       "evidence": [
-        "ℹ tests 50",
-        "ℹ pass 50",
+        "ℹ tests 49",
+        "ℹ pass 49",
         "ℹ fail 0"
       ]
     },
@@ -42,35 +42,35 @@
       "name": "browser interface",
       "status": "PASS",
       "evidence": [
-        "  7 passed (15.8s)"
+        "  7 passed (14.4s)"
       ]
     },
     {
       "name": "browser employee-expenses",
       "status": "PASS",
       "evidence": [
-        "  3 passed (7.9s)"
+        "  3 passed (7.4s)"
       ]
     },
     {
       "name": "browser receivables",
       "status": "PASS",
       "evidence": [
-        "  3 passed (4.9s)"
+        "  3 passed (7.0s)"
       ]
     },
     {
       "name": "browser accounting",
       "status": "PASS",
       "evidence": [
-        "  4 passed (9.8s)"
+        "  4 passed (10.7s)"
       ]
     },
     {
       "name": "browser accounting-events",
       "status": "PASS",
       "evidence": [
-        "  3 passed (5.3s)"
+        "  3 passed (5.5s)"
       ]
     }
   ],

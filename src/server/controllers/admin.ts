@@ -74,3 +74,14 @@ export const updateEmail = (privileged: PrivilegedAuth): RequestHandler => async
   await privileged.updateEmail(id, newEmail);
   res.sendStatus(204);
 };
+export const setTemporaryPassword = (privileged: PrivilegedAuth): RequestHandler => async (req, res) => {
+  const actor = getActor(req);
+  const id = v.uuid.parse(req.params.id);
+  if (id === actor.id) throw new HttpError(403, 'SELF_IDENTITY_CHANGE_FORBIDDEN');
+  const { password } = v.temporaryPassword.parse(req.body);
+  // Mark the one-time requirement and revoke old sessions first. Neither this
+  // RPC nor audit receives the password itself.
+  await actor.db.rpc('admin_require_temporary_password', { target_user: id });
+  await privileged.updatePassword(id, password);
+  res.sendStatus(204);
+};

@@ -16,8 +16,8 @@ const user='00000000-0000-4000-8000-000000000001';
 const other='00000000-0000-4000-8000-000000000002';
 const company='10000000-0000-4000-8000-000000000001';
 const config=readConfig({SUPABASE_URL:'https://example.supabase.co',SUPABASE_PUBLISHABLE_KEY:'sb_publishable_test_fixture',SUPABASE_SECRET_KEY:'sb_secret_server_test_fixture',APP_ORIGIN:'http://localhost:3000',NODE_ENV:'test',TRUST_PROXY_HOPS:'0'});
-const profile:Profile={id:user,email:'test@example.test',username:'tester',full_name:'Tester',status:'active',area_id:null,position_id:null,manager_id:null};
-function fixture(options:{inactive?:boolean;grants?:string[];companyAllowed?:boolean}={}){
+const profile:Profile={id:user,email:'test@example.test',username:'tester',full_name:'Tester',status:'active',must_change_password:false,area_id:null,position_id:null,manager_id:null};
+function fixture(options:{inactive?:boolean;forcedPassword?:boolean;grants?:string[];companyAllowed?:boolean}={}){
   const calls:{name:string;args:Record<string,unknown>}[]=[];
   const deps:Dependencies={
     auth:{
@@ -26,9 +26,9 @@ function fixture(options:{inactive?:boolean;grants?:string[];companyAllowed?:boo
       async refresh(){return {access_token:'valid',refresh_token:'refresh',expires_in:3600};},
       async recover(){},async verifyOtp(){return {access_token:'valid',refresh_token:'refresh',expires_in:3600};},async updatePassword(){},
     },
-    privileged:{async ensureIdentity(){},async updateEmail(){},async logout(){},async recordVerifiedLogin(id,sid,ip){calls.push({name:'audit',args:{id,sid,ip}});}},
+    privileged:{async ensureIdentity(){},async updateEmail(){},async updatePassword(id){calls.push({name:'auth_password_update',args:{id}});},async logout(){},async recordVerifiedLogin(id,sid,ip){calls.push({name:'audit',args:{id,sid,ip}});}},
     repository:()=>({
-      async profile(){return options.inactive?{...profile,status:'inactive'}:profile;},
+      async profile(){return options.inactive?{...profile,status:'inactive'}:{...profile,must_change_password:!!options.forcedPassword};},
       async rpc<T>(name:string,args:Record<string,unknown>):Promise<T>{
         calls.push({name,args});
         if(name==='has_permission')return (options.grants??[]).includes(String(args.permission_code)) as T;
@@ -166,6 +166,24 @@ test('verified JWT plus inactive profile returns 403',async()=>{
   const {app}=fixture({inactive:true,grants:['user.view']});
   const result=await request(app).get('/api/users').auth('valid',{type:'bearer'});
   assert.equal(result.status,403);assert.equal(result.body.error,'PROFILE_DISABLED');
+});
+test('administrator sets a temporary password without sending it to database RPC or audit',async()=>{
+  const {app,calls}=fixture({grants:['user.edit']});
+  const result=await request(app).put(`/api/users/${other}/temporary-password`).auth('valid',{type:'bearer'}).send({password:'Temporary-2026!'});
+  assert.equal(result.status,204);
+  assert.deepEqual(calls.find(c=>c.name==='admin_require_temporary_password')?.args,{target_user:other});
+  assert.deepEqual(calls.find(c=>c.name==='auth_password_update')?.args,{id:other});
+  assert.equal(JSON.stringify(calls).includes('Temporary-2026!'),false);
+  assert.equal((await request(app).put(`/api/users/${user}/temporary-password`).auth('valid',{type:'bearer'}).send({password:'Temporary-2026!'})).status,403);
+  assert.equal((await request(app).put(`/api/users/${other}/temporary-password`).auth('valid',{type:'bearer'}).send({password:'short'})).status,400);
+});
+test('temporary password blocks business routes and clears only after authenticated password change',async()=>{
+  const {app,calls}=fixture({forcedPassword:true,grants:['user.view']});
+  const blocked=await request(app).get('/api/users').auth('valid',{type:'bearer'});
+  assert.equal(blocked.status,403);assert.equal(blocked.body.error,'PASSWORD_CHANGE_REQUIRED');
+  assert.equal((await request(app).get('/api/auth/me').auth('valid',{type:'bearer'})).status,200);
+  assert.equal((await request(app).post('/api/auth/password').auth('valid',{type:'bearer'}).send({password:'New-personal-2026!'})).status,204);
+  assert.ok(calls.some(c=>c.name==='complete_forced_password_change'));
 });
 test('permission middleware denies before mutation and cannot trust role payload',async()=>{
   const {app,calls}=fixture();

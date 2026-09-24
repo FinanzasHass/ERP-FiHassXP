@@ -217,6 +217,45 @@ function Callback({ done }: { done: () => void }) {
     </main>
   );
 }
+function ForcedPasswordChange({
+  done,
+  logout,
+}: {
+  done: () => void;
+  logout: () => void;
+}) {
+  const [password, setPassword] = useState("");
+  const [confirmation, setConfirmation] = useState("");
+  const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
+  return (
+    <div className="login-shell">
+      <section className="login-brand">
+        <div className="brand"><span className="brand-mark">N</span><span>NEXO <small>GESTIÓN CORPORATIVA</small></span></div>
+        <div><p className="eyebrow">SEGURIDAD DE LA CUENTA</p><h1>Proteja<br />su acceso<br /><em>personal.</em></h1><p>La contraseña provisional sólo permite completar este cambio inicial.</p></div>
+      </section>
+      <main className="login-form">
+        <span className="badge">CAMBIO OBLIGATORIO</span>
+        <h2>Defina su contraseña</h2>
+        <p>Este paso se solicitará una sola vez. La nueva contraseña quedará guardada en Supabase Auth.</p>
+        <form onSubmit={async (event) => {
+          event.preventDefault();
+          if (password !== confirmation) { setError("Las contraseñas no coinciden."); return; }
+          setBusy(true); setError("");
+          try { await api('/auth/password','POST',{password}); done(); }
+          catch (reason) { setError((reason as Error).message); }
+          finally { setBusy(false); }
+        }}>
+          <label>Nueva contraseña · mínimo 12 caracteres<input required minLength={12} maxLength={128} type="password" autoComplete="new-password" value={password} onChange={(e)=>setPassword(e.target.value)} /></label>
+          <label>Confirmar nueva contraseña<input required minLength={12} maxLength={128} type="password" autoComplete="new-password" value={confirmation} onChange={(e)=>setConfirmation(e.target.value)} /></label>
+          <ErrorBox error={error}/>
+          <button className="primary" disabled={busy}>{busy?'Guardando…':'Guardar y continuar'}</button>
+          <button type="button" className="link" onClick={logout}>Cerrar sesión</button>
+        </form>
+      </main>
+    </div>
+  );
+}
 function App() {
   const [signed, setSigned] = useState(hasSession()),
     [path, setPath] = useState(location.pathname),
@@ -259,9 +298,8 @@ function App() {
   useEffect(() => {
     if (!signed) return;
     let valid = true;
-    setLoading(true);
+    setLoading(!me);
     setError("");
-    setMe(null);
     Promise.all([api("/auth/workspace"), api("/auth/me")])
       .then(async ([w, p]) => {
         const id = chooseCompany(
@@ -317,6 +355,10 @@ function App() {
         }}
       />
     );
+  if (me?.profile?.must_change_password)
+    return <ForcedPasswordChange done={() => setRevision((x) => x + 1)} logout={() => {
+      setSession(null); setSigned(false); setMe(null); navigate('/login');
+    }}/>;
   const activeCompany = workspace?.companies?.find(
     (c: Row) => c.id === company,
   );
@@ -502,7 +544,7 @@ function App() {
               Reintentar conexión
             </button>
           )}
-          {loading ? (
+          {loading && !me ? (
             <p className="loading">Verificando contexto y permisos…</p>
           ) : (
             me && (

@@ -1,5 +1,5 @@
 {
-  "executedAt": "2026-09-24T17:50:20.339Z",
+  "executedAt": "2026-09-23T18:02:38.622Z",
   "environment": "disposable_loopback_postgresql",
   "migrationHashes": {
     "202609220044_accounting_events_model.sql": "da3344f3fc1803f27e00f2507da8f08a586c805391a593bee23d6dee68e95491",
@@ -9,8 +9,7 @@
     "202609220048_accounting_afe_dimension.sql": "7e9d7c414f9c721c659c38fe99c6cda2c0f1ea965afa411d3cb27f90165dac1f",
     "202609230049_accounting_event_configuration.sql": "71513a189c35745373a1abc84d45328e379a7c7f2d2f35f3208defb76f752864",
     "202609230050_demo_dashboard.sql": "85d21ea150f19286f678d8e48abeb41c1256bbf0a977df7383a29168906e721d",
-    "202609230051_demo_company_boundary.sql": "2a74cc4465da8e1b677e79f3d7ebf33a7928450f9b728c1bd65c9ad14ecde79e",
-    "202609240052_forced_password_change.sql": "bfa9c9ec874de5ff32f011f70e51c714b692cb18d677909468a4153c4428d394"
+    "202609230051_demo_company_boundary.sql": "2a74cc4465da8e1b677e79f3d7ebf33a7928450f9b728c1bd65c9ad14ecde79e"
   },
   "status": "PASS",
   "cases": [
@@ -18,7 +17,6 @@
     "OK cannot assign company role without active membership",
     "OK Sandra treasury A never authorizes B or missing context",
     "OK same user different roles by company",
-    "OK temporary password requirement revokes sessions and clears exactly once",
     "OK null-scope uniqueness and multiple company roles",
     "OK membership revocation invalidates existing company grants immediately",
     "OK global deny beats company allow, company deny beats global allow",
@@ -138,7 +136,7 @@
     "OK F8B disabling DEMO prevents generation but preserves controlled reversal of posted evidence",
     "OK F8B CONCURRENT double generation creates exactly one journal and preserves its source",
     "OK F8B CONCURRENT membership revocation prevents subsequent replay of a generated event",
-    "PASS 124 Phase 2–8B database checks on v24.18.0"
+    "PASS 123 Phase 2–8B database checks on v24.18.0"
   ],
   "supabaseDevModified": false
 }

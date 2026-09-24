@@ -28,7 +28,7 @@ try{
  child.stderr.on('data',b=>{output+=String(b);process.stderr.write(b);});
  const code=await new Promise(resolve=>child.on('exit',resolve));
  await mkdir('docs/fase-8b',{recursive:true});
- const migrationHashes={};for(const name of (await readdir('supabase/migrations')).filter(n=>/^202609(2200(44|45|46|47|48)|2300(49|50|51))_/.test(n)))migrationHashes[name]=createHash('sha256').update(await readFile('supabase/migrations/'+name)).digest('hex');
+ const migrationHashes={};for(const name of (await readdir('supabase/migrations')).filter(n=>/^202609(2200(44|45|46|47|48)|2300(49|50|51)|240052)_/.test(n)))migrationHashes[name]=createHash('sha256').update(await readFile('supabase/migrations/'+name)).digest('hex');
  const resultPath='docs/fase-8b/resultado-postgres-local.json';
  await mkdir('docs/fase-8b/historico',{recursive:true});
  try{const previous=await readFile(resultPath,'utf8');await writeFile('docs/fase-8b/historico/postgres-'+Date.now()+'.json',previous);}catch(error){if(error.code!=='ENOENT')throw error;}

@@ -122,7 +122,9 @@ Invoke-RestMethod -Uri 'http://localhost:3000/api/auth/me' -Headers $erpHeaders
 
 Crear una empresa con POST /api/companies y body `{"legal_name":"Razón social real","code":"EMP_A","tax_id":"Identificador real","country_code":"PE"}`. No hay empresas ficticias en el seed.
 
-Crear usuario con POST /api/users, Idempotency-Key UUID y body `{ "email":"correo real", "username":"usuario", "full_name":"Nombre completo", "status":"active" }`. No enviar contraseña. Por seguridad el estado por defecto es inactive; active debe ser explícito. Reintentar con **la misma clave y el mismo body** si falla Auth o la finalización DB. El alta crea Auth sin password/confirmación manual y después profile; nunca entrega contraseñas.
+Crear usuario con POST /api/users, Idempotency-Key UUID y body `{ "email":"correo real", "username":"usuario", "full_name":"Nombre completo", "status":"active" }`. No enviar contraseña en el alta. Por seguridad el estado por defecto es inactive; active debe ser explícito. Reintentar con **la misma clave y el mismo body** si falla Auth o la finalización DB. El alta crea Auth sin password/confirmación manual y después profile; nunca entrega contraseñas.
+
+Un administrador con `user.edit` puede abrir **Usuarios → Seguridad** y establecer una contraseña provisional (mínimo 12 caracteres). El backend la envía sólo a Supabase Auth, revoca las sesiones anteriores y guarda únicamente `must_change_password=true`. Al siguiente ingreso el usuario debe elegir su contraseña personal; `/auth/password` actualiza Auth y limpia la marca una sola vez. La contraseña provisional o personal nunca se almacena en PostgreSQL, auditoría ni logs. El estado `inactive` o `blocked` impide el acceso de inmediato mediante el control de perfil existente.
 
 Después, usar POST /api/auth/recover con su correo para que reciba instrucciones de acceso. El envío depende de SMTP y no está ligado a una transacción DB; la respuesta 202 no acredita entrega. El interesado intercambia el token de correo en /auth/verify y establece su contraseña en /auth/password. No devolver ni imprimir enlaces de acceso desde el backend administrativo.
 

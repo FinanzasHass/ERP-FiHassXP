@@ -394,6 +394,9 @@ export function UserDetail({
     [permission, setPermission] = useState(""),
     [effect, setEffect] = useState("deny"),
     [reason, setReason] = useState(""),
+    [temporaryPassword, setTemporaryPassword] = useState(""),
+    [passwordConfirmation, setPasswordConfirmation] = useState(""),
+    [notice, setNotice] = useState(""),
     [revision, setRevision] = useState(0),
     [busy, setBusy] = useState(false);
   const self = user.id === actorId;
@@ -445,6 +448,7 @@ export function UserDetail({
   }
   const tabs = [
     "Información",
+    ...(!self && can("user.edit") ? ["Seguridad"] : []),
     ...(can("user.view") ? ["Roles"] : []),
     ...(can("permission.assign") ? ["Permisos especiales"] : []),
     ...(can("company.assign") ? ["Empresas"] : []),
@@ -464,6 +468,7 @@ export function UserDetail({
         ))}
       </div>
       <ErrorBox error={error} />
+      {notice && <p className="notice" role="status">{notice}</p>}
       {self && (
         <p className="notice">
           Las modificaciones de sus propios accesos están protegidas por el
@@ -598,6 +603,25 @@ export function UserDetail({
             </form>
           )}
         </>
+      )}
+      {tab === "Seguridad" && (
+        <form className="form-grid" onSubmit={async (event) => {
+          event.preventDefault();
+          setError(""); setNotice("");
+          if (temporaryPassword !== passwordConfirmation) { setError("Las contraseñas no coinciden."); return; }
+          setBusy(true);
+          try {
+            await api(`/users/${user.id}/temporary-password`, 'PUT', {password: temporaryPassword});
+            setTemporaryPassword(""); setPasswordConfirmation("");
+            setNotice("Contraseña provisional establecida. Las sesiones anteriores fueron cerradas y el usuario deberá cambiarla una sola vez.");
+          } catch (reason) { setError((reason as Error).message); }
+          finally { setBusy(false); }
+        }}>
+          <p className="notice full">La contraseña no se guarda en la base administrativa ni en auditoría. Al confirmar se cerrarán las sesiones actuales del usuario.</p>
+          <label>Contraseña provisional · mínimo 12 caracteres<input required minLength={12} maxLength={128} type="password" autoComplete="new-password" value={temporaryPassword} onChange={(e)=>setTemporaryPassword(e.target.value)}/></label>
+          <label>Confirmar contraseña provisional<input required minLength={12} maxLength={128} type="password" autoComplete="new-password" value={passwordConfirmation} onChange={(e)=>setPasswordConfirmation(e.target.value)}/></label>
+          <button className="primary" disabled={busy}>{busy?'Aplicando…':'Establecer contraseña provisional'}</button>
+        </form>
       )}
       {tab === "Empresas" && (
         <>

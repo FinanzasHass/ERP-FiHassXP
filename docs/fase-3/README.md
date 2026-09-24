@@ -10,7 +10,7 @@ La interfaz usa una barra lateral verde profundo, encabezado blanco con contexto
 - `/auth/callback`: verificación explícita del enlace y nueva contraseña; el token del enlace se retira de la URL antes de enviarlo al backend.
 - `/app/dashboard`: contexto y tarjetas “No hay datos disponibles todavía”.
 - Empresas, áreas, cargos globales/específicos y usuarios: creación/edición/desactivación según permisos existentes. Sin DELETE físico.
-- Usuarios: filtros empresariales, área, cargo y estado; información, roles, permisos especiales, empresas y actividad. Cambio de correo separado por su impacto en Auth. La vista de empresas por usuario respeta también el RLS existente.
+- Usuarios: filtros empresariales, área, cargo y estado; información, seguridad, roles, permisos especiales, empresas y actividad. Seguridad permite fijar una contraseña provisional sin persistirla fuera de Supabase Auth, revoca sesiones y exige un único cambio al siguiente ingreso. Cambio de correo permanece separado por su impacto en Auth. La vista de empresas por usuario respeta también el RLS existente.
 - Roles: metadata y matriz agrupada con etiquetas legibles, selección/retiro por grupo y marca de permiso sensible. `is_system` no se edita.
 - CECO: árbol de profundidad arbitraria, tabla, filtros globales de código/nombre/categoría/estado, categorías configurables, subcentros, vigencias, desactivación e historial auditado.
 - Importación CSV UTF-8 o XLSX: lectura en worker, validación, vista previa, errores y confirmación. Componente desacoplado mediante adaptador para futuros maestros.

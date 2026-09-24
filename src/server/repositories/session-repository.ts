@@ -15,7 +15,7 @@ export function createSessionRepository(config: Pick<Config, 'SUPABASE_URL' | 'S
   });
   return {
     async profile(id) {
-      const { data, error } = await db.from('profiles').select('id,email,username,full_name,status,area_id,position_id,manager_id').eq('id', id).maybeSingle();
+      const { data, error } = await db.from('profiles').select('id,email,username,full_name,status,must_change_password,area_id,position_id,manager_id').eq('id', id).maybeSingle();
       if (error) databaseError(error);
       return data as Profile | null;
     },
@@ -29,7 +29,10 @@ export function createSessionRepository(config: Pick<Config, 'SUPABASE_URL' | 'S
       if(table==='journal_entry_lines')builder=db.from(table).select('*,journal_line_dimensions(*)',{count:'exact'});
       if(table==='supplier_companies')builder=db.from(table).select('*,suppliers(id,tax_id_type,tax_id,country_code,legal_name)',{count:'exact'});
       if(table==='profiles') {
-        builder=db.from(table).select(query.company_id?'*,user_companies!inner(company_id,active)':'*,user_companies(company_id,active)',{count:'exact'});
+        // user_companies also references profiles through assigned_by. Pin the
+        // membership FK so PostgREST never treats this embed as ambiguous.
+        const membership='user_companies!user_companies_user_id_fkey';
+        builder=db.from(table).select(query.company_id?`*,${membership}!inner(company_id,active)`:`*,${membership}(company_id,active)`,{count:'exact'});
         if(query.company_id) builder=builder.eq('user_companies.company_id',query.company_id).eq('user_companies.active',true);
       }
       if(table==='audit_logs') {

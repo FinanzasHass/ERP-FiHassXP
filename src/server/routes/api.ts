@@ -51,6 +51,11 @@ export function apiRouter(_config: RuntimeConfig, deps: Dependencies) {
     res.json(await completeLogin(await deps.auth.verifyOtp(body.token_hash, body.type), req.ip ?? '127.0.0.1'));
   });
   router.use(authenticated);
+  router.use((req, _res, next) => {
+    if (!getActor(req).profile.must_change_password) return next();
+    if (['/auth/workspace','/auth/me','/auth/password','/auth/logout'].includes(req.path)) return next();
+    throw new HttpError(403, 'PASSWORD_CHANGE_REQUIRED');
+  });
   router.use(mastersRouter());
   router.use(financeRouter(_config));
   router.use(treasuryRouter());
@@ -67,7 +72,12 @@ export function apiRouter(_config: RuntimeConfig, deps: Dependencies) {
     res.json({ profile: actor.profile, company_id: company_id ?? null, permissions: await actor.db.rpc('effective_permissions', { company_id: company_id ?? null }) });
   });
   router.post('/auth/logout', async (req, res) => { await deps.privileged.logout(getActor(req).token); res.sendStatus(204); });
-  router.post('/auth/password', authLimiter, async (req, res) => { await deps.auth.updatePassword(getActor(req).token, v.password.parse(req.body).password); res.sendStatus(204); });
+  router.post('/auth/password', authLimiter, async (req, res) => {
+    const actor=getActor(req);
+    await deps.auth.updatePassword(actor.token, v.password.parse(req.body).password);
+    await actor.db.rpc('complete_forced_password_change', {});
+    res.sendStatus(204);
+  });
   router.get('/auth/companies', async (req, res) => {
     const actor = getActor(req);
     res.json(await actor.db.list('user_companies', v.pageQuery.parse(req.query), { user_id: actor.id, active: 'true' }));
@@ -85,6 +95,7 @@ export function apiRouter(_config: RuntimeConfig, deps: Dependencies) {
     res.json(await getActor(req).db.rpc('admin_set_profile_status', { target_user: v.uuid.parse(req.params.id), new_status: body.status }));
   });
   router.patch('/users/:id/email', requirePermission('user.edit'), admin.updateEmail(deps.privileged));
+  router.put('/users/:id/temporary-password', requirePermission('user.edit'), admin.setTemporaryPassword(deps.privileged));
   router.get('/users/:id/roles', requirePermission('user.view'), admin.listUserRelation('user_roles'));
   router.put('/users/:id/roles', requirePermission('role.assign'), admin.setRole);
   router.get('/users/:id/companies', requirePermission('company.assign'), admin.listUserRelation('user_companies'));

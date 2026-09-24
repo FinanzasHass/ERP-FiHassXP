@@ -6,6 +6,7 @@ export interface PrivilegedAuth {
   resolveUsername?(username: string): Promise<string | null>;
   ensureIdentity(id: string, email: string): Promise<void>;
   updateEmail(id: string, email: string): Promise<void>;
+  updatePassword(id: string, password: string): Promise<void>;
   logout(token: string): Promise<void>;
   recordVerifiedLogin(userId: string, sessionId: string, ip: string): Promise<void>;
 }
@@ -39,6 +40,10 @@ export function createPrivilegedAuth(config: Pick<Config, 'SUPABASE_URL' | 'SUPA
     async updateEmail(id, email) {
       const { error } = await client.auth.admin.updateUserById(id, { email, email_confirm: false });
       if (error) throw new HttpError(409, 'AUTH_EMAIL_UPDATE_FAILED');
+    },
+    async updatePassword(id, password) {
+      const { error } = await client.auth.admin.updateUserById(id, { password });
+      if (error) throw new HttpError(503, 'AUTH_PASSWORD_UPDATE_FAILED');
     },
     async logout(token) {
       const { error } = await client.auth.admin.signOut(token, 'global');
