@@ -201,10 +201,11 @@ export function Form({
               />
             ) : (
               <input
-                autoComplete="off"
+                autoComplete={f.type === "password" ? "new-password" : "off"}
                 required={f.required}
                 type={f.type || "text"}
                 maxLength={f.key === "description" ? 2000 : 254}
+                minLength={f.type === "password" ? 12 : undefined}
                 min={f.type === "number" ? 0 : undefined}
                 value={values[f.key] ?? ""}
                 onChange={(e) =>
@@ -432,6 +433,7 @@ export function EntityPage({
   const fields = config.fields.filter(
     (f) =>
       !(edit?.id && f.key === "email") &&
+      !(edit?.id && ["temporary_password", "temporary_password_confirmation"].includes(f.key)) &&
       !(edit?.is_system && f.key === "code") &&
       (!edit?.id ||
         f.key !== "active" ||
@@ -685,6 +687,11 @@ export function EntityPage({
               company={company}
               close={() => setEdit(null)}
               onSave={async (data) => {
+                if (config.permission === "user" && !edit.id) {
+                  if (data.temporary_password !== data.temporary_password_confirmation)
+                    throw new Error("Las contraseñas provisionales no coinciden.");
+                  delete data.temporary_password_confirmation;
+                }
                 if (edit.id) {
                   for (const k of Object.keys(data))
                     if (data[k] === edit[k]) delete data[k];

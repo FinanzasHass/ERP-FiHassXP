@@ -38,4 +38,5 @@ export const refresh = z.object({ refresh_token: z.string().min(1).max(8192) }).
 export const email = z.object({ email: z.email().max(254) }).strict();
 export const password = z.object({ password: z.string().min(12).max(128) }).strict();
 export const temporaryPassword = z.object({ password: z.string().min(12).max(128) }).strict();
+export const userCreate = profileCreate.extend({ temporary_password: z.string().min(12).max(128) }).strict();
 export const verifyOtp = z.object({ token_hash: z.string().min(1).max(1024), type: z.enum(['invite', 'recovery']) }).strict();

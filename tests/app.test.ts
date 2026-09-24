@@ -177,6 +177,27 @@ test('administrator sets a temporary password without sending it to database RPC
   assert.equal((await request(app).put(`/api/users/${user}/temporary-password`).auth('valid',{type:'bearer'}).send({password:'Temporary-2026!'})).status,403);
   assert.equal((await request(app).put(`/api/users/${other}/temporary-password`).auth('valid',{type:'bearer'}).send({password:'short'})).status,400);
 });
+test('user creation requires and applies one temporary password after durable provisioning',async()=>{
+  const {deps,calls}=fixture({grants:['user.create']});
+  deps.repository=()=>({
+    async profile(){return profile;},
+    async rpc<T>(name:string,args:Record<string,unknown>):Promise<T>{
+      calls.push({name,args});
+      if(name==='has_permission')return (String(args.permission_code)==='user.create') as T;
+      if(name==='begin_user_provisioning')return {request_id:other,user_id:other,status:'pending'} as T;
+      if(name==='finish_user_provisioning')return {...profile,id:other,email:'new@example.test',username:'newuser'} as T;
+      return {} as T;
+    },
+    async list(){return {data:[],count:0};},
+  });
+  const app=createApp(config,deps),payload={email:'new@example.test',username:'newuser',full_name:'New User',status:'active',temporary_password:'Temporary-2026!'};
+  const response=await request(app).post('/api/users').auth('valid',{type:'bearer'}).set('Idempotency-Key',company).send(payload);
+  assert.equal(response.status,201);
+  assert.equal(JSON.stringify(calls.find(c=>c.name==='begin_user_provisioning')?.args).includes('Temporary-2026!'),false);
+  assert.deepEqual(calls.find(c=>c.name==='admin_require_temporary_password')?.args,{target_user:other});
+  assert.deepEqual(calls.find(c=>c.name==='auth_password_update')?.args,{id:other});
+  assert.equal((await request(app).post('/api/users').auth('valid',{type:'bearer'}).set('Idempotency-Key',company).send({...payload,temporary_password:undefined})).status,400);
+});
 test('temporary password blocks business routes and clears only after authenticated password change',async()=>{
   const {app,calls}=fixture({forcedPassword:true,grants:['user.view']});
   const blocked=await request(app).get('/api/users').auth('valid',{type:'bearer'});

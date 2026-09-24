@@ -34,7 +34,12 @@ export const saveEntity = (kind: keyof typeof v.entitySchemas): RequestHandler =
 };
 export const createUser = (privileged: PrivilegedAuth): RequestHandler => async (req, res) => {
   const key = v.uuid.parse(req.header('Idempotency-Key'));
-  res.status(201).json(await provisionUser(getActor(req), privileged, key, v.profileCreate.parse(req.body)));
+  const actor=getActor(req);
+  const {temporary_password,...profile}=v.userCreate.parse(req.body);
+  const created=await provisionUser(actor, privileged, key, profile);
+  await actor.db.rpc('admin_require_temporary_password',{target_user:created.id});
+  await privileged.updatePassword(created.id,temporary_password);
+  res.status(201).json(created);
 };
 export const updateUser: RequestHandler = async (req, res) => {
   res.json(await getActor(req).db.rpc('admin_update_profile', { target_user: v.uuid.parse(req.params.id), payload: v.profileUpdate.parse(req.body) }));

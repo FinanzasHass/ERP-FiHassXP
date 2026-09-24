@@ -182,6 +182,8 @@ export const catalogs: Record<string, Catalog> = {
       { key: "full_name", label: "Nombre completo", required: true },
       { key: "username", label: "Usuario", required: true },
       { key: "email", label: "Correo", type: "email", required: true },
+      { key: "temporary_password", label: "Contraseña provisional · mínimo 12 caracteres", type: "password", required: true },
+      { key: "temporary_password_confirmation", label: "Confirmar contraseña provisional", type: "password", required: true },
       { key: "area_id", label: "Área", source: "areas" },
       { key: "position_id", label: "Cargo", source: "positions" },
       { key: "manager_id", label: "Jefe directo", source: "users" },

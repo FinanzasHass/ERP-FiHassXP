@@ -77,6 +77,11 @@ async function fixture(page: Page, blocked = false, forced = false) {
       status = 204;
       body = null;
     }
+    else if (p === "/api/users" && req.method() === "POST") {
+      writes.push(req.postDataJSON());
+      status = 201;
+      body = {id:u,...req.postDataJSON()};
+    }
     else if (p === "/api/cost-centers/import") {
       writes.push(req.postDataJSON());
       body = {
@@ -205,6 +210,21 @@ test("provisional password is required once and the application resumes after sa
   await page.getByLabel(/Confirmar nueva contraseña/).fill('Personal-password-2026!');
   await page.getByRole('button',{name:'Guardar y continuar'}).click();
   await expect(page.getByRole('heading',{name:'Su espacio de gestión'})).toBeVisible();
+});
+test("new user form requires a confirmed temporary password and sends only the credential once",async({page})=>{
+  const writes=await fixture(page);
+  await login(page);
+  await page.getByRole('button',{name:'Usuarios',exact:true}).click();
+  await page.getByRole('button',{name:'Nuevo usuario'}).click();
+  await page.getByLabel('Nombre completo *').fill('Richard Synthetic');
+  await page.getByLabel('Usuario *').fill('rsaavedra_test');
+  await page.getByLabel('Correo *').fill('richard.synthetic@example.test');
+  await page.getByLabel(/Contraseña provisional · mínimo 12 caracteres/).fill('Temporary-2026!');
+  await page.getByLabel('Confirmar contraseña provisional *').fill('Temporary-2026!');
+  await page.getByRole('button',{name:'Guardar cambios'}).click();
+  await expect.poll(()=>writes.length).toBe(1);
+  expect(writes[0].temporary_password).toBe('Temporary-2026!');
+  expect(writes[0].temporary_password_confirmation).toBeUndefined();
 });
 test("CECO subcenter form, hierarchy, import preview and explicit confirmation", async ({
   page,

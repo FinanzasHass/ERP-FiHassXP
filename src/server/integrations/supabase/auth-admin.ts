@@ -42,7 +42,9 @@ export function createPrivilegedAuth(config: Pick<Config, 'SUPABASE_URL' | 'SUPA
       if (error) throw new HttpError(409, 'AUTH_EMAIL_UPDATE_FAILED');
     },
     async updatePassword(id, password) {
-      const { error } = await client.auth.admin.updateUserById(id, { password });
+      // Assigning the initial credential is the controlled activation step for
+      // identities provisioned without relying on SMTP delivery.
+      const { error } = await client.auth.admin.updateUserById(id, { password, email_confirm: true });
       if (error) throw new HttpError(503, 'AUTH_PASSWORD_UPDATE_FAILED');
     },
     async logout(token) {
