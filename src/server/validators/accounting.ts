@@ -52,7 +52,7 @@ export const entryType = z
   .strict();
 const dimension = z
   .object({
-    dimension_type: z.enum(["cost_center", "project", "subproject", "area"]),
+    dimension_type: z.enum(["cost_center", "project", "subproject", "area", "afe_future"]),
     dimension_id: uuid,
   })
   .strict();
@@ -66,7 +66,7 @@ export const journalLine = z
     foreign_amount: money.optional(),
     third_party_type: thirdParty.nullable().optional(),
     third_party_id: nullableId,
-    dimensions: z.array(dimension).max(4).optional(),
+    dimensions: z.array(dimension).max(5).optional(),
   })
   .strict()
   .refine((x) => x.debit > 0 !== x.credit > 0, {
@@ -116,7 +116,7 @@ export const exchangeRate = z
     source: text(500),
   })
   .strict();
-const dimensionType = z.enum(["cost_center", "project", "subproject", "area"]);
+const dimensionType = z.enum(["cost_center", "project", "subproject", "area", "afe_future"]);
 export const rule = z
   .object({
     code: text(60),
@@ -144,7 +144,7 @@ export const rule = z
             amount_key: z.enum(["amount", "net_amount", "tax_amount"]),
             multiplier: rate.optional(),
             use_third_party: z.boolean().optional(),
-            dimension_types: z.array(dimensionType).max(4).optional(),
+            dimension_types: z.array(dimensionType).max(5).optional(),
           })
           .strict(),
       )
@@ -173,6 +173,7 @@ export const preview = z
         project: uuid.optional(),
         subproject: uuid.optional(),
         area: uuid.optional(),
+        afe_future: uuid.optional(),
       })
       .strict()
       .optional(),

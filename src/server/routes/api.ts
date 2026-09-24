@@ -1,5 +1,6 @@
 import { receivablesRouter } from './receivables.js';
 import { accountingRouter } from './accounting.js';
+import { accountingEventsRouter } from './accounting-events.js';
 import { Router } from 'express';
 import { rateLimit } from 'express-rate-limit';
 import type { RuntimeConfig } from '../config/env.js';
@@ -22,6 +23,7 @@ export interface Dependencies {
 }
 export function apiRouter(_config: RuntimeConfig, deps: Dependencies) {
   const router = Router();
+  router.get('/runtime',(_req,res)=>res.json({environment:_config.APP_ENV,label:_config.APP_ENV==='demo'?'ENTORNO DEMO':'ENTORNO DE PRUEBAS',accounting:{auto_generate:false,auto_post:false,production_rules:false}}));
   const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 20, standardHeaders: 'draft-8', legacyHeaders: false, message: { error: 'AUTH_RATE_LIMIT' } });
   const authenticated = requireAuth(deps.auth, deps.repository);
   const completeLogin = async (tokens: Tokens, ip: string) => {
@@ -56,6 +58,7 @@ export function apiRouter(_config: RuntimeConfig, deps: Dependencies) {
   router.use(expenseReportsRouter());
   router.use(receivablesRouter());
   router.use(accountingRouter());
+  router.use(accountingEventsRouter());
   router.get('/auth/workspace',async(req,res)=>res.json(await getActor(req).db.rpc('my_workspace',{})));
   router.get('/auth/me', async (req, res) => {
     const { company_id } = v.companyContext.parse(req.query);

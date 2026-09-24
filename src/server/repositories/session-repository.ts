@@ -37,6 +37,10 @@ export function createSessionRepository(config: Pick<Config, 'SUPABASE_URL' | 'S
         if(query.to) builder=builder.lt('created_at',new Date(Date.parse(query.to+'T00:00:00Z')+86400000).toISOString());
       }
       for (const [key, value] of Object.entries(filters)) builder = builder.eq(key, value);
+      if(table==='accounting_event_queue'){
+        if(query.from)builder=builder.gte('event_date',query.from);
+        if(query.to)builder=builder.lte('event_date',query.to);
+      }
       if(query.search){const fields=table==='profiles'?['full_name','username','email']:table==='companies'?['code','legal_name']:['code','name'];builder=builder.or(fields.map(f=>`${f}.ilike.%${query.search}%`).join(','));}
       if(['cost_centers','cost_center_categories','projects','subprojects'].includes(table)){
         if(query.code)builder=builder.eq('code',query.code);
@@ -45,7 +49,7 @@ export function createSessionRepository(config: Pick<Config, 'SUPABASE_URL' | 'S
         if(query.category_id&&table==='cost_centers')builder=builder.eq('category_id',query.category_id);
         if(query.project_id&&table==='subprojects')builder=builder.eq('project_id',query.project_id);
       }
-      const order = table === 'audit_logs'?'created_at':table === 'permissions' ? 'code' : table === 'role_permissions' ? 'permission_id' : table === 'user_companies' ? 'company_id' : 'id';
+      const order = table === 'accounting_event_sources'?'entity_id':table === 'audit_logs'?'created_at':table === 'permissions' ? 'code' : table === 'role_permissions' ? 'permission_id' : table === 'user_companies' ? 'company_id' : 'id';
       if (table.endsWith('_history')) builder=builder.order('created_at',{ascending:true});
       const { data, error, count } = await builder.order(order,{ascending:table!=='audit_logs'}).range((query.page - 1) * query.limit, query.page * query.limit - 1);
       if (error) databaseError(error);

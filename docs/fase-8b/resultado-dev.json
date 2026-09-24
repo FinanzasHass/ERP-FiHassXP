@@ -1,0 +1,107 @@
+{
+  "run": "F8B_20260923180622",
+  "environment": "DEV",
+  "sameProjectAsApplication": true,
+  "projectFingerprint": "7a91ed85e13bc5b1",
+  "startedAt": "2026-09-23T18:06:22.520Z",
+  "status": "PASS",
+  "results": [
+    {
+      "id": 1,
+      "name": "Migraciones 044–051 y mismo proyecto DEV",
+      "status": "PASS"
+    },
+    {
+      "id": 2,
+      "name": "Operación financiera válida sin regla contable",
+      "status": "PASS"
+    },
+    {
+      "id": 3,
+      "name": "Evento contable idempotente y no forjable por REST",
+      "status": "PASS"
+    },
+    {
+      "id": 4,
+      "name": "Empresa DEMO requiere designación explícita",
+      "status": "PASS"
+    },
+    {
+      "id": 5,
+      "name": "Regla y cuentas exclusivamente DEMO",
+      "status": "PASS"
+    },
+    {
+      "id": 6,
+      "name": "Resolución y preview no persisten asiento",
+      "status": "PASS"
+    },
+    {
+      "id": 7,
+      "name": "Generación concurrente produce un solo draft",
+      "status": "PASS"
+    },
+    {
+      "id": 8,
+      "name": "Segregación generación, validación y posteo",
+      "status": "PASS"
+    },
+    {
+      "id": 9,
+      "name": "Trazabilidad bidireccional operación-evento-asiento",
+      "status": "PASS"
+    },
+    {
+      "id": 10,
+      "name": "Aislamiento de empresa y revocación inmediata",
+      "status": "PASS"
+    },
+    {
+      "id": 11,
+      "name": "Dashboard DEMO deriva datos persistidos",
+      "status": "PASS"
+    },
+    {
+      "id": 12,
+      "name": "Importación AFE preview y confirmación idempotente",
+      "status": "PASS"
+    },
+    {
+      "id": 13,
+      "name": "Diccionario legacy conserva significado no definido",
+      "status": "PASS"
+    },
+    {
+      "id": 14,
+      "name": "Feature flags productivos permanecen deshabilitados",
+      "status": "PASS"
+    },
+    {
+      "id": 15,
+      "name": "Auditoría financiera y de configuración",
+      "status": "PASS"
+    },
+    {
+      "id": 16,
+      "name": "Secret boundary y UI DEMO real",
+      "status": "PASS"
+    }
+  ],
+  "fixtures": {
+    "companyA": "0439502c-dde8-454b-8d2b-376398456f82",
+    "companyB": "19cc5b0b-fad8-42e4-a1a2-d52e4c317ab9",
+    "users": [
+      "844b07a4-5f96-4922-a9f8-5f96444b32db",
+      "5d3d1083-bccf-4309-b74e-cfd759035c92",
+      "24d9d6c1-4457-4aaa-a2a0-a1f8e861e517",
+      "f323a5a9-775d-4b52-9770-85acef3f5b55",
+      "345fff1f-0af4-455d-a495-48a93506ce10"
+    ]
+  },
+  "updatedAt": "2026-09-23T18:08:00.653Z",
+  "summary": {
+    "pass": 16,
+    "fail": 0,
+    "notRun": 0
+  }
+}

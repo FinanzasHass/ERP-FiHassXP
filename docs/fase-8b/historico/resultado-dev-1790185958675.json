@@ -1,0 +1,109 @@
+{
+  "run": "F8B_20260923175052",
+  "environment": "DEV",
+  "sameProjectAsApplication": true,
+  "projectFingerprint": "7a91ed85e13bc5b1",
+  "startedAt": "2026-09-23T17:50:52.791Z",
+  "status": "FAIL",
+  "results": [
+    {
+      "id": 1,
+      "name": "Migraciones 044–051 y mismo proyecto DEV",
+      "status": "PASS"
+    },
+    {
+      "id": 2,
+      "name": "Operación financiera válida sin regla contable",
+      "status": "PASS"
+    },
+    {
+      "id": 3,
+      "name": "Evento contable idempotente y no forjable por REST",
+      "status": "PASS"
+    },
+    {
+      "id": 4,
+      "name": "Empresa DEMO requiere designación explícita",
+      "status": "PASS"
+    },
+    {
+      "id": 5,
+      "name": "Regla y cuentas exclusivamente DEMO",
+      "status": "PASS"
+    },
+    {
+      "id": 6,
+      "name": "Resolución y preview no persisten asiento",
+      "status": "PASS"
+    },
+    {
+      "id": 7,
+      "name": "Generación concurrente produce un solo draft",
+      "status": "PASS"
+    },
+    {
+      "id": 8,
+      "name": "Segregación generación, validación y posteo",
+      "status": "PASS"
+    },
+    {
+      "id": 9,
+      "name": "Trazabilidad bidireccional operación-evento-asiento",
+      "status": "PASS"
+    },
+    {
+      "id": 10,
+      "name": "Aislamiento de empresa y revocación inmediata",
+      "status": "PASS"
+    },
+    {
+      "id": 11,
+      "name": "Dashboard DEMO deriva datos persistidos",
+      "status": "PASS"
+    },
+    {
+      "id": 12,
+      "name": "Importación AFE preview y confirmación idempotente",
+      "status": "PASS"
+    },
+    {
+      "id": 13,
+      "name": "Diccionario legacy conserva significado no definido",
+      "status": "PASS"
+    },
+    {
+      "id": 14,
+      "name": "Feature flags productivos permanecen deshabilitados",
+      "status": "FAIL",
+      "evidence": "Productive flag enabled"
+    },
+    {
+      "id": 15,
+      "name": "Auditoría financiera y de configuración",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": 16,
+      "name": "Secret boundary y UI DEMO real",
+      "status": "NOT_RUN"
+    }
+  ],
+  "fixtures": {
+    "companyA": "e58031cb-a699-44a2-9e79-2cd276334253",
+    "companyB": "a50f82d2-6b25-42bd-b284-469c55f3dc7a",
+    "users": [
+      "2e79391a-ae51-4911-a725-dc06c9fc5d6b",
+      "6c1ac17f-a8d0-4cee-9f46-64780133b021",
+      "22a0c709-03c7-4134-ac49-7dc1d84f9b7d",
+      "aefddd55-018c-45c5-9f18-8bd1d2d5a4ac",
+      "118111a6-58ca-455b-8cbb-1d6a9da28f96"
+    ]
+  },
+  "updatedAt": "2026-09-23T17:52:18.723Z",
+  "summary": {
+    "pass": 13,
+    "fail": 1,
+    "notRun": 2
+  },
+  "incident": "Productive flag enabled"
+}

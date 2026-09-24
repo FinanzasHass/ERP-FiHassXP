@@ -1,4 +1,5 @@
 import { settlementPresentation } from "./settlement-presentation";
+import {AccountingTraceLink} from './accounting-trace';
 import React, { useEffect, useRef, useState } from "react";
 import { api, all, query, type Row } from "./api";
 import { Modal, ErrorBox, Empty } from "./components";
@@ -738,6 +739,7 @@ export function EmployeeExpensePage({
       </section>
       {detail && (
         <section className="table-card expense-detail">
+          {['expense-reports','employee-advances','employee-returns','employee-reimbursements'].includes(page)&&<AccountingTraceLink entityType={{'expense-reports':'expense_report','employee-advances':'employee_advance','employee-returns':'employee_return','employee-reimbursements':'employee_reimbursement'}[page]!} id={detail.record.id} can={can}/>}
           <div className="page-heading">
             <h2>
               {data!.report_number ?? data!.request_number ?? definition.title}

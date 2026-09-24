@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: mini-erp-financiero
+    name: mini-erp-financiero-demo
     runtime: node
     buildCommand: npm ci && npm run build
     startCommand: npm start
@@ -10,6 +10,14 @@ services:
         value: 24.18.0
       - key: NODE_ENV
         value: production
+      - key: APP_ENV
+        value: demo
+      - key: ACCOUNTING_AUTO_GENERATE
+        value: "false"
+      - key: ACCOUNTING_AUTO_POST
+        value: "false"
+      - key: PRODUCTION_ACCOUNTING_RULES
+        value: "false"
       - key: TRUST_PROXY_HOPS
         value: 1
       - key: APP_ORIGIN

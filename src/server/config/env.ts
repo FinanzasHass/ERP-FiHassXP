@@ -1,6 +1,10 @@
 import { z } from "zod";
 
 const schema = z.object({
+  APP_ENV: z.enum(['development','demo','staging']).default('development'),
+  ACCOUNTING_AUTO_GENERATE: z.literal('false').default('false'),
+  ACCOUNTING_AUTO_POST: z.literal('false').default('false'),
+  PRODUCTION_ACCOUNTING_RULES: z.literal('false').default('false'),
   SUPABASE_URL: z
     .url()
     .refine(

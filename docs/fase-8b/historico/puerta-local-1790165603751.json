@@ -1,0 +1,87 @@
+{
+  "executedAt": "2026-09-23T12:07:59.091Z",
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "PostgreSQL including concurrency",
+      "status": "PASS",
+      "evidence": [
+        "PASS 123 Phase 2–8B database checks on v24.18.0"
+      ]
+    },
+    {
+      "name": "backend types",
+      "status": "PASS",
+      "evidence": []
+    },
+    {
+      "name": "client types",
+      "status": "PASS",
+      "evidence": []
+    },
+    {
+      "name": "application tests",
+      "status": "PASS",
+      "evidence": [
+        "ℹ tests 47",
+        "ℹ pass 47",
+        "ℹ fail 0"
+      ]
+    },
+    {
+      "name": "client build",
+      "status": "PASS",
+      "evidence": []
+    },
+    {
+      "name": "secret boundary",
+      "status": "PASS",
+      "evidence": []
+    },
+    {
+      "name": "browser interface",
+      "status": "PASS",
+      "evidence": [
+        "  6 passed (12.3s)"
+      ]
+    },
+    {
+      "name": "browser employee-expenses",
+      "status": "PASS",
+      "evidence": [
+        "  3 passed (6.3s)"
+      ]
+    },
+    {
+      "name": "browser receivables",
+      "status": "PASS",
+      "evidence": [
+        "  3 passed (5.3s)"
+      ]
+    },
+    {
+      "name": "browser accounting",
+      "status": "PASS",
+      "evidence": [
+        "  4 passed (8.0s)"
+      ]
+    },
+    {
+      "name": "browser accounting-events",
+      "status": "PASS",
+      "evidence": [
+        "  2 passed (6.1s)"
+      ]
+    }
+  ],
+  "migrationHashes": {
+    "202609220044_accounting_events_model.sql": "da3344f3fc1803f27e00f2507da8f08a586c805391a593bee23d6dee68e95491",
+    "202609220045_accounting_source_capture.sql": "30526a27611fff625c175ededcb16496965690be133ff2e72e31c13aca1ed936",
+    "202609220046_accounting_event_workflow.sql": "9f5a882c0c13effd6844e2aa91e55ba0dbdff5a22a1ed84f90b7aface3a2f824",
+    "202609220047_accounting_configurable_masters.sql": "4e2cd7cb4e939339f90df2496d396da66418952a257e2fe466b9b13820ca4381",
+    "202609220048_accounting_afe_dimension.sql": "7e9d7c414f9c721c659c38fe99c6cda2c0f1ea965afa411d3cb27f90165dac1f",
+    "202609230049_accounting_event_configuration.sql": "71513a189c35745373a1abc84d45328e379a7c7f2d2f35f3208defb76f752864",
+    "202609230050_demo_dashboard.sql": "85d21ea150f19286f678d8e48abeb41c1256bbf0a977df7383a29168906e721d"
+  },
+  "supabaseDevModified": false
+}

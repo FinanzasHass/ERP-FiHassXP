@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import {AccountingTraceLink} from './accounting-trace';
 import { all, api, query, type Row } from "./api";
 import { Empty, ErrorBox, Modal } from "./components";
 type Field = {
@@ -1098,6 +1099,7 @@ export function FinancePage({
           }}
         >
           <div className="finance-detail">
+            {d.endpoint==='payables'&&<AccountingTraceLink entityType="payable" id={detail.record.id} can={can}/>}
             <span className="badge">{label(detail.record.status)}</span>
             <dl>
               {d.fields

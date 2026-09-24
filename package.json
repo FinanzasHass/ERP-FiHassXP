@@ -32,7 +32,13 @@
     "verify:phase8a:local": "node scripts/phase8a-local-gate.mjs",
     "db:phase8a:dev:apply": "node --env-file=.env scripts/phase8a-dev-migrations.mjs --apply",
     "verify:phase8a:dev": "node --env-file=.env --import tsx scripts/verify-phase8a-dev.ts",
-    "verify:phase8a:ui:dev": "node --env-file=.env --import tsx scripts/verify-phase8a-ui-dev.ts"
+    "verify:phase8a:ui:dev": "node --env-file=.env --import tsx scripts/verify-phase8a-ui-dev.ts",
+    "test:phase8b:postgres": "node scripts/phase8b-local-postgres.mjs",
+    "verify:phase8b:local": "node scripts/phase8b-local-gate.mjs",
+    "db:phase8b:dev:preflight": "node --env-file=.env scripts/phase8b-dev-migrations.mjs",
+    "db:phase8b:dev:apply": "node --env-file=.env scripts/phase8b-dev-migrations.mjs --apply",
+    "verify:phase8b:dev": "node --env-file=.env --import tsx scripts/verify-phase8b-dev.ts",
+    "demo:manifest": "node scripts/build-demo-manifest.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.116.0",

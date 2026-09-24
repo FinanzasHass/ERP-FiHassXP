@@ -223,5 +223,7 @@ try {
   await (await import('./phase7-checks.mjs')).phase7Checks({db,rpc,asUser,scalar,test,admin,...f4,...settlements});
   const f8a=await (await import('./phase8a-checks.mjs')).phase8aChecks({db,rpc,asUser,scalar,test,admin,...f4,...settlements});
   if(process.env.TEST_DATABASE_URL)await (await import('./phase8a-concurrency-checks.mjs')).phase8aConcurrencyChecks({db,rpc,asUser,scalar,test,admin,...f4,...f8a});
-  console.log(`PASS ${checks} Phase 2–8A database checks on ${process.version}`);
+  const f8b=await (await import('./phase8b-checks.mjs')).phase8bChecks({db,rpc,asUser,scalar,test,admin,...f4,...f8a});
+  if(process.env.TEST_DATABASE_URL)await (await import('./phase8b-concurrency-checks.mjs')).phase8bConcurrencyChecks({db,rpc,scalar,test,admin,...f4,...f8a,...f8b});
+  console.log(`PASS ${checks} Phase 2–8B database checks on ${process.version}`);
 }catch(error){console.error({message:error.message,code:error.code,position:error.position,where:error.where});process.exitCode=1;}finally{await db.close();}

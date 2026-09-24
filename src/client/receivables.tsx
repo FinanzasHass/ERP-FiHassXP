@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import {AccountingTraceLink} from './accounting-trace';
 import { api, all, query, type Row } from "./api";
 import { Modal, ErrorBox, Empty } from "./components";
 export const receivablePages: Record<
@@ -1080,6 +1081,7 @@ export function ReceivablePage({
       )}
       {detail && (
         <Modal title={detail.title} close={() => setDetail(null)}>
+          {detail.id&&['receivables','collections'].includes(page)&&<AccountingTraceLink entityType={page==='receivables'?'receivable':'collection'} id={detail.id} can={can}/>}
           {detail.id ? (
             <CollectionFiles
               company={company}

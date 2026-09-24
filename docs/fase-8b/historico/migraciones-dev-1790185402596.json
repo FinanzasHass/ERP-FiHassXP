@@ -1,0 +1,15 @@
+{
+  "executedAt": "2026-09-23T17:42:45.710Z",
+  "mode": "PREFLIGHT",
+  "sameProjectAsApplication": true,
+  "projectFingerprint": "7a91ed85e13bc5b1",
+  "status": "FAIL",
+  "steps": [
+    {
+      "operation": "migration list before",
+      "status": "PASS",
+      "versions": []
+    }
+  ],
+  "diagnostic": "Unexpected DEV migration drift"
+}

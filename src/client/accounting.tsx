@@ -6,6 +6,9 @@ export const accountingPages: Record<
   string,
   { title: string; permission: string; endpoint: string; columns: string[] }
 > = {
+  "accounting-events": {title:"Operaciones pendientes",permission:"accounting_event.view",endpoint:"events",columns:[]},
+  "accounting-configuration": {title:"Configuración e importación",permission:"accounting_configuration.view",endpoint:"configuration",columns:[]},
+  "accounting-afes": {title:"AFE",permission:"afe.view",endpoint:"afes",columns:[]},
   "accounting-accounts": {
     title: "Plan de cuentas",
     permission: "accounting_account.view",
@@ -286,6 +289,8 @@ export function AccountingPage({
   };
   useEffect(() => {
     void load();
+    const linked = new URLSearchParams(window.location.search).get('journal_id');
+    if (page === 'accounting-journals' && linked) void inspect({id:linked},false);
   }, [company, page]);
   const complete = async () => {
     setModal(null);
@@ -1077,6 +1082,7 @@ export function AccountingPage({
           }
           close={() => setDetail(null)}
         >
+          {detail.record.accounting_event_id && <p>Evento de origen: <a href={'/app/accounting-events?event_id='+encodeURIComponent(detail.record.accounting_event_id)}>{detail.record.accounting_event_id}</a></p>}
           <p>
             {detail.record.description} ·{" "}
             {states[detail.record.status] || detail.record.status}

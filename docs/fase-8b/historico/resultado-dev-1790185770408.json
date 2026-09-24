@@ -1,0 +1,109 @@
+{
+  "run": "F8B_20260923174822",
+  "environment": "DEV",
+  "sameProjectAsApplication": true,
+  "projectFingerprint": "7a91ed85e13bc5b1",
+  "startedAt": "2026-09-23T17:48:22.714Z",
+  "status": "FAIL",
+  "results": [
+    {
+      "id": 1,
+      "name": "Migraciones 044–051 y mismo proyecto DEV",
+      "status": "PASS"
+    },
+    {
+      "id": 2,
+      "name": "Operación financiera válida sin regla contable",
+      "status": "PASS"
+    },
+    {
+      "id": 3,
+      "name": "Evento contable idempotente y no forjable por REST",
+      "status": "PASS"
+    },
+    {
+      "id": 4,
+      "name": "Empresa DEMO requiere designación explícita",
+      "status": "FAIL",
+      "evidence": "POST /accounting/demo/configure status 403 ACCESS_DENIED"
+    },
+    {
+      "id": 5,
+      "name": "Regla y cuentas exclusivamente DEMO",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": 6,
+      "name": "Resolución y preview no persisten asiento",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": 7,
+      "name": "Generación concurrente produce un solo draft",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": 8,
+      "name": "Segregación generación, validación y posteo",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": 9,
+      "name": "Trazabilidad bidireccional operación-evento-asiento",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": 10,
+      "name": "Aislamiento de empresa y revocación inmediata",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": 11,
+      "name": "Dashboard DEMO deriva datos persistidos",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": 12,
+      "name": "Importación AFE preview y confirmación idempotente",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": 13,
+      "name": "Diccionario legacy conserva significado no definido",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": 14,
+      "name": "Feature flags productivos permanecen deshabilitados",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": 15,
+      "name": "Auditoría financiera y de configuración",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": 16,
+      "name": "Secret boundary y UI DEMO real",
+      "status": "NOT_RUN"
+    }
+  ],
+  "fixtures": {
+    "companyA": "a619cee4-ed89-4081-979a-003d37643405",
+    "companyB": "af474392-08be-46a4-9cf1-68cc1eceb762",
+    "users": [
+      "3b1d27ef-2fa0-420a-a071-515021c09cb9",
+      "aef2565b-4f59-42e4-a6cd-e3bced5a3e3f",
+      "50eae593-f4ed-4828-8510-65afabd9dca7",
+      "eb4f4ed4-f708-4ce8-8b10-3434708f3bf7",
+      "102274b3-a45a-4c4a-b660-ce8a7821f06f"
+    ]
+  },
+  "updatedAt": "2026-09-23T17:49:14.137Z",
+  "summary": {
+    "pass": 3,
+    "fail": 1,
+    "notRun": 12
+  },
+  "incident": "POST /accounting/demo/configure status 403 ACCESS_DENIED"
+}

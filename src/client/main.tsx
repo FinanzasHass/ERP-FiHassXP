@@ -1,5 +1,9 @@
 import {ReceivablePage,ReceivableDashboard,receivablePages} from './receivables';
 import {AccountingPage,accountingPages} from './accounting';
+import {AccountingEventsPage} from './accounting-events';
+import {AccountingConfigurationPage} from './accounting-configuration';
+import {DemoDashboard} from './demo-dashboard';
+import {AfePage} from './accounting-masters';
 import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
@@ -420,7 +424,7 @@ function App() {
         </nav>
         <div className="sidebar-foot">
           <span className="status-dot" /> Plataforma administrativa{" "}
-          <small>Fase 8A</small>
+          <small>Entorno demo</small>
         </div>
       </aside>
       <div className="main-column">
@@ -503,7 +507,7 @@ function App() {
           ) : (
             me && (
               <div key={company + key + mode}>
-                {accountingPages[key]&&<AccountingPage key={company+key} page={key} company={company} can={can}/>}
+                {key==='accounting-afes'?<AfePage key={company+key} company={company} can={can}/>:key==='accounting-configuration'?<AccountingConfigurationPage key={company+key} company={company} can={can}/>:key==='accounting-events'?<AccountingEventsPage key={company+key} company={company} can={can}/>:accountingPages[key]&&<AccountingPage key={company+key} page={key} company={company} can={can}/>}
                 {receivablePages[key]&&<ReceivablePage key={company+key} page={key} company={company} can={can}/>}
                 {['receivable-dashboard','customer-credits'].includes(key)&&<ReceivableDashboard company={company} creditsOnly={key==='customer-credits'}/>}
                 {expensePages[key]&&<EmployeeExpensePage key={company+key} page={key} company={company} can={can} actor={me.profile.id}/>}
@@ -559,6 +563,7 @@ function App() {
                       </dl>
                     </section>
                     <FinancialDashboard company={company} can={can}/>
+                    <DemoDashboard company={company} can={can}/>
                     <section className="roadmap-note">
                       <span>◈</span>
                       <div>
@@ -670,7 +675,7 @@ function App() {
           )}
         </main>
         <footer className="app-footer">
-          Mini ERP Financiero <span>Núcleo contable · Fase 8A</span>
+          Mini ERP Financiero <span>Arquitectura contable configurable · DEMO</span>
         </footer>
       </div>
       {selected && key === "users" && (
@@ -833,4 +838,9 @@ function Settings({ company }: { company: string }) {
     </section>
   );
 }
-createRoot(document.getElementById("root")!).render(<App />);
+function EnvironmentShell(){
+ const[label,setLabel]=useState('ENTORNO DE PRUEBAS');
+ useEffect(()=>{void api('/runtime').then(r=>setLabel(r.environment==='demo'?'ENTORNO DEMO':'ENTORNO DE PRUEBAS')).catch(()=>{});},[]);
+ return <><div className="environment-banner" role="status">{label} · Contabilización automática y reglas productivas deshabilitadas</div><App/></>;
+}
+createRoot(document.getElementById("root")!).render(<EnvironmentShell />);

@@ -1,0 +1,141 @@
+{
+  "generated_at": "2026-09-24T14:38:28.193Z",
+  "environment": "DEV",
+  "data_classification": "SYNTHETIC_ONLY",
+  "production_accounting": false,
+  "credentials_included": false,
+  "presentation_company_id": "0439502c-dde8-454b-8d2b-376398456f82",
+  "presentation_run": "F8B_20260923180622",
+  "datasets": [
+    {
+      "phase": "fase-4",
+      "purpose": "Solicitud, proveedor, compra/servicio, comprobante y CxP",
+      "run": "F4_20260910202312",
+      "status": "PASS",
+      "company_ids": [
+        "d417dabe-933b-4587-a0fd-28f0e9fef86c",
+        "5bafe39b-f6ec-42dd-a11a-2fd0c4752b68"
+      ],
+      "company_codes": [
+        "F4_20260910202312_A",
+        "F4_20260910202312_B"
+      ],
+      "user_ids": [
+        "480a8dee-63a0-484a-adac-f8dee5bdefde",
+        "3d66c23d-b28f-4367-bcc8-cd08d047b47c",
+        "ad437f22-6437-4a73-bee5-b809ab5b9607"
+      ],
+      "entity_ids": {
+        "request": "c6fbddfd-fa00-4477-853d-97fbecc28a47",
+        "supplier": "4b6ffc51-af23-4000-84d2-ade752ebb27c",
+        "payable": "c6f61d31-2d7b-4b7c-9158-ebed578033f9"
+      }
+    },
+    {
+      "phase": "fase-5",
+      "purpose": "OP, pago, banco, cash flow y conciliación",
+      "run": "F5_20260911183203",
+      "status": "PASS",
+      "company_ids": [
+        "cc085e16-2dba-4d78-b5d2-bb6a5e0ac76b",
+        "116b2b66-66ea-4088-8620-d30c9e3ccbcd"
+      ],
+      "company_codes": [
+        "F5_20260911183203_A",
+        "F5_20260911183203_B"
+      ],
+      "user_ids": [
+        "480a8dee-63a0-484a-adac-f8dee5bdefde",
+        "3d66c23d-b28f-4367-bcc8-cd08d047b47c",
+        "ad437f22-6437-4a73-bee5-b809ab5b9607",
+        "0fa0a5fb-6a69-4113-ba29-0628e616aacd"
+      ],
+      "entity_ids": {
+        "payables": [
+          "40a2fbfc-fda3-4043-a133-c55ee6713cb9",
+          "6ea76f57-933b-410f-8031-fc40d14aabeb"
+        ],
+        "order": "af741c08-50e4-4868-9589-bea46172fb54",
+        "payment": "e638290c-36df-4ba9-93f5-ad0081507a3c",
+        "transaction": "9df8a934-783e-429f-9cbc-263e34e7cbdc"
+      }
+    },
+    {
+      "phase": "fase-6",
+      "purpose": "Empleado, VIA, anticipo, rendición y liquidación",
+      "run": "F6_20260913045729",
+      "status": "PASS",
+      "company_ids": [
+        "e6defe20-5431-48f1-8cc5-d2d77a6637b6",
+        "18fee055-9e5d-4973-b8b1-7b3d2658ea6c"
+      ],
+      "company_codes": [],
+      "user_ids": [
+        "28977d00-97c2-41f2-8599-2365afda2119",
+        "1e67b819-8958-4424-88fd-b7a70e149312",
+        "8be803f1-4cbe-4233-9a7d-8f633442dc8a",
+        "4689d06a-ee35-461d-ab40-c1dfedad6627",
+        "1bdbe103-4f87-4843-a73a-3f0e9a73e777"
+      ],
+      "entity_ids": {}
+    },
+    {
+      "phase": "fase-7",
+      "purpose": "Cliente, CxC, depósito, cobranza y conciliación",
+      "run": "F7_20260913181951",
+      "status": "PASS",
+      "company_ids": [
+        "33add6b6-07fd-4eb8-9afc-b85e3c122503",
+        "48889251-efbe-4522-b860-91ec627b3878"
+      ],
+      "company_codes": [],
+      "user_ids": [
+        "2e59c100-a6b3-4b41-9d6a-b19423649da5",
+        "9e34dd1f-abbc-4563-bb3e-0518a4632938",
+        "f4fe7c8d-d953-4602-a1b8-0ecdf7ca0e1d"
+      ],
+      "entity_ids": {}
+    },
+    {
+      "phase": "fase-8a",
+      "purpose": "Plan DEMO, período, asiento, mayor y balance",
+      "run": "F8A_20260914000108",
+      "status": "PASS",
+      "company_ids": [
+        "89117e8f-2b4e-4155-86e1-ae14e249a263",
+        "111df918-9857-4931-9244-04aee6dff5b2"
+      ],
+      "company_codes": [],
+      "user_ids": [
+        "a9f3b066-159f-47a3-943b-6f2d4dc449d3",
+        "deea8ca5-82de-486a-9b52-8ae6da56c0d7",
+        "4a91ef7a-4280-4097-af82-eb1ca2c2d13d"
+      ],
+      "entity_ids": {}
+    },
+    {
+      "phase": "fase-8b",
+      "purpose": "Evento contable, preview, draft, posteo y dashboard DEMO",
+      "run": "F8B_20260923180622",
+      "status": "PASS",
+      "company_ids": [
+        "0439502c-dde8-454b-8d2b-376398456f82",
+        "19cc5b0b-fad8-42e4-a1a2-d52e4c317ab9"
+      ],
+      "company_codes": [],
+      "user_ids": [
+        "844b07a4-5f96-4922-a9f8-5f96444b32db",
+        "5d3d1083-bccf-4309-b74e-cfd759035c92",
+        "24d9d6c1-4457-4aaa-a2a0-a1f8e861e517",
+        "f323a5a9-775d-4b52-9770-85acef3f5b55",
+        "345fff1f-0af4-455d-a495-48a93506ce10"
+      ],
+      "entity_ids": {}
+    }
+  ],
+  "notes": [
+    "Los lotes son evidencia sintética inmutable por fase; no se deben renombrar ni convertir en datos reales.",
+    "El recorrido contable Fase 8B usa presentation_company_id. Los recorridos operativos previos usan la empresa A de su fase.",
+    "Las contraseñas y tokens nunca forman parte de este manifiesto."
+  ]
+}

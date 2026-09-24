@@ -41,6 +41,37 @@ function fixture(options:{inactive?:boolean;grants?:string[];companyAllowed?:boo
   };
   return {deps,calls,app:createApp(config,deps)};
 }
+test('accounting events reject forged source, status and feature flags before invoking RPC',async()=>{
+ const {app,calls}=fixture({companyAllowed:true}),auth={type:'bearer' as const};
+ assert.equal((await request(fixture().app).get('/api/accounting/events?company_id='+company).auth('valid',auth)).status,403);
+ assert.equal((await request(fixture({inactive:true}).app).get('/api/accounting/events?company_id='+company).auth('valid',auth)).status,403);
+ assert.equal((await request(app).post('/api/accounting/events/'+other+'/resolve').auth('valid',auth).send({amount:100,company_id:company})).status,400);
+ assert.equal((await request(app).post('/api/accounting/demo/configure').auth('valid',auth).send({company_id:company,enabled:true,reason:'DEMO',auto_post:true})).status,400);
+ const body={period_id:other,entry_type_id:user};
+ assert.equal((await request(app).post('/api/accounting/events/'+other+'/generate').auth('valid',auth).send(body)).status,400);
+ assert.equal((await request(app).post('/api/accounting/events/'+other+'/generate').auth('valid',auth).set('Idempotency-Key',company).send({...body,status:'posted'})).status,400);
+ assert.equal(calls.some(c=>c.name==='accounting_event_generate'),false);
+ assert.equal((await request(app).post('/api/accounting/events/'+other+'/generate').auth('valid',auth).set('Idempotency-Key',company).send(body)).status,200);
+ assert.deepEqual(calls.find(c=>c.name==='accounting_event_generate')?.args,{target_id:other,...body,operation_key:company});
+});
+
+test('DEMO dashboard is company-scoped and exposes only an authorized aggregate RPC',async()=>{
+ const {app,calls}=fixture({companyAllowed:true}),auth={type:'bearer' as const};
+ assert.equal((await request(fixture().app).get('/api/accounting/demo-dashboard?company_id='+company).auth('valid',auth)).status,403);
+ assert.equal((await request(app).get('/api/accounting/demo-dashboard?company_id=not-a-uuid').auth('valid',auth)).status,400);
+ const response=await request(app).get('/api/accounting/demo-dashboard?company_id='+company).auth('valid',auth);
+ assert.equal(response.status,200);assert.deepEqual(calls.find(c=>c.name==='accounting_demo_dashboard')?.args,{target_company:company});
+});
+
+test('bank accounting adjustment and dimension matches accept only narrow server payloads',async()=>{
+ const {app,calls}=fixture({companyAllowed:true}),auth={type:'bearer' as const};
+ assert.equal((await request(app).post('/api/bank-transactions/'+other+'/accounting-adjustment').auth('valid',auth).send({reason:'Clasificación explícita',amount:1})).status,400);
+ assert.equal((await request(app).post('/api/bank-transactions/'+other+'/accounting-adjustment').auth('valid',auth).send({reason:'Clasificación explícita'})).status,200);
+ assert.deepEqual(calls.find(c=>c.name==='accounting_bank_adjustment_capture')?.args,{target_transaction:other,reason:'Clasificación explícita'});
+ assert.equal((await request(app).post('/api/accounting/rules/'+other+'/dimension-matches').auth('valid',auth).send({company_id:company,dimensions:[{dimension_type:'unknown',dimension_id:other}]})).status,400);
+ assert.equal((await request(app).post('/api/accounting/rules/'+other+'/dimension-matches').auth('valid',auth).send({company_id:company,dimensions:[{dimension_type:'afe_future',dimension_id:other}]})).status,200);
+});
+
 test('accounting API rejects scope bypass, forged status, implicit rounding and productive rule activation',async()=>{
  const {app,calls}=fixture({companyAllowed:true}),auth={type:'bearer' as const};
  assert.equal((await request(fixture().app).get('/api/accounting/accounts?company_id='+company).auth('valid',auth)).status,403);

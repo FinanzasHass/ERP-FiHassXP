@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { AccountingTraceLink } from "./accounting-trace";
 import { api, all, query, type Row } from "./api";
 import { Modal, Empty, ErrorBox } from "./components";
 import { mapBankRows } from "./bank-import-parser";
@@ -423,6 +424,7 @@ export function TreasuryPage({
     [items, setItems] = useState<Row[]>([]),
     [action, setAction] = useState<{ row: Row; name: string } | null>(null),
     [actionData, setActionData] = useState<Row>({}),
+    [accountingReason, setAccountingReason] = useState(""),
     [busy, setBusy] = useState(false),
     [importing, setImporting] = useState(false),
     [matching, setMatching] = useState<Row | null>(null);
@@ -845,6 +847,20 @@ export function TreasuryPage({
       )}
       {detail && (
         <Modal title="Detalle de operación" close={() => setDetail(null)}>
+          {page === "payments" && (
+            <AccountingTraceLink
+              entityType="payment"
+              id={detail.record.id}
+              can={can}
+            />
+          )}
+          {page === "bank-transactions" && (
+            <AccountingTraceLink
+              entityType="bank_transaction"
+              id={detail.record.id}
+              can={can}
+            />
+          )}
           <dl>
             {Object.entries(detail.record)
               .filter(([k]) => !["cci", "account_number"].includes(k))
@@ -857,6 +873,45 @@ export function TreasuryPage({
                 </React.Fragment>
               ))}
           </dl>
+          {page === "bank-transactions" &&
+            can("bank_transaction.classify_accounting") &&
+            detail.record.source &&
+            ["manual", "import"].includes(detail.record.source) &&
+            detail.record.evidence_state === "confirmed" &&
+            detail.record.status !== "reconciled" && (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  void guard(async () => {
+                    await api(
+                      "/bank-transactions/" +
+                        detail.record.id +
+                        "/accounting-adjustment",
+                      "POST",
+                      { reason: accountingReason },
+                    );
+                    setAccountingReason("");
+                  });
+                }}
+              >
+                <h3>Clasificación contable explícita</h3>
+                <p>
+                  Solo crea un evento pendiente de regla; no contabiliza ni
+                  reconcilia el movimiento.
+                </p>
+                <label>
+                  Motivo
+                  <input
+                    required
+                    minLength={1}
+                    maxLength={2000}
+                    value={accountingReason}
+                    onChange={(e) => setAccountingReason(e.target.value)}
+                  />
+                </label>
+                <button disabled={busy}>Crear ajuste contable</button>
+              </form>
+            )}
           {detail.items?.length > 0 && (
             <table>
               <thead>
@@ -1307,7 +1362,13 @@ export function TreasuryDashboard({
               Comprometido: saldo de CxP aprobadas, contado una sola vez. No
               representa saldo disponible garantizado.
             </p>
-            {["position", "actual", "committed", "expected_receivables", "forecast"].map((k) => (
+            {[
+              "position",
+              "actual",
+              "committed",
+              "expected_receivables",
+              "forecast",
+            ].map((k) => (
               <section key={k}>
                 <h2>
                   {
@@ -1315,7 +1376,8 @@ export function TreasuryDashboard({
                       position: "Posición bancaria registrada",
                       actual: "Actual · por fecha",
                       committed: "Comprometido · por vencimiento",
-                      expected_receivables: "CxC esperadas · no son ingresos bancarios",
+                      expected_receivables:
+                        "CxC esperadas · no son ingresos bancarios",
                       forecast: "Forecast · sin fuentes adicionales",
                     }[k]
                   }

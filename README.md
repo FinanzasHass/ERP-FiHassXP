@@ -1,6 +1,6 @@
-# Mini ERP Financiero — Fase 8A
+# Mini ERP Financiero — Fase 8B técnica / DEMO
 
-**Entrega actual:** [Fase 8A: núcleo contable](docs/fase-8a/README.md). [Matriz DEV: 34 PASS, 0 FAIL](docs/fase-8a/resultado-dev.md), cuatro concurrencias PASS y migraciones 038–043 verificadas en el mismo proyecto DEV. Plan de cuentas configurable, importador CSV/XLSX, períodos, asientos manuales, reglas solo para simulación, mayor y balance. [Recorrido manual](docs/fase-8a/recorrido-manual.md). No se inicia Fase 8B.
+**Entrega actual:** [Fase 8B técnica](docs/fase-8b/entrega.md). [Matriz DEV: 16 PASS, 0 FAIL](docs/fase-8b/resultado-dev.md); migraciones 044–051 verificadas en el mismo proyecto DEV. Incluye eventos contables idempotentes, resolución configurable, preview, generación manual de borrador, trazabilidad, AFE y diccionarios legacy, dashboard DEMO y configuración Render. [Recorrido de presentación](docs/demo/recorrido-presentacion.md). La contabilización productiva y Fase 9 no están activadas.
 
 **Fase 7 aprobada:** [Fase 7: CxC, clientes y cobranzas](docs/fase-7/README.md). [Matriz DEV: 34 PASS](docs/fase-7/resultado-dev.md), cuatro casos de concurrencia PASS, [Storage adicional PASS](docs/fase-7/resultado-storage-dev.json) y [migraciones 033–037 DEV](docs/fase-7/migraciones-dev.json). [Puerta local](docs/fase-7/puerta-local.json): 91 PostgreSQL, 39 aplicación y 12 UI PASS. Sólo fixtures sintéticos; evidencia histórica de Fase 7.
 
@@ -14,7 +14,7 @@
 
 [Fase 2.5: diseño del ERP y sustitución progresiva de Ábasoft](docs/fase-2.5/README.md). Incluye modelos, diagramas, workflows, migración y roadmap; no implementa módulos financieros.
 
-API de autenticación, autorización y administración, frontend React/Vite, selector de empresa, CECO/importación, proyectos/subproyectos, solicitudes, aprobaciones, proveedores, órdenes, conformidades, comprobantes, CxP y auditoría. Incluye registro de pagos externos y conciliación; no envía transferencias a bancos ni genera asientos automáticos o validaciones SUNAT automáticas. La base de seguridad de Fases 1–3 se conserva; para actualizar use las instrucciones de Fase 8A.
+API de autenticación, autorización y administración, frontend React/Vite, selector de empresa, CECO/importación, proyectos/subproyectos, solicitudes, aprobaciones, proveedores, órdenes, conformidades, comprobantes, CxP, Tesorería, viáticos, cobranzas, núcleo contable y auditoría. Incluye registro de pagos externos y conciliación; no envía transferencias a bancos, no valida SUNAT automáticamente y no auto-genera ni auto-postea asientos.
 
 ## Implementación
 
