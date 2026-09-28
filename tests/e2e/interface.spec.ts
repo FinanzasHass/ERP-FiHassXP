@@ -227,6 +227,21 @@ test("blocked profile cannot enter app", async ({ page }) => {
   await page.getByRole("button", { name: "Ingresar a la plataforma" }).click();
   await expect(page.getByRole("alert")).toContainText("inactiva o bloqueada");
 });
+test("repeated focus events do not flood context endpoints", async ({ page }) => {
+  let contextReads = 0;
+  page.on("request", (request) => {
+    if (["/api/auth/me", "/api/auth/workspace"].includes(new URL(request.url()).pathname))
+      contextReads += 1;
+  });
+  await fixture(page);
+  await login(page);
+  const initialReads = contextReads;
+  await page.evaluate(() => {
+    for (let index = 0; index < 20; index += 1) window.dispatchEvent(new Event("focus"));
+  });
+  await page.waitForTimeout(250);
+  expect(contextReads).toBe(initialReads);
+});
 test("provisional password is required once and the application resumes after saving it", async ({page}) => {
   await fixture(page,false,true);
   await page.goto('/login');

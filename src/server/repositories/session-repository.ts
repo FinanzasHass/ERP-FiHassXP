@@ -33,6 +33,9 @@ export function createSessionRepository(config: Pick<Config, 'SUPABASE_URL' | 'S
         // membership FK so PostgREST never treats this embed as ambiguous.
         const membership='user_companies!user_companies_user_id_fkey';
         builder=db.from(table).select(query.company_id?`*,${membership}!inner(company_id,active)`:`*,${membership}(company_id,active)`,{count:'exact'});
+        // Verification identities keep their audit/financial references, but
+        // never belong in the functional user directory used for the demo.
+        builder=builder.not('full_name','ilike','PRUEBA DEV%');
         if(query.company_id) builder=builder.eq('user_companies.company_id',query.company_id).eq('user_companies.active',true);
       }
       if(table==='audit_logs') {

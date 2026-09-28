@@ -371,7 +371,6 @@ export function EntityPage({
   }, [config, company]);
   useEffect(() => {
     let valid = true;
-    setRows([]);
     setBusy(true);
     setError("");
     const params = config.scoped ? { company_id: company } : {};

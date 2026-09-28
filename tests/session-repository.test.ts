@@ -16,5 +16,8 @@ test('profile listing pins the membership foreign key for PostgREST', async () =
     const selects=requests.map((request)=>new URL(request).searchParams.get('select') || '');
     assert.match(selects[0],/user_companies!user_companies_user_id_fkey\(company_id,active\)/);
     assert.match(selects[1],/user_companies!user_companies_user_id_fkey!inner\(company_id,active\)/);
+    for (const request of requests) {
+      assert.equal(new URL(request).searchParams.get('full_name'),'not.ilike.PRUEBA DEV%');
+    }
   } finally { globalThis.fetch=original; }
 });

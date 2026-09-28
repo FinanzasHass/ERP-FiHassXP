@@ -44,6 +44,8 @@ const messages: Record<string, string> = {
     "Los datos entran en conflicto: revise códigos, referencias, jerarquía y estado.",
   INVALID_INPUT: "Revise los campos y formatos del formulario.",
   AUTH_RATE_LIMIT: "Demasiados intentos. Inténtelo más tarde.",
+  RATE_LIMIT:
+    "Se realizaron demasiadas consultas seguidas. Espere un momento y vuelva a intentarlo.",
   DATABASE_UNAVAILABLE: "No se pudo conectar con la base de datos.",
   AUTH_UNAVAILABLE: "El servicio de autenticación no está disponible.",
   AUTH_PASSWORD_UPDATE_FAILED: "No se pudo establecer la contraseña provisional.",

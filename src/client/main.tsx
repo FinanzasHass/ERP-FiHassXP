@@ -4,7 +4,7 @@ import {AccountingEventsPage} from './accounting-events';
 import {AccountingConfigurationPage} from './accounting-configuration';
 import {DemoDashboard} from './demo-dashboard';
 import {AfePage} from './accounting-masters';
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
   api,
@@ -257,6 +257,7 @@ function ForcedPasswordChange({
   );
 }
 function App() {
+  const lastContextRefresh = useRef(Date.now());
   const [signed, setSigned] = useState(hasSession()),
     [path, setPath] = useState(location.pathname),
     [workspace, setWorkspace] = useState<Row | null>(null),
@@ -327,7 +328,13 @@ function App() {
   }, [signed, revision]);
   useEffect(() => {
     if (!signed) return;
-    const refresh = () => setRevision((x) => x + 1);
+    const refresh = () => {
+      const now = Date.now();
+      if (document.visibilityState !== "visible" || now - lastContextRefresh.current < 60000)
+        return;
+      lastContextRefresh.current = now;
+      setRevision((x) => x + 1);
+    };
     const timer = setInterval(refresh, 120000);
     addEventListener("focus", refresh);
     return () => {
