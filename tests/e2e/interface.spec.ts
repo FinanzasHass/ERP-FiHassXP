@@ -3,7 +3,9 @@ import { mkdir } from "node:fs/promises";
 import ExcelJS from "exceljs";
 const a = "10000000-0000-4000-8000-000000000001",
   b = "10000000-0000-4000-8000-000000000002",
-  u = "00000000-0000-4000-8000-000000000001";
+  u = "00000000-0000-4000-8000-000000000001",
+  p2 = "00000000-0000-4000-8000-000000000002",
+  p3 = "00000000-0000-4000-8000-000000000003";
 const grants = [
   "user.view",
   "user.create",
@@ -137,8 +139,26 @@ async function fixture(page: Page, blocked = false, forced = false) {
             active: true,
             is_sensitive: true,
           },
+          {
+            id: p2,
+            resource: "request",
+            action: "submit",
+            code: "request.submit",
+            description: "Submit request",
+            active: true,
+            is_sensitive: false,
+          },
+          {
+            id: p3,
+            resource: "accounting_event",
+            action: "resolve",
+            code: "accounting_event.resolve",
+            description: "Resolve accounting rule",
+            active: true,
+            is_sensitive: false,
+          },
         ],
-        count: 1,
+        count: 3,
       };
     else if (p === "/api/audit")
       body = {
@@ -282,7 +302,7 @@ test("CECO subcenter form, hierarchy, import preview and explicit confirmation",
     .click();
   await expect.poll(() => writes.at(-1)?.commit).toBe(true);
 });
-test("role matrix shows sensitive human labels and audit has old/new detail", async ({
+test("role matrix presents friendly, searchable and collapsible permissions", async ({
   page,
 }) => {
   await fixture(page);
@@ -293,7 +313,28 @@ test("role matrix shows sensitive human labels and audit has old/new detail", as
   await page.getByRole("button", { name: "Abrir ↗" }).click();
   await page.getByRole("button", { name: "Matriz de permisos" }).click();
   await expect(page.getByText("Sensible", { exact: true })).toBeVisible();
-  await expect(page.getByLabel("Ejecutar Sensible")).toBeVisible();
+  await expect(page.getByLabel("Ejecutar pago · Sensible")).toBeVisible();
+  await expect(
+    page.getByText("Permite registrar una salida real de dinero en Tesorería."),
+  ).toBeVisible();
+  await expect(
+    page.getByTitle("Este permiso permite ejecutar acciones críticas o irreversibles."),
+  ).toBeVisible();
+  await expect(page.getByText("0 permisos seleccionados", { exact: true })).toBeVisible();
+  await page.getByLabel("Ejecutar pago · Sensible").check();
+  await expect(page.getByText("1 permiso seleccionado", { exact: true })).toBeVisible();
+  await page.getByLabel("Mostrar").selectOption("selected");
+  await expect(page.getByRole("button", { name: /Pagos 1\/1/ })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Solicitudes/ })).toHaveCount(0);
+  await page.getByLabel("Mostrar").selectOption("all");
+  await page.getByLabel("Buscar permisos").fill("regla contable");
+  await expect(page.getByText("Resolver regla contable", { exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Pagos/ })).toHaveCount(0);
+  await page.getByLabel("Buscar permisos").fill("");
+  await page.getByRole("button", { name: "Colapsar todos" }).click();
+  await expect(page.getByText("Enviar solicitud", { exact: true })).toHaveCount(0);
+  await page.getByRole("button", { name: "Expandir todos" }).click();
+  await expect(page.getByText("Enviar solicitud", { exact: true })).toBeVisible();
   await page.getByRole("button", { name: "Cerrar", exact: true }).click();
   await page.getByRole("button", { name: "Auditoría", exact: true }).click();
   await page.getByRole("button", { name: "Abrir ↗" }).click();

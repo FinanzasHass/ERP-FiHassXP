@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { all, api, query, type Row } from "./api";
-import { catalogs, permissionLabel } from "./catalog";
+import { catalogs } from "./catalog";
 import { DataTable, Empty, ErrorBox, Form, Modal } from "./components";
+import { permissionModuleLabel, permissionPresentation } from "./permission-labels";
 export function PermissionMatrix({
   role,
   can,
@@ -14,7 +15,10 @@ export function PermissionMatrix({
   const [permissions, setPermissions] = useState<Row[]>([]),
     [selected, setSelected] = useState<string[]>([]),
     [error, setError] = useState(""),
-    [busy, setBusy] = useState(true);
+    [busy, setBusy] = useState(true),
+    [search, setSearch] = useState(""),
+    [filter, setFilter] = useState("all"),
+    [collapsed, setCollapsed] = useState<Set<string>>(new Set());
   useEffect(() => {
     Promise.all([all("/permissions"), all(`/roles/${role.id}/permissions`)])
       .then(([p, g]) => {
@@ -24,43 +28,20 @@ export function PermissionMatrix({
       .catch((e) => setError(e.message))
       .finally(() => setBusy(false));
   }, [role.id]);
-  const groups = [...new Set(permissions.map((p) => p.resource))];
-  const names: Record<string, string> = {
-    payment: "Pagos",
-    user: "Usuarios",
-    role: "Roles",
-    permission: "Permisos",
-    cost_center: "Centros de costo",
-    project: "Proyectos",
-    subproject: "Subproyectos",
-    currency: "Monedas",
-    company: "Empresas",
-    audit: "Auditoría",
-    area: "Áreas",
-    position: "Cargos",
-    settings: "Configuración",
-    supplier: "Proveedores",
-    request: "Solicitudes",
-    budget: "Presupuestos",
-    advance: "Anticipos",
-    expense_report: "Rendiciones",
-    bank: "Bancos",
-    dashboard: "Dashboard",
-    invoice: "Documentos de compra",
-    sworn_declaration: "Declaraciones juradas",
-    vendor_refund: "Recuperaciones de proveedores",
-    employee_return: "Devoluciones de colaboradores",
-    employee_reimbursement: "Reembolsos a colaboradores",
-    service_acceptance: "Conformidad de servicios",
-    payment_batch: "Lotes de pago",
-    purchase_order: "Órdenes de compra",
-    payable: "Cuentas por pagar",
-    reconciliation: "Conciliación bancaria",
-    recurring_service: "Servicios recurrentes",
-    contract: "Contratos",
-    report: "Reportes",
-    exchange_rate: "Tipos de cambio",
-  };
+  const decorated: Array<Row & { presentation: ReturnType<typeof permissionPresentation> }> = permissions.map((permission) => ({
+    ...permission,
+    presentation: permissionPresentation(permission as any),
+  }));
+  const normalizedSearch = search.trim().toLocaleLowerCase("es-PE");
+  const visible = decorated.filter((permission) => {
+    if (filter === "sensitive" && !permission.is_sensitive) return false;
+    if (filter === "selected" && !selected.includes(permission.id)) return false;
+    if (!normalizedSearch) return true;
+    return [permission.presentation.label, permission.presentation.moduleLabel, permission.presentation.description, permission.code]
+      .some((value) => String(value).toLocaleLowerCase("es-PE").includes(normalizedSearch));
+  });
+  const groups = [...new Set(visible.map((permission) => permission.resource))]
+    .sort((left, right) => permissionModuleLabel(left).localeCompare(permissionModuleLabel(right), "es"));
   return (
     <Modal title={"Permisos · " + role.name} close={close}>
       <p className="muted">
@@ -72,24 +53,65 @@ export function PermissionMatrix({
         <p>Cargando…</p>
       ) : (
         <>
+          <div className="permission-toolbar">
+            <label className="permission-search">
+              Buscar permisos
+              <input
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                placeholder="Ej.: aprobar, banco, asiento…"
+              />
+            </label>
+            <label>
+              Mostrar
+              <select value={filter} onChange={(event) => setFilter(event.target.value)}>
+                <option value="all">Todos</option>
+                <option value="sensitive">Sensibles</option>
+                <option value="selected">Seleccionados</option>
+              </select>
+            </label>
+            <div className="permission-expand-actions">
+              <button type="button" onClick={() => setCollapsed(new Set())}>Expandir todos</button>
+              <button type="button" onClick={() => setCollapsed(new Set(groups))}>Colapsar todos</button>
+            </div>
+            <strong className="permission-total">
+              {selected.length} {selected.length === 1 ? "permiso seleccionado" : "permisos seleccionados"}
+            </strong>
+          </div>
           <div className="permission-grid">
-            {groups.map((group) => (
+            {groups.map((group) => {
+              const groupPermissions = decorated
+                .filter((permission) => permission.resource === group)
+                .sort((left, right) => left.presentation.order - right.presentation.order || left.presentation.label.localeCompare(right.presentation.label, "es"));
+              const visibleInGroup = visible
+                .filter((permission) => permission.resource === group)
+                .sort((left, right) => left.presentation.order - right.presentation.order || left.presentation.label.localeCompare(right.presentation.label, "es"));
+              const selectedInGroup = groupPermissions.filter((permission) => selected.includes(permission.id)).length;
+              const isCollapsed = collapsed.has(group) && !normalizedSearch;
+              return (
               <section className="permission-group" key={group}>
-                <h3>{names[group] || group.replaceAll("_", " ")}</h3>
-                {can("permission.assign") && (
+                <button
+                  type="button"
+                  className="permission-group-heading"
+                  aria-expanded={!isCollapsed}
+                  onClick={() => setCollapsed((current) => {
+                    const next = new Set(current);
+                    if (next.has(group)) next.delete(group); else next.add(group);
+                    return next;
+                  })}
+                >
+                  <span>{isCollapsed ? "▸" : "▾"} {permissionModuleLabel(group)}</span>
+                  <small>{selectedInGroup}/{groupPermissions.length}</small>
+                </button>
+                {!isCollapsed && can("permission.assign") && (
                   <div className="small-actions">
                     <button
                       onClick={() =>
                         setSelected([
                           ...new Set([
                             ...selected,
-                            ...permissions
-                              .filter(
-                                (p) =>
-                                  p.resource === group &&
-                                  p.active &&
-                                  !(role.is_system && p.requires_company),
-                              )
+                            ...groupPermissions
+                              .filter((p) => p.active && !(role.is_system && p.requires_company))
                               .map((p) => p.id),
                           ]),
                         ])
@@ -102,9 +124,7 @@ export function PermissionMatrix({
                         setSelected(
                           selected.filter(
                             (id) =>
-                              !permissions.some(
-                                (p) => p.id === id && p.resource === group,
-                              ),
+                              !groupPermissions.some((p) => p.id === id),
                           ),
                         )
                       }
@@ -113,11 +133,15 @@ export function PermissionMatrix({
                     </button>
                   </div>
                 )}
-                {permissions
-                  .filter((p) => p.resource === group)
+                {!isCollapsed && visibleInGroup
                   .map((p) => (
-                    <label className="check-row" title={p.code} key={p.id}>
+                    <label
+                      className="check-row"
+                      title={`${p.presentation.description}\nCódigo técnico: ${p.code}`}
+                      key={p.id}
+                    >
                       <input
+                        aria-label={`${p.presentation.label}${p.is_sensitive ? " · Sensible" : ""}`}
                         type="checkbox"
                         disabled={
                           !can("permission.assign") ||
@@ -134,15 +158,23 @@ export function PermissionMatrix({
                         }
                       />
                       <span>
-                        {permissionLabel(p as any)}{" "}
+                        <strong>{p.presentation.label}</strong>{" "}
                         {p.is_sensitive && (
-                          <small className="sensitive">Sensible</small>
+                          <small
+                            className="sensitive"
+                            title="Este permiso permite ejecutar acciones críticas o irreversibles."
+                          >
+                            Sensible
+                          </small>
                         )}
+                        <small className="permission-description">{p.presentation.description}</small>
                       </span>
                     </label>
                   ))}
               </section>
-            ))}
+              );
+            })}
+            {!groups.length && <Empty text="No hay permisos que coincidan con la búsqueda o el filtro." />}
           </div>
           {can("permission.assign") && (
             <footer className="form-actions">
@@ -709,7 +741,7 @@ export function UserDetail({
                     .filter((p) => p.active)
                     .map((p) => (
                       <option key={p.id} value={p.id}>
-                        {p.resource} · {permissionLabel(p as any)}
+                        {permissionModuleLabel(p.resource)} · {permissionPresentation(p as any).label}
                       </option>
                     ))}
                 </select>

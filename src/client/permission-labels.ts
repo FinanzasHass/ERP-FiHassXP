@@ -1,0 +1,202 @@
+export type PermissionView = {
+  code: string;
+  resource: string;
+  action: string;
+  module?: string;
+  description?: string;
+};
+
+type PermissionCopy = { label: string; description?: string; order?: number };
+
+export const permissionModuleLabels: Record<string, string> = {
+  accounting_account: "Plan de cuentas",
+  accounting_configuration: "Configuración contable",
+  accounting_event: "Eventos contables",
+  accounting_period: "Períodos contables",
+  accounting_rule: "Reglas contables",
+  afe: "AFE",
+  advance: "Anticipos",
+  approval_policy: "Reglas de aprobación",
+  area: "Áreas",
+  audit: "Auditoría",
+  bank: "Bancos",
+  bank_reconciliation: "Conciliación bancaria",
+  bank_transaction: "Movimientos bancarios",
+  budget: "Presupuestos",
+  cashflow: "Flujo de caja",
+  collection: "Cobranzas",
+  company: "Empresas",
+  contract: "Contratos",
+  cost_center: "Centros de costo",
+  currency: "Monedas",
+  customer: "Clientes",
+  dashboard: "Panel principal",
+  demo_dashboard: "Panel ejecutivo demo",
+  employee: "Colaboradores",
+  employee_advance: "Anticipos a colaboradores",
+  employee_reimbursement: "Reembolsos a colaboradores",
+  employee_return: "Devoluciones de colaboradores",
+  exchange_rate: "Tipos de cambio",
+  expense_category: "Categorías de gasto",
+  expense_policy: "Políticas de gasto",
+  expense_report: "Rendiciones",
+  general_ledger: "Libro mayor",
+  invoice: "Documentos de compra",
+  journal: "Asientos contables",
+  legacy_mapping: "Mapeos legados",
+  lot_receivable: "CxC de lotes",
+  payable: "Cuentas por pagar",
+  payment: "Pagos",
+  payment_batch: "Lotes de pago",
+  payment_order: "Órdenes de pago",
+  payment_term: "Condiciones de pago",
+  permission: "Permisos",
+  position: "Cargos",
+  project: "Proyectos",
+  purchase_order: "Órdenes de compra",
+  receivable: "Cuentas por cobrar",
+  receivable_schedule: "Cronogramas de cobro",
+  reconciliation: "Conciliación",
+  recurring_service: "Servicios recurrentes",
+  report: "Reportes",
+  request: "Solicitudes",
+  role: "Roles",
+  service_acceptance: "Conformidad de servicios",
+  settings: "Configuración general",
+  subproject: "Subproyectos",
+  supplier: "Proveedores",
+  sworn_declaration: "Declaraciones juradas",
+  tax_document: "Documentos tributarios",
+  travel_expense: "Viáticos",
+  trial_balance: "Balance de comprobación",
+  user: "Usuarios",
+  vendor_refund: "Recuperaciones de proveedores",
+};
+
+const actionLabels: Record<string, string> = {
+  view: "Ver",
+  view_own: "Ver propios",
+  view_area: "Ver del área",
+  view_company: "Ver de la empresa",
+  view_all: "Ver de todas las empresas autorizadas",
+  create: "Crear",
+  create_for_employee: "Crear para otro colaborador",
+  edit: "Editar",
+  edit_own: "Editar propios",
+  edit_draft: "Editar borrador",
+  review: "Revisar",
+  validate: "Validar",
+  observe: "Observar",
+  submit: "Enviar",
+  sign: "Firmar",
+  approve: "Aprobar",
+  bank_change_approve: "Aprobar cambio de cuenta bancaria",
+  reject: "Rechazar",
+  cancel: "Cancelar",
+  hold: "Poner en espera",
+  schedule: "Programar",
+  identify: "Identificar",
+  apply: "Aplicar",
+  match: "Vincular",
+  reconcile: "Conciliar",
+  execute: "Ejecutar",
+  disburse: "Desembolsar",
+  pay: "Pagar",
+  register: "Registrar",
+  record_payment: "Registrar recepción",
+  reverse: "Reversar",
+  close: "Cerrar",
+  approve_closure: "Aprobar cierre",
+  reopen: "Reabrir",
+  disable: "Deshabilitar",
+  assign: "Asignar",
+  import: "Importar",
+  export: "Exportar",
+  preview: "Previsualizar",
+  resolve: "Resolver",
+  generate: "Generar",
+  ignore: "Ignorar",
+  activate: "Activar",
+  manage: "Administrar",
+  manage_projection: "Administrar proyecciones",
+  classify_accounting: "Clasificar para contabilidad",
+  bank_change: "Solicitar cambio de cuenta bancaria",
+  bank_view: "Ver cuenta bancaria",
+  finance_view: "Ver auditoría financiera",
+  operational: "Ver reportes operativos",
+  financial: "Ver reportes financieros",
+  managerial: "Ver reportes gerenciales",
+};
+
+const exactPermissionCopy: Record<string, PermissionCopy> = {
+  "request.submit": { label: "Enviar solicitud", order: 50 },
+  "request.observe": { label: "Observar solicitud", order: 45 },
+  "accounting_event.generate": { label: "Generar asiento borrador", order: 80 },
+  "accounting_event.ignore": { label: "Ignorar evento contable", order: 120 },
+  "accounting_event.preview": { label: "Previsualizar asiento", order: 42 },
+  "accounting_event.resolve": { label: "Resolver regla contable", order: 44 },
+  "accounting_account.import": { label: "Importar plan de cuentas", order: 120 },
+  "accounting_period.reopen": { label: "Reabrir período contable", order: 110 },
+  "accounting_rule.activate": { label: "Activar regla contable", order: 120 },
+  "bank_reconciliation.match": { label: "Vincular movimiento", order: 75 },
+  "bank_reconciliation.reconcile": { label: "Conciliar movimiento", order: 78 },
+  "bank_reconciliation.reopen": { label: "Reabrir conciliación", order: 110 },
+  "bank_transaction.create_manual": { label: "Registrar movimiento manual", order: 20 },
+  "bank_transaction.import": { label: "Importar movimientos bancarios", order: 120 },
+  "cashflow.manage_projection": { label: "Administrar proyecciones", order: 120 },
+  "collection.apply": { label: "Aplicar cobro", order: 76 },
+  "collection.identify": { label: "Identificar depósito", order: 74 },
+  "employee_return.match": { label: "Conciliar devolución de colaborador", order: 78 },
+  "employee_return.register": { label: "Registrar devolución", order: 80 },
+  "employee.bank_view": { label: "Ver cuenta bancaria del colaborador", order: 10 },
+  "journal.edit_draft": { label: "Editar asiento borrador", order: 30 },
+  "receivable.adjust": { label: "Ajustar cuenta por cobrar", order: 35 },
+  "receivable_schedule.modify": { label: "Modificar cronograma", order: 35 },
+  "service_acceptance.accept": { label: "Registrar conformidad", order: 60 },
+  "service_acceptance.observe": { label: "Observar conformidad", order: 45 },
+  "supplier.bank_view": { label: "Ver cuenta bancaria del proveedor", order: 10 },
+  "travel_expense.create_for_employee": { label: "Crear viático para otro colaborador", order: 20 },
+  "travel_expense.observe": { label: "Observar solicitud de viático", order: 45 },
+  "travel_expense.submit": { label: "Enviar solicitud de viático", order: 50 },
+  "afe.import": { label: "Importar AFE", order: 120 },
+  "legacy_mapping.import": { label: "Importar mapeo legado", order: 120 },
+  "payment.execute": {
+    label: "Ejecutar pago",
+    description: "Permite registrar una salida real de dinero en Tesorería.",
+    order: 80,
+  },
+};
+
+const actionOrder: Record<string, number> = {
+  view: 10, view_own: 11, view_area: 12, view_company: 13, view_all: 14,
+  create: 20, create_for_employee: 21, create_manual: 22,
+  edit: 30, edit_own: 31, edit_draft: 32, modify: 33, adjust: 34,
+  review: 40, validate: 41, preview: 42, observe: 45, resolve: 46,
+  submit: 50, sign: 51, approve: 60, bank_change_approve: 61,
+  reject: 70, cancel: 71, hold: 72, identify: 74, match: 75, apply: 76, reconcile: 78,
+  execute: 80, disburse: 81, pay: 82, register: 83, record_payment: 84,
+  reverse: 90, close: 100, approve_closure: 101, reopen: 110,
+  manage: 120, manage_projection: 121, assign: 122, import: 123, export: 124,
+};
+
+function humanize(value: string) {
+  const text=value.replaceAll("_", " ").trim();
+  return text ? text[0].toUpperCase()+text.slice(1) : "Permiso";
+}
+
+export function permissionModuleLabel(resource: string) {
+  return permissionModuleLabels[resource] || humanize(resource);
+}
+
+export function permissionPresentation(permission: PermissionView) {
+  const copy=exactPermissionCopy[permission.code];
+  const label=copy?.label || actionLabels[permission.action] || humanize(permission.action);
+  const moduleLabel=permissionModuleLabel(permission.resource);
+  return {
+    label,
+    moduleLabel,
+    description: copy?.description || `Permite ${label.toLocaleLowerCase("es-PE")} en ${moduleLabel.toLocaleLowerCase("es-PE")}.`,
+    order: copy?.order ?? actionOrder[permission.action] ?? 500,
+    technicalCode: permission.code,
+  };
+}
