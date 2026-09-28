@@ -82,6 +82,14 @@ async function fixture(page: Page, blocked = false, forced = false) {
       status = 201;
       body = {id:u,...req.postDataJSON()};
     }
+    else if (p === "/api/users" && req.method() === "GET") {
+      body = {data:[{id:'00000000-0000-4000-8000-000000000099',full_name:'Usuario Finanzas',username:'finanzas.demo',email:'finanzas@example.test',area_id:null,position_id:null,manager_id:null,status:'active',must_change_password:true,user_companies:[]}],count:1};
+    }
+    else if (/^\/api\/users\/[^/]+\/temporary-password$/.test(p) && req.method() === "PUT") {
+      writes.push(req.postDataJSON());
+      status = 204;
+      body = null;
+    }
     else if (p === "/api/cost-centers/import") {
       writes.push(req.postDataJSON());
       body = {
@@ -225,6 +233,20 @@ test("new user form requires a confirmed temporary password and sends only the c
   await expect.poll(()=>writes.length).toBe(1);
   expect(writes[0].temporary_password).toBe('Temporary-2026!');
   expect(writes[0].temporary_password_confirmation).toBeUndefined();
+});
+test("existing user edits profile separately from temporary password security",async({page})=>{
+  const writes=await fixture(page);
+  await login(page);
+  await page.getByRole('button',{name:'Usuarios',exact:true}).click();
+  await page.getByRole('button',{name:'Abrir ↗'}).click();
+  await expect(page.getByRole('dialog')).toBeVisible();
+  await expect(page.getByLabel(/Contraseña provisional/)).toHaveCount(0);
+  await page.getByRole('button',{name:'Seguridad',exact:true}).click();
+  await page.getByLabel(/Contraseña provisional · mínimo 12 caracteres/).fill('Temporary-2026!');
+  await page.getByLabel(/Confirmar contraseña provisional/).fill('Temporary-2026!');
+  await page.getByRole('button',{name:'Establecer contraseña provisional'}).click();
+  await expect(page.getByText(/Contraseña provisional establecida/)).toBeVisible();
+  expect(writes.at(-1)).toEqual({password:'Temporary-2026!'});
 });
 test("CECO subcenter form, hierarchy, import preview and explicit confirmation", async ({
   page,

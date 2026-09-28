@@ -481,7 +481,7 @@ export function UserDetail({
             <Form
               fields={catalogs.users.fields.filter(
                 (f) =>
-                  f.key !== "email" &&
+                  !["email", "temporary_password", "temporary_password_confirmation"].includes(f.key) &&
                   (f.key !== "status" || (can("user.disable") && !self)) &&
                   (!self ||
                     !["area_id", "position_id", "manager_id"].includes(f.key)),
