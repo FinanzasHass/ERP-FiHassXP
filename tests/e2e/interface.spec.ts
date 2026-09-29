@@ -87,6 +87,12 @@ async function fixture(page: Page, blocked = false, forced = false) {
     else if (p === "/api/users" && req.method() === "GET") {
       body = {data:[{id:'00000000-0000-4000-8000-000000000099',full_name:'Usuario Finanzas',username:'finanzas.demo',email:'finanzas@example.test',area_id:null,position_id:null,manager_id:null,status:'active',must_change_password:true,user_companies:[]}],count:1};
     }
+    else if (/^\/api\/users\/[^/]+\/roles$/.test(p) && req.method() === "GET") {
+      body = {data:[{role_id:u,company_id:a,assigned_at:"2026-09-09T12:00:00Z"}],count:1};
+    }
+    else if (/^\/api\/users\/[^/]+\/overrides$/.test(p) && req.method() === "GET") {
+      body = {data:[{permission_id:p2,company_id:a,effect:"allow",reason:"Analista"}],count:1};
+    }
     else if (/^\/api\/users\/[^/]+\/temporary-password$/.test(p) && req.method() === "PUT") {
       writes.push(req.postDataJSON());
       status = 204;
@@ -127,6 +133,8 @@ async function fixture(page: Page, blocked = false, forced = false) {
         data: [{ id: u, name: "Rol prueba", code: "test", active: true }],
         count: 1,
       };
+    else if (p === "/api/companies")
+      body = {data:[{id:a,code:"TEST_A",legal_name:"Empresa A · entorno de prueba",active:true}],count:1};
     else if (p === "/api/permissions")
       body = {
         data: [
@@ -282,6 +290,21 @@ test("existing user edits profile separately from temporary password security",a
   await page.getByRole('button',{name:'Establecer contraseña provisional'}).click();
   await expect(page.getByText(/Contraseña provisional establecida/)).toBeVisible();
   expect(writes.at(-1)).toEqual({password:'Temporary-2026!'});
+});
+test("user roles and overrides show functional names before technical identifiers", async ({page}) => {
+  await fixture(page);
+  await login(page);
+  await page.getByRole("button", {name:"Usuarios", exact:true}).click();
+  await page.getByRole("button", {name:"Abrir ↗"}).click();
+  await page.getByRole("button", {name:"Roles", exact:true}).click();
+  await expect(page.getByRole("columnheader", {name:"Rol"})).toBeVisible();
+  await expect(page.getByText("Rol prueba", {exact:true})).toBeVisible();
+  await expect(page.getByText("test", {exact:true})).toBeVisible();
+  await page.getByRole("button", {name:"Permisos especiales", exact:true}).click();
+  await expect(page.getByRole("columnheader", {name:"Permiso"})).toBeVisible();
+  await expect(page.getByRole("cell", {name:/Solicitudes · Enviar solicitud/})).toBeVisible();
+  await expect(page.getByRole("cell", {name:/request\.submit/})).toBeVisible();
+  await expect(page.getByRole("cell", {name:"Permitir", exact:true})).toBeVisible();
 });
 test("CECO subcenter form, hierarchy, import preview and explicit confirmation", async ({
   page,

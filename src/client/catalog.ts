@@ -234,6 +234,10 @@ export const labels: Record<string, string> = {
   action: "Acción",
   entity_type: "Entidad",
   company_id: "Empresa",
+  role_id: "Rol",
+  permission_id: "Permiso",
+  assigned_at: "Asignado el",
+  effect: "Efecto",
   reason: "Motivo",
 };
 export const stateLabels: Record<string, string> = {

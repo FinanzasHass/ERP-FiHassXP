@@ -450,7 +450,7 @@ export function UserDetail({
           if (valid) setLinks(r);
         })
         .catch((e) => setError(e.message));
-    if (can("role.view"))
+    if (can("role.view") || can("role.assign"))
       all("/roles")
         .then(setRoles)
         .catch(() => {});
@@ -458,7 +458,7 @@ export function UserDetail({
       all("/companies")
         .then(setCompanies)
         .catch(() => {});
-    if (can("role.view"))
+    if (can("role.view") || can("permission.assign"))
       all("/permissions")
         .then(setPermissions)
         .catch(() => {});
@@ -481,7 +481,7 @@ export function UserDetail({
   const tabs = [
     "Información",
     ...(!self && can("user.edit") ? ["Seguridad"] : []),
-    ...(can("user.view") ? ["Roles"] : []),
+    ...(can("role.view") || can("role.assign") ? ["Roles"] : []),
     ...(can("permission.assign") ? ["Permisos especiales"] : []),
     ...(can("company.assign") ? ["Empresas"] : []),
     ...(can("audit.view") ? ["Actividad"] : []),
@@ -558,14 +558,18 @@ export function UserDetail({
           <DataTable
             rows={links}
             columns={["role_id", "company_id", "assigned_at"]}
-            display={(r, k) =>
-              k === "role_id"
-                ? roles.find((x) => x.id === r.role_id)?.name
+            display={(r, k) => {
+              const assignedRole = roles.find((candidate) => candidate.id === r.role_id);
+              return k === "role_id"
+                ? <span className="reference-label" title={`ID técnico: ${r.role_id}`}>
+                    <strong>{assignedRole?.name || "Rol no disponible"}</strong>
+                    {assignedRole?.code && <small>{assignedRole.code}</small>}
+                  </span>
                 : k === "company_id"
                   ? companies.find((x) => x.id === r.company_id)?.legal_name ||
                     "Global"
-                  : undefined
-            }
+                  : undefined;
+            }}
           />
           {!self && can("role.assign") && (
             <form
@@ -707,14 +711,27 @@ export function UserDetail({
           <DataTable
             rows={links}
             columns={["permission_id", "company_id", "effect", "reason"]}
-            display={(r, k) =>
-              k === "permission_id"
-                ? permissions.find((p) => p.id === r.permission_id)?.description
+            display={(r, k) => {
+              const assignedPermission = permissions.find((candidate) => candidate.id === r.permission_id);
+              const presentation = assignedPermission
+                ? permissionPresentation(assignedPermission as any)
+                : null;
+              return k === "permission_id"
+                ? <span className="reference-label" title={`ID técnico: ${r.permission_id}`}>
+                    <strong>
+                      {presentation
+                        ? `${presentation.moduleLabel} · ${presentation.label}`
+                        : "Permiso no disponible"}
+                    </strong>
+                    {assignedPermission?.code && <small>{assignedPermission.code}</small>}
+                  </span>
                 : k === "company_id"
                   ? companies.find((c) => c.id === r.company_id)?.legal_name ||
                     "Global"
+                  : k === "effect"
+                    ? r.effect === "allow" ? "Permitir" : r.effect === "deny" ? "Denegar" : r.effect
                   : undefined
-            }
+            }}
           />
           {!self && (
             <form
